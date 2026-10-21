@@ -137,6 +137,8 @@ Total server service time across all 10 RPCs is ~3 ms; the remaining wall time i
 | `benchmarks/bench-arbor-4repos.py` | Runner and verifier for the four-repository Arbor Stack dogfood study |
 | `benchmarks/arbor_4repo_results.json` | Committed dataset of that study, checked with `bench-arbor-4repos.py --verify` |
 | `benchmarks/ARBOR_4REPO_STUDY.md` | Write-up of the four-repository Arbor Stack study |
+| `benchmarks/README.md` | Quick-start guide for running and verifying benchmarks |
+| `benchmarks/REPORT.md` | Methodology, architectural tradeoffs, and reproduction guide |
 
 ## 7. Results: the v0.1.0 Release Campaign
 
@@ -171,12 +173,12 @@ Ratios are Git p50 divided by `inr` p50 per agent, so a value above 1 means `inr
 Where `inr` is faster:
 
 - **Landing many changes at once.** At `K=32`, `serve_land` has a per-agent p50 of 1.0 to 4.6 s on the two shared Linux hosts against 39.5 to 53.4 s for `push_rebase`, and 2.8 to 3.0 s against 526 to 583 s on the laptop. At `K=8` the ratio is 4.15 to 9.77 on the Linux hosts and 36.15 to 38.94 on the laptop.
-- **Provisioning a slice or a virtual workspace.** `checkout_sparse` is 3.8 to 7.1 times faster than `clone_sparse` at `K=1` and 6.6 to 11.7 times faster at `K=32` on the Linux hosts. Across all four hosts `mount` is 33 to 91 times faster than `worktree_add` at `K=1` and 36 to 2,377 times faster at `K=32`. `mount` writes no file blobs up front (section 5.1), so this compares provisioning cost, not the cost of reading the files afterwards.
+- **Provisioning a slice or a virtual workspace.** `checkout_sparse` is 3.8 to 7.1 times faster than `clone_sparse` at `K=1` and 6.6 to 11.7 times faster at `K=32` on the Linux hosts. Across the hosts that ran each `K`, `mount` is 33 to 91 times faster than `worktree_add` at `K=1` and 36 to 2,377 times faster at `K=32`. `mount` writes no file blobs up front (section 5.1), so this compares provisioning cost, not the cost of reading the files afterwards.
 
 Where `inr` is slower or only level:
 
-- **Full working copy.** `checkout_full` is slower than `clone_full` in 12 of the 14 (run, `K`) cells where both ran. In the other two it is ahead by 18% and 3% (`linux-worker-a` run A at `K=8`, `linux-worker-b` run A at `K=8`). At `K=1` it takes 1.1 to 1.4 times as long as `git clone` on every host. At `K=32` on `linux-worker-c`, the only host where it ran, run A takes 17.4 s against 16.2 s for `clone_full` and 10.1 s for `worktree_add`.
-- **Memory per process.** Peak resident memory of `checkout_full` is 430 to 449 MiB per process against 42 to 51 MiB for `clone_full` and 45 to 53 MiB for `worktree_add`, roughly nine to ten times more. This is why the memory-fit guard skipped the cell wherever memory was limited (section 7.4).
+- **Full working copy.** `checkout_full` is slower than `clone_full` in 12 of the 14 (run, `K`) cells where both ran. In the other two it is ahead by 18% and 3% (`linux-worker-a` run A at `K=8`, `linux-worker-b` run A at `K=8`). At `K=1` it takes 1.1 to 1.4 times as long as `git clone` on every host that ran `K=1`. At `K=32` on `linux-worker-c`, the only host where it ran, run A takes 17.4 s against 16.2 s for `clone_full` and 10.1 s for `worktree_add`.
+- **Memory per process.** Peak resident memory of `checkout_full` is 430 to 449 MiB per process against 42 to 51 MiB for `clone_full` and 45 to 53 MiB for `worktree_add`, roughly eight to ten times more. This is why the memory-fit guard skipped the cell wherever memory was limited (section 7.4). The other `inr` commands that do work also use more memory than the Git commands they are compared with: `commit_full` 148 to 154 MiB against 14 to 18 MiB for `commit_scan`, `commit_sparse` 32 to 38 MiB against 14 to 18 MiB for `commit_path`, and `serve_land` 27 to 29 MiB at `K=1` and 57 to 59 MiB at `K` of 8 or more against 14 to 19 MiB and 28 to 33 MiB for `push_rebase`. Only `checkout_sparse` (12 to 13 MiB) and `mount` (14 to 16 MiB) use less than the Git provisioning commands.
 - **Recording one change.** `commit_full`, which scans all 50,000 files, takes 795 to 1,512 ms against 62 to 162 ms for Git's `add -A` plus `commit` (`commit_scan`), roughly 9 to 13 times as long. `commit_sparse` takes 92 to 157 ms on the Linux hosts against 35 to 72 ms for `commit_path`, 1.9 to 2.6 times as long, and 95 ms against 90 ms on the laptop.
 - **Landing one change.** At `K=1` on the Linux hosts `serve_land` takes 1.3 to 1.5 times as long as `push_rebase` (79 to 119 ms against 58 to 90 ms). On the laptop it is faster, at 91 ms against 139 to 140 ms.
 - **Sparse checkout on the laptop at larger `K`.** `checkout_sparse` is only 1.09 and 1.12 times faster than `clone_sparse` at `K=16` and `K=32`.
@@ -189,7 +191,7 @@ What went wrong for Git or for the harness:
 
 ### 7.2 Hosts and runs
 
-Everything below this heading is the output of `benchmarks/report-tables.py` over the eight result sets, in the order `linux-worker-a` A and B, `linux-worker-b` A and B, `linux-worker-c` A and B, `macos-laptop-a` A and B, with the renderer's headings moved down two levels. Tables show run A / run B in one cell where a host ran twice. Host labels are neutral by design (section 3.5).
+The tables from here to the end of section 7.4 are the output of `benchmarks/report-tables.py` over the eight result sets, in the order `linux-worker-a` A and B, `linux-worker-b` A and B, `linux-worker-c` A and B, `macos-laptop-a` A and B, with the renderer's headings moved down one level; the prose around them is written for this report. Tables show run A / run B in one cell where a host ran twice. Host labels are neutral by design (section 3.5).
 
 Conditions that affect how far the numbers can be trusted:
 
@@ -508,7 +510,7 @@ For every cell measured in two consecutive runs of one host at one inr source re
 
 #### Skipped cells (memory-fit guard)
 
-Before each measured batch at `K` above 1 the guard predicts memory as `K` times the largest peak RSS seen so far for that variant and skips the rest of the cell when the prediction exceeds 90% of the memory available to the process (section 3.4). It only ever skipped `inr/checkout_full`, whose agents need about 433 MiB each, apart from two trials of one `serve_land` cell. Full-checkout rows at `K` of 16 or more therefore exist only for `linux-worker-a` run B at `K=16`, `macos-laptop-a` at `K=16` and `linux-worker-c` at `K=32`. Whether a cell ran also depended on the memory free at that moment: `linux-worker-a` skipped `K=16` in run A with 5.1 GiB available and ran it in run B, when more memory was free (8.1 GiB at the `K=32` check).
+Before each measured batch at `K` above 1 the guard predicts memory as `K` times the largest peak RSS seen so far for that variant and skips the rest of the cell when the prediction exceeds 90% of the memory available to the process (section 3.4). It only ever skipped `inr/checkout_full`, whose agents need about 433 MiB each, apart from two trials of one `serve_land` cell. Full-checkout rows at `K` of 16 or more therefore exist only for `linux-worker-a` run B at `K=16`, `macos-laptop-a` at `K=16` and `linux-worker-c` at `K=32`. Whether a cell ran also depended on the memory free at that moment: `linux-worker-a` skipped `K=16` in run A with 5.0 GiB available and ran it in run B, when more memory was free (7.9 GiB at the `K=32` check).
 
 | Host | Run | Cell | K | trials measured | trials skipped | peak RSS basis MiB | predicted K x peak MiB | available MiB |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -539,8 +541,8 @@ Only Git's `worktree_add` produced failed agents, all with exit code 128, and on
 What they support:
 
 - On this corpus and these four machines, `inr` provisions a virtual workspace (`mount`) or one service directory (`checkout_sparse`) much faster than Git provisions an equivalent working copy, and the gap widens with `K`. The exception is `checkout_sparse` on the laptop, where the gap narrows from 2.7 times at `K=1` to about 1.1 times at `K` of 16 and 32.
-- Landing `K` concurrent single-file changes through one `inr serve` is slower than a single Git push at `K=1` on the Linux hosts, faster at `K=1` on the laptop, and faster at every `K` of 8 or more on every host. Every landing batch in every set delivered all `K` changes (`landed per batch` equals `K` throughout).
-- A full working copy is the case where `inr` loses. `checkout_full` is slower than `git clone` in 12 of the 14 comparable cells, needs about ten times the memory per process, and is the cell the memory-fit guard skipped (apart from two trials of one `serve_land` cell). Recording a change after a full checkout (`commit_full`) is roughly ten times slower than Git's `commit_scan`.
+- Landing `K` concurrent single-file changes through one `inr serve` is slower than a single Git push at `K=1` on the Linux hosts, faster at `K=1` on the laptop, and faster at every `K` of 8 or more on every host that ran `land`. Every landing batch in every set delivered all `K` changes (`landed per batch` equals `K` throughout).
+- A full working copy is the case where `inr` loses. `checkout_full` is slower than `git clone` in 12 of the 14 comparable cells, needs about eight to ten times the memory per process, and is the cell the memory-fit guard skipped (apart from two trials of one `serve_land` cell). Every `inr` commit and landing command also uses more memory per process than its Git counterpart (section 7.1). Recording a change after a full checkout (`commit_full`) is roughly ten times slower than Git's `commit_scan`.
 
 What they do not show:
 
@@ -560,5 +562,3 @@ python3 -I benchmarks/report-tables.py \
 ```
 
 and check any set with `python3 -I benchmarks/verify-run.py benchmarks/results/<run-id>`.
-| `benchmarks/README.md` | Quick-start guide for running and verifying benchmarks |
-| `benchmarks/REPORT.md` | Methodology, architectural tradeoffs, and reproduction guide |
