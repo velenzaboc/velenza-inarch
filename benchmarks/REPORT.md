@@ -137,5 +137,54 @@ Total server service time across all 10 RPCs is ~3 ms; the remaining wall time i
 | `benchmarks/bench-arbor-4repos.py` | Runner and verifier for the four-repository Arbor Stack dogfood study |
 | `benchmarks/arbor_4repo_results.json` | Committed dataset of that study, checked with `bench-arbor-4repos.py --verify` |
 | `benchmarks/ARBOR_4REPO_STUDY.md` | Write-up of the four-repository Arbor Stack study |
+
+## 7. Results: the v0.1.0 Release Campaign
+
+This section reports the result sets committed under `benchmarks/results/`. All eight were produced on 2026-10-21 (UTC) by `bench-vs-git.sh` (SHA-256 prefix `52d477d26dd49c84` on every host) against `inr` built from release commit `c15d5e5558bf29103d21102c4c63a77038818c90`, with `N=50,000` files, five measured trials and one warm-up batch per cell. Each set passed `verify-run.py` with zero failed checks (418 to 1,994 checks per set). The built-in `inr bench` suite was skipped (`--skip-inr-bench`). Four hosts were used, each run twice:
+
+- `linux-worker-a`, `linux-worker-b` and `macos-laptop-a` ran `provision`, `commit` and `land` at `K` in {1, 8, 16, 32}. The second laptop run repeated `land` only.
+- `linux-worker-c` ran `provision` at `K=32` only. It has 30.6 GiB of memory and no cgroup limit, so it is the one host that measured the `K=32` full checkout.
+
+### 7.1 Summary
+
+Ratios are Git p50 divided by `inr` p50 per agent, so a value above 1 means `inr` is faster and a value below 1 means `inr` is slower. A host with two runs shows run A / run B. "skipped" means the memory-fit guard declined to run the cell (section 3.4).
+
+| Comparison | Host | K=1 | K=32 |
+| :--- | :--- | :--- | :--- |
+| Full working copy (`clone_full` vs `checkout_full`) | linux-worker-a | 0.82 / 0.70 | skipped / skipped |
+| | linux-worker-b | 0.85 / 0.88 | skipped / skipped |
+| | linux-worker-c | not run | 0.93 / 0.91 |
+| | macos-laptop-a | 0.74 | skipped |
+| One service directory (`clone_sparse` vs `checkout_sparse`) | linux-worker-a | 3.78 / 4.19 | 9.31 / 9.90 |
+| | linux-worker-b | 7.06 / 5.22 | 10.93 / 11.72 |
+| | linux-worker-c | not run | 6.59 / 6.80 |
+| | macos-laptop-a | 2.74 | 1.12 |
+| Cheapest working copy (`worktree_add` vs `mount`) | linux-worker-a | 48.01 / 52.38 | 428.08 / 772.79 |
+| | linux-worker-b | 33.16 / 45.43 | 128.45 / 139.62 |
+| | linux-worker-c | not run | 35.98 / 35.82 |
+| | macos-laptop-a | 91.05 | 2376.71 |
+| `K` concurrent single-file landings (`push_rebase` vs `serve_land`) | linux-worker-a | 0.73 / 0.74 | 29.49 / 51.31 |
+| | linux-worker-b | 0.79 / 0.67 | 9.80 / 9.21 |
+| | linux-worker-c | not run | not run |
+| | macos-laptop-a | 1.53 / 1.54 | 173.68 / 205.19 |
+
+Where `inr` is faster:
+
+- **Landing many changes at once.** At `K=32`, `serve_land` has a per-agent p50 of 1.0 to 4.6 s on the two shared Linux hosts against 39.5 to 53.4 s for `push_rebase`, and 2.8 to 3.0 s against 526 to 583 s on the laptop. At `K=8` the ratio is 4.15 to 9.77 on the Linux hosts and 36.15 to 38.94 on the laptop.
+- **Provisioning a slice or a virtual workspace.** `checkout_sparse` is 3.8 to 7.1 times faster than `clone_sparse` at `K=1` and 6.6 to 11.7 times faster at `K=32` on the Linux hosts. `mount` is 33 to 91 times faster than `worktree_add` at `K=1` and 36 to 2,377 times faster at `K=32`. `mount` writes no file blobs, so this compares provisioning cost, not the cost of reading the files afterwards.
+
+Where `inr` is slower or only level:
+
+- **Full working copy.** `checkout_full` is slower than `clone_full` in 12 of the 14 (run, `K`) cells where both ran. In the other two it is ahead by 18% and 3% (`linux-worker-a` run A at `K=8`, `linux-worker-b` run A at `K=8`). At `K=1` it takes 1.1 to 1.4 times as long as `git clone` on every host. At `K=32` on `linux-worker-c`, the only host where it ran, it takes 17.4 s against 16.2 s for `clone_full` and 10.1 s for `worktree_add`.
+- **Memory per process.** Peak resident memory of `checkout_full` is 430 to 449 MiB per process against 42 to 51 MiB for `clone_full` and 45 to 53 MiB for `worktree_add`, roughly nine to ten times more. This is why the memory-fit guard skipped the cell wherever memory was limited (section 7.4).
+- **Recording one change.** `commit_full`, which scans all 50,000 files, takes 795 to 1,512 ms against 62 to 162 ms for Git's `add -A` plus `commit` (`commit_scan`), roughly 9 to 13 times as long. `commit_sparse` takes 92 to 157 ms on the Linux hosts against 35 to 72 ms for `commit_path`, 1.9 to 2.6 times as long, and 95 ms against 90 ms on the laptop.
+- **Landing one change.** At `K=1` on the Linux hosts `serve_land` takes 1.3 to 1.5 times as long as `push_rebase` (79 to 119 ms against 58 to 90 ms). On the laptop it is faster, at 91 ms against 139 to 140 ms.
+- **Sparse checkout on the laptop at larger `K`.** `checkout_sparse` is only 1.09 and 1.12 times faster than `clone_sparse` at `K=16` and `K=32`.
+
+What went wrong for Git or for the harness:
+
+- Git's `worktree_add` had 17 failed agents out of 1,760 sampled at `K` of 16 or 32 across the four hosts, all exit code 128 (`linux-worker-a` 1 and 2, `linux-worker-c` 3, `macos-laptop-a` 8 and 3). No `inr` agent failed in any measured cell. Latency percentiles cover successful agents only (section 3.4), so these cells exclude the failed `worktree_add` agents. The logs show `fatal: failed to read .git/worktrees/<agent>/commondir` and `fatal: '<work>/prov-git-worktree_add/<agent>' is not a working tree` on both Linux and macOS. This campaign did not isolate the cause.
+- 9 cells were skipped by the memory-fit guard and one landing cell was only partly measured (3 of 5 trials). Section 7.4 lists them.
+- Run-to-run agreement is poor on the two shared Linux hosts (section 7.4), so their individual ratios indicate order of magnitude and direction, not precise factors.
 | `benchmarks/README.md` | Quick-start guide for running and verifying benchmarks |
 | `benchmarks/REPORT.md` | Methodology, architectural tradeoffs, and reproduction guide |
