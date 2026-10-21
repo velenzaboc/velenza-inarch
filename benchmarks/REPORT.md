@@ -1,6 +1,6 @@
 # Git vs Velenza Inarch at 50,000 files: Benchmark Methodology, Tradeoffs & Reproduction Guide
 
-This document describes the benchmark methodology, fairness controls, independent verification pipeline, and architectural mechanisms measured by the harness in `benchmarks/`. Because raw per-trial CSV and JSON bundles are large and host-dependent, `benchmarks/results/` is gitignored; every script, timing wrapper, verifier, and table renderer is included in this directory so anyone can run the comparison on their own hardware and generate verified tables.
+This document describes the benchmark methodology, fairness controls, independent verification pipeline, and architectural mechanisms measured by the harness in `benchmarks/`. The raw per-trial CSV and JSON result sets of the v0.1.0 release campaign are committed under `benchmarks/results/<run-id>/`, and section 7 reads them. Timings are host-dependent, so every script, timing wrapper, verifier, and table renderer is included in this directory and anyone can run the comparison on their own hardware and generate verified tables.
 
 ## 1. Executive Summary of Architectural Tradeoffs
 
@@ -133,5 +133,9 @@ Total server service time across all 10 RPCs is ~3 ms; the remaining wall time i
 | `benchmarks/report-tables.py` | Renders Markdown summary tables from generated result directories |
 | `benchmarks/rpc-relay.py` | Transparent loopback TCP relay that logs per-RPC timings and byte counts |
 | `benchmarks/decompose-landing.sh` | Decomposes a single `serve_land` commit through `rpc-relay.py` |
+| `benchmarks/results/<run-id>/` | Raw and aggregate result sets of the v0.1.0 release campaign (section 7) |
+| `benchmarks/bench-arbor-4repos.py` | Runner and verifier for the four-repository Arbor Stack dogfood study |
+| `benchmarks/arbor_4repo_results.json` | Committed dataset of that study, checked with `bench-arbor-4repos.py --verify` |
+| `benchmarks/ARBOR_4REPO_STUDY.md` | Write-up of the four-repository Arbor Stack study |
 | `benchmarks/README.md` | Quick-start guide for running and verifying benchmarks |
 | `benchmarks/REPORT.md` | Methodology, architectural tradeoffs, and reproduction guide |
