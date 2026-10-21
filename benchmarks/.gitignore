@@ -1,0 +1,4 @@
+# Byte-code written when the Python tools here are compiled or imported.
+__pycache__/
+# Run-time benchmark output directories produced by bench-vs-git.sh and decompose-landing.sh.
+results/

@@ -1,0 +1,56 @@
+# Velenza Inarch Configuration Template (`inarch.example.toml`)
+#
+# Copy this file to `inarch.toml` or `.inarch/config.toml` (both are git-ignored by default)
+# or point to a custom file via `--config <path>` or `INARCH_CONFIG=/path/to/inarch.toml`.
+#
+# IMPORTANT: Never commit organization-specific endpoints, hostnames, credentials, or
+# proprietary path rules to the public Velenza Inarch repository. All deployment-specific
+# configuration belongs in your local `inarch.toml` or environment variables.
+
+[repository]
+repo_id = "default"
+default_ref = "main"
+default_author = "developer@inarch.local"
+tz_offset_secs = 0
+ignore_names = [".git", ".inarch", "target", "node_modules"]
+
+[network]
+listen_addr = "127.0.0.1:7331"
+remote_url = ""
+auth_token = ""
+gcp_credentials_file = ""
+jit_lease_file = ""
+jit_signing_key = ""
+oidc_tokeninfo_url = "https://oauth2.googleapis.com/tokeninfo"
+oidc_token_uri = ""
+oidc_audience = ""
+
+[storage]
+store_dir = ".inarch/store"
+blobs_subdir = "blobs"
+meta_subdir = "meta"
+tier1_cache_dir = ""
+tier2_cache_dir = ""
+blob_backend = "fs"
+gcs_bucket = ""
+gcs_prefix = "objects/v1"
+meta_backend = "fs"
+spanner_database = ""
+
+[chunking]
+min_size = 16384
+avg_size = 65536
+max_size = 262144
+
+[telemetry]
+# Pluggable structured logging & telemetry backend: "none", "local" ("jsonl"), "stderr", or "gcp"
+log_backend = "none"
+log_level = "info"
+log_file = ".inarch/logs/inarch.jsonl"
+gcp_log_name = ""
+
+# Example Antique Directory ACL rules:
+# [[acl_rules]]
+# prefix = "infra/production"
+# allowed_actors = ["platform-admin@example.com"]
+# required_reviewers = ["secops@example.com"]

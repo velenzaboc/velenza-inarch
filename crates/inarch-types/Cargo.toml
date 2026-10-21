@@ -1,0 +1,6 @@
+[package]
+name = "inarch-types"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Core content-addressed types, BLAKE3 hashing, FastCDC chunking, and tree-free Bonsai changesets for Velenza Inarch"

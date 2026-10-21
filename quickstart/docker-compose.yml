@@ -1,0 +1,21 @@
+# Velenza Arbor Stack — Local Cloud Spanner Emulator
+#
+# Starts a local, zero-credential Google Cloud Spanner Emulator instance for
+# running all 4 Velenza Arbor Stack layers locally:
+#   - Layer 0: velenza-inarch  (inr)
+#   - Layer 1: velenza-cambium (code-graph)
+#   - Layer 2: velenza-canon   (spec-graph)
+#   - Layer 3: velenza-trellis (task-graph)
+#
+# Usage:
+#   docker compose -f quickstart/docker-compose.yml up -d
+#   export SPANNER_EMULATOR_HOST=localhost:9010
+
+services:
+  spanner-emulator:
+    image: gcr.io/cloud-spanner-emulator/emulator:1.5.23
+    container_name: velenza-arbor-spanner-emulator
+    ports:
+      - "9010:9010" # gRPC endpoint (SPANNER_EMULATOR_HOST=localhost:9010)
+      - "9020:9020" # REST endpoint (localhost:9020)
+    restart: unless-stopped

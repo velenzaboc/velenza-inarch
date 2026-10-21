@@ -1,0 +1,12 @@
+[package]
+name = "inarch-derived"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "Inductive derived data engine (Fsnode Merkle trees, Unode O(k) path history, BlameV2, and O(log N) CommitGraph) for Velenza Inarch"
+
+[dependencies]
+inarch-types = { path = "../inarch-types" }
+inarch-store = { path = "../inarch-store" }

@@ -1,0 +1,15 @@
+[Unit]
+Description=Velenza Inarch Centralized VCS & MCP Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/inr --config /etc/inarch/inarch.toml serve
+Restart=always
+RestartSec=2
+LimitNOFILE=65536
+WorkingDirectory=/var/lib/inarch
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,17 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/inarch-types",
+    "crates/inarch-store",
+    "crates/inarch-derived",
+    "crates/inarch-engine",
+    "crates/inarch-antique",
+    "crates/inarch-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+repository = "https://github.com/velenzaboc/velenza-inarch"
+rust-version = "1.85"

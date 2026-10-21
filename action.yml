@@ -1,0 +1,63 @@
+name: "Velenza Inarch Checkout & CLI Setup"
+description: "Install the Velenza Inarch (`inr`) CLI and optionally execute a sub-second stateless tree-walk or sparse checkout in CI/CD pipelines."
+author: "Velenza"
+branding:
+  icon: "git-branch"
+  color: "blue"
+
+inputs:
+  remote-url:
+    description: "Optional Velenza Inarch remote server URL (`INARCH_REMOTE_URL`)."
+    required: false
+    default: ""
+  auth-token:
+    description: "Optional Bearer token or short-lived JIT lease token (`INARCH_AUTH_TOKEN`)."
+    required: false
+    default: ""
+  repo-id:
+    description: "Repository identifier (`INARCH_REPO_ID`)."
+    required: false
+    default: "default"
+  rev:
+    description: "Optional ref or 64-hex ChangesetId to materialize via `inr checkout`."
+    required: false
+    default: ""
+  sparse-prefix:
+    description: "Optional comma-separated path prefixes for sparse checkout (`--prefix`)."
+    required: false
+    default: ""
+  dest:
+    description: "Destination directory when `rev` is provided."
+    required: false
+    default: "."
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build and install Velenza Inarch (`inr`)
+      shell: bash
+      run: |
+        set -euo pipefail
+        cargo build --release --manifest-path "${{ github.action_path }}/Cargo.toml" --bin inr --bin velenza-inarch
+        mkdir -p "${RUNNER_TEMP}/velenza-inarch-bin"
+        cp "${{ github.action_path }}/target/release/inr"* "${RUNNER_TEMP}/velenza-inarch-bin/" || true
+        cp "${{ github.action_path }}/target/release/velenza-inarch"* "${RUNNER_TEMP}/velenza-inarch-bin/" || true
+        echo "${RUNNER_TEMP}/velenza-inarch-bin" >> "${GITHUB_PATH}"
+
+    - name: Materialize stateless checkout (if `rev` specified)
+      if: ${{ inputs.rev != '' }}
+      shell: bash
+      env:
+        INARCH_REMOTE_URL: ${{ inputs.remote-url }}
+        INARCH_AUTH_TOKEN: ${{ inputs.auth-token }}
+        INARCH_REPO_ID: ${{ inputs.repo-id }}
+        INPUT_REV: ${{ inputs.rev }}
+        INPUT_PREFIX: ${{ inputs.sparse-prefix }}
+        INPUT_DEST: ${{ inputs.dest }}
+      run: |
+        set -euo pipefail
+        if [ -n "${INPUT_PREFIX}" ]; then
+          inr checkout "${INPUT_REV}" "${INPUT_DEST}" --prefix "${INPUT_PREFIX}"
+        else
+          inr checkout "${INPUT_REV}" "${INPUT_DEST}"
+        fi

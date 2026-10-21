@@ -1,0 +1,24 @@
+[package]
+name = "inarch-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "Velenza Inarch CLI (`inr` / `velenza-inarch`), stateless tree-walk checkout materializer, and checkout-free MCP JSON-RPC server for AI agents"
+default-run = "inr"
+
+[[bin]]
+name = "inr"
+path = "src/main.rs"
+
+[[bin]]
+name = "velenza-inarch"
+path = "src/bin/velenza-inarch.rs"
+
+[dependencies]
+inarch-types = { path = "../inarch-types" }
+inarch-store = { path = "../inarch-store" }
+inarch-derived = { path = "../inarch-derived" }
+inarch-engine = { path = "../inarch-engine" }
+inarch-antique = { path = "../inarch-antique" }

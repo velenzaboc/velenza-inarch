@@ -1,0 +1,13 @@
+[package]
+name = "inarch-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "High-concurrency lock-free speculative rebase engine and checkout-free RPC operations for Velenza Inarch"
+
+[dependencies]
+inarch-types = { path = "../inarch-types" }
+inarch-store = { path = "../inarch-store" }
+inarch-derived = { path = "../inarch-derived" }

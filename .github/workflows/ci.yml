@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test-and-hygiene:
+    name: Test Suite & Open-Source Hygiene (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          # Full history: the hygiene test scans every commit, including the merge commits
+          # GitHub signs, so the scan runs here the way it runs on every clone.
+          fetch-depth: 0
+
+      - name: Install Rust stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run full workspace test suite (including clean-room hygiene check)
+        run: cargo test --workspace
+
+      - name: Build release binaries (`inr` & `velenza-inarch`)
+        run: cargo build --release --workspace
+
+      - name: Upload release binaries (`inr` & `velenza-inarch`)
+        uses: actions/upload-artifact@v4
+        with:
+          name: inarch-binaries-${{ matrix.os }}
+          path: |
+            target/release/inr
+            target/release/inr.exe
+            target/release/velenza-inarch
+            target/release/velenza-inarch.exe
+          if-no-files-found: error
+

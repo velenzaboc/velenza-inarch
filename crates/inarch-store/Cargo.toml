@@ -1,0 +1,9 @@
+[package]
+name = "inarch-store"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Content-addressed storage traits, atomic CAS metadata store, filesystem CAS, and Scion 3-tier cache hierarchy"
+
+[dependencies]
+inarch-types = { path = "../inarch-types" }

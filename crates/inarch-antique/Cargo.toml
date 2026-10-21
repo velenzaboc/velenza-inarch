@@ -1,0 +1,14 @@
+[package]
+name = "inarch-antique"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "Antique intent-based review, directory ACLs, semantic approvals, O(log N) post-merge bisect, and server-side instant revert for Velenza Inarch"
+
+[dependencies]
+inarch-types = { path = "../inarch-types" }
+inarch-store = { path = "../inarch-store" }
+inarch-derived = { path = "../inarch-derived" }
+inarch-engine = { path = "../inarch-engine" }

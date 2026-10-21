@@ -1,0 +1,41 @@
+# Velenza Inarch Centralized Server Configuration Template (`deploy/server.example.toml`)
+#
+# Install to `/etc/inarch/inarch.toml` on your central Velenza Inarch server host
+# and start via `deploy/inarch-server.service`.
+
+[repository]
+repo_id = "default"
+default_ref = "main"
+
+[network]
+# Bind address for the HTTP/1.1 RPC and MCP server (`inr serve`).
+listen_addr = "0.0.0.0:7331"
+
+# Google OIDC token verification endpoint and expected `aud` claim for enrolled workstation service accounts.
+oidc_tokeninfo_url = "https://oauth2.googleapis.com/tokeninfo"
+oidc_audience = "https://inarch.example.com"
+
+# 64-character hex secret (32 bytes) used for 256-bit BLAKE3 keyed MAC verification
+# of Just-In-Time (JIT) swarm access leases (`inarch_jit_v1.<lease_id>.<mac_hex>`).
+# Generate with: `openssl rand -hex 32`
+jit_signing_key = "REPLACE_WITH_64_HEX_CHAR_RANDOM_KEY"
+
+# Optional static bootstrap token (leave empty in production once OIDC principals are enrolled).
+auth_token = ""
+
+[storage]
+# Local NVMe read-through caches on the server host:
+tier1_cache_dir = "/var/lib/inarch/cache/t1"
+tier2_cache_dir = "/var/lib/inarch/cache/t2"
+
+# Option A: Cloud-backed origin (Google Cloud Storage + Cloud Spanner)
+blob_backend = "gcs"
+gcs_bucket = "your-velenza-inarch-blobs-bucket"
+gcs_prefix = "objects/v1"
+meta_backend = "spanner"
+spanner_database = "projects/YOUR_PROJECT/instances/YOUR_INSTANCE/databases/velenza-inarch-vcs"
+
+# Option B: Single-server filesystem origin (uncomment to run without cloud dependencies)
+# blob_backend = "fs"
+# meta_backend = "fs"
+# store_dir = "/var/lib/inarch/store"
