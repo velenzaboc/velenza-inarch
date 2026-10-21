@@ -551,7 +551,7 @@ What they do not show:
 - Two runs per host on non-dedicated machines do not bound the noise. `linux-worker-b` in particular moved by about 19% at the median between its two runs, and the laptop's load average ended above 100.
 - The 9 skipped rows and the 5 failed-agent rows above are part of the result: the full-checkout comparison at `K` of 16 or more rests on four host-runs, and the Git `worktree_add` timings at large `K` are for the agents that succeeded.
 
-To regenerate every table in this section from the committed sets, run the renderer over the eight run directories in the order of section 7.2:
+To regenerate the tables in sections 7.2 to 7.4 from the committed sets, run the renderer over the eight run directories in the order of section 7.2. The section 7.1 table repeats the `K=1` and `K=32` agent ratios of the per-host pair tables.
 
 ```bash
 python3 -I benchmarks/report-tables.py \
