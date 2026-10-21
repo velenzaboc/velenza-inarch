@@ -1,0 +1,51 @@
+[02:42:01] run_id=20261021T024201Z-n50000 files=50000 file_bytes=2048 concurrency=32 trials=5 warmup=1 host_label=linux-worker-c
+[02:42:01] generating corpus
+[02:42:03] preparing git baseline
+[02:42:08] preparing inr stores
+Initialized Velenza Inarch repository in <work>/cfg-local/.inarch (config: <work>/cfg-local/.inarch/config.toml)
+Initialized Velenza Inarch repository in <work>/cfg-server/.inarch (config: <work>/cfg-server/.inarch/config.toml)
+[main] e59010df712e56e1b070911d20373963fb0bced3d3aec771bf3e3fecf0e2ed0e (50000 files scanned, 50000 upserted, 0 deleted, 100277890 bytes)
+[main] 7811f5562aec5180ad6512692a3ab05fe5c2f93919b878a7515fb7f87719cc2b (50000 files scanned, 50000 upserted, 0 deleted, 100277890 bytes)
+[02:42:44] provision git/worktree_add k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=10568
+fatal: failed to read .git/worktrees/agent-15/commondir: Success
+fatal: failed to read .git/worktrees/agent-29/commondir: Success
+fatal: failed to read .git/worktrees/agent-29/commondir: Success
+fatal: '<work>/prov-git-worktree_add/agent-1' is not a working tree
+fatal: '<work>/prov-git-worktree_add/agent-3' is not a working tree
+fatal: '<work>/prov-git-worktree_add/agent-22' is not a working tree
+[02:43:11] provision git/worktree_add k=32 trial=1 warmup=0 ok=29 failed=3 batch_wall_ms=9625
+[02:43:43] provision git/worktree_add k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=10899
+[02:44:13] provision git/worktree_add k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=10703
+[02:44:44] provision git/worktree_add k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=11104
+[02:45:14] provision git/worktree_add k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=10700
+[02:45:49] provision git/clone_full k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=16338
+[02:46:23] provision git/clone_full k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=16417
+[02:46:59] provision git/clone_full k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=16201
+[02:47:42] provision git/clone_full k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=25254
+[02:48:18] provision git/clone_full k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=16185
+[02:48:55] provision git/clone_full k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=16388
+[02:48:58] provision git/clone_sparse k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=2339
+[02:49:00] provision git/clone_sparse k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=2032
+[02:49:03] provision git/clone_sparse k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=2060
+[02:49:05] provision git/clone_sparse k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=2047
+[02:49:08] provision git/clone_sparse k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=2047
+[02:49:10] provision git/clone_sparse k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=2072
+[02:49:49] provision inr/checkout_full k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=17535
+[02:50:26] provision inr/checkout_full k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=17588
+[02:51:03] provision inr/checkout_full k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=20151
+[02:51:44] provision inr/checkout_full k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=19132
+[02:52:22] provision inr/checkout_full k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=20618
+[02:52:57] provision inr/checkout_full k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=17351
+[02:52:58] provision inr/checkout_sparse k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=459
+[02:52:59] provision inr/checkout_sparse k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=443
+[02:53:00] provision inr/checkout_sparse k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=780
+[02:53:01] provision inr/checkout_sparse k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=457
+[02:53:02] provision inr/checkout_sparse k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=456
+[02:53:03] provision inr/checkout_sparse k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=461
+[02:53:04] provision inr/mount k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=473
+[02:53:04] provision inr/mount k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=481
+[02:53:05] provision inr/mount k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=489
+[02:53:06] provision inr/mount k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=468
+[02:53:06] provision inr/mount k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=464
+[02:53:07] provision inr/mount k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=473
+[02:53:07] done: results in 20261021T024201Z-n50000

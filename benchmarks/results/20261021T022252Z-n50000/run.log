@@ -1,0 +1,45 @@
+[02:22:52] run_id=20261021T022252Z-n50000 files=50000 file_bytes=2048 concurrency=32 trials=5 warmup=1 host_label=linux-worker-c
+[02:22:52] generating corpus
+[02:22:54] preparing git baseline
+[02:22:59] preparing inr stores
+Initialized Velenza Inarch repository in <work>/cfg-local/.inarch (config: <work>/cfg-local/.inarch/config.toml)
+Initialized Velenza Inarch repository in <work>/cfg-server/.inarch (config: <work>/cfg-server/.inarch/config.toml)
+[main] 7597bcbc37f245a20a6371622090e6d9b358148e5fc0d6e01efbdf67f555089a (50000 files scanned, 50000 upserted, 0 deleted, 100277890 bytes)
+[main] 12c29ef1311b1807e38998dfd97530e3c689e89e9b63585578733e17aaf73b74 (50000 files scanned, 50000 upserted, 0 deleted, 100277890 bytes)
+[02:23:36] provision git/worktree_add k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=11361
+[02:24:06] provision git/worktree_add k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=11237
+[02:24:37] provision git/worktree_add k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=10826
+[02:25:07] provision git/worktree_add k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=10703
+[02:25:37] provision git/worktree_add k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=11023
+[02:26:08] provision git/worktree_add k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=10858
+[02:26:43] provision git/clone_full k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=16328
+[02:27:17] provision git/clone_full k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=16278
+[02:27:57] provision git/clone_full k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=22103
+[02:28:35] provision git/clone_full k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=18069
+[02:29:13] provision git/clone_full k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=17304
+[02:29:48] provision git/clone_full k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=16878
+[02:29:50] provision git/clone_sparse k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=2137
+[02:29:53] provision git/clone_sparse k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=2071
+[02:29:55] provision git/clone_sparse k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=2032
+[02:29:58] provision git/clone_sparse k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=2067
+[02:30:00] provision git/clone_sparse k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=2075
+[02:30:03] provision git/clone_sparse k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=2042
+[02:30:42] provision inr/checkout_full k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=20130
+[02:31:18] provision inr/checkout_full k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=18777
+[02:31:55] provision inr/checkout_full k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=19117
+[02:32:37] provision inr/checkout_full k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=18206
+[02:33:13] provision inr/checkout_full k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=17886
+[02:33:49] provision inr/checkout_full k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=18099
+[02:33:50] provision inr/checkout_sparse k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=472
+[02:33:51] provision inr/checkout_sparse k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=488
+[02:33:52] provision inr/checkout_sparse k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=461
+[02:33:53] provision inr/checkout_sparse k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=464
+[02:33:54] provision inr/checkout_sparse k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=463
+[02:33:55] provision inr/checkout_sparse k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=484
+[02:33:56] provision inr/mount k=32 trial=0 warmup=1 ok=32 failed=0 batch_wall_ms=481
+[02:33:56] provision inr/mount k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=478
+[02:33:57] provision inr/mount k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=480
+[02:33:58] provision inr/mount k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=476
+[02:33:58] provision inr/mount k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=471
+[02:33:59] provision inr/mount k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=487
+[02:33:59] done: results in 20261021T022252Z-n50000
