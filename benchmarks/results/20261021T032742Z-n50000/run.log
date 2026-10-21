@@ -1,0 +1,499 @@
+[03:27:43] run_id=20261021T032742Z-n50000 files=50000 file_bytes=2048 concurrency=1,8,16,32 trials=5 warmup=1 host_label=linux-worker-b
+[03:27:43] generating corpus
+[03:27:47] preparing git baseline
+[03:27:57] preparing inr stores
+Initialized Velenza Inarch repository in <work>/cfg-local/.inarch (config: <work>/cfg-local/.inarch/config.toml)
+Initialized Velenza Inarch repository in <work>/cfg-server/.inarch (config: <work>/cfg-server/.inarch/config.toml)
+[main] ef879b229462bf982a0b01de5f6c7aa87e7e04ec16d53eaa7f46a9a438bbb28d (50000 files scanned, 50000 upserted, 0 deleted, 100277890 bytes)
+[main] 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 (50000 files scanned, 50000 upserted, 0 deleted, 100277890 bytes)
+[03:28:13] provision git/worktree_add k=1 trial=0 warmup=1 ok=1 failed=0 batch_wall_ms=2440
+[03:28:16] provision git/worktree_add k=1 trial=1 warmup=0 ok=1 failed=0 batch_wall_ms=2406
+[03:28:20] provision git/worktree_add k=1 trial=2 warmup=0 ok=1 failed=0 batch_wall_ms=2484
+[03:28:23] provision git/worktree_add k=1 trial=3 warmup=0 ok=1 failed=0 batch_wall_ms=2532
+[03:28:27] provision git/worktree_add k=1 trial=4 warmup=0 ok=1 failed=0 batch_wall_ms=2359
+[03:28:30] provision git/worktree_add k=1 trial=5 warmup=0 ok=1 failed=0 batch_wall_ms=2130
+[03:28:50] provision git/worktree_add k=8 trial=1 warmup=0 ok=8 failed=0 batch_wall_ms=10023
+[03:29:08] provision git/worktree_add k=8 trial=2 warmup=0 ok=8 failed=0 batch_wall_ms=7908
+[03:29:22] provision git/worktree_add k=8 trial=3 warmup=0 ok=8 failed=0 batch_wall_ms=4429
+[03:29:37] provision git/worktree_add k=8 trial=4 warmup=0 ok=8 failed=0 batch_wall_ms=6176
+[03:29:52] provision git/worktree_add k=8 trial=5 warmup=0 ok=8 failed=0 batch_wall_ms=5711
+[03:30:26] provision git/worktree_add k=16 trial=1 warmup=0 ok=16 failed=0 batch_wall_ms=12883
+[03:31:06] provision git/worktree_add k=16 trial=2 warmup=0 ok=16 failed=0 batch_wall_ms=17782
+[03:31:44] provision git/worktree_add k=16 trial=3 warmup=0 ok=16 failed=0 batch_wall_ms=16225
+[03:32:24] provision git/worktree_add k=16 trial=4 warmup=0 ok=16 failed=0 batch_wall_ms=15906
+[03:33:02] provision git/worktree_add k=16 trial=5 warmup=0 ok=16 failed=0 batch_wall_ms=18264
+[03:34:34] provision git/worktree_add k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=45128
+[03:36:10] provision git/worktree_add k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=50050
+[03:37:51] provision git/worktree_add k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=56630
+[03:39:31] provision git/worktree_add k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=53868
+[03:41:04] provision git/worktree_add k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=46069
+[03:41:07] provision git/clone_full k=1 trial=0 warmup=1 ok=1 failed=0 batch_wall_ms=2545
+[03:41:12] provision git/clone_full k=1 trial=1 warmup=0 ok=1 failed=0 batch_wall_ms=3485
+[03:41:16] provision git/clone_full k=1 trial=2 warmup=0 ok=1 failed=0 batch_wall_ms=2787
+[03:41:20] provision git/clone_full k=1 trial=3 warmup=0 ok=1 failed=0 batch_wall_ms=2725
+[03:41:24] provision git/clone_full k=1 trial=4 warmup=0 ok=1 failed=0 batch_wall_ms=3149
+[03:41:27] provision git/clone_full k=1 trial=5 warmup=0 ok=1 failed=0 batch_wall_ms=2524
+[03:41:44] provision git/clone_full k=8 trial=1 warmup=0 ok=8 failed=0 batch_wall_ms=7542
+[03:42:01] provision git/clone_full k=8 trial=2 warmup=0 ok=8 failed=0 batch_wall_ms=7288
+[03:42:17] provision git/clone_full k=8 trial=3 warmup=0 ok=8 failed=0 batch_wall_ms=7550
+[03:42:34] provision git/clone_full k=8 trial=4 warmup=0 ok=8 failed=0 batch_wall_ms=7928
+[03:42:53] provision git/clone_full k=8 trial=5 warmup=0 ok=8 failed=0 batch_wall_ms=9630
+[03:43:31] provision git/clone_full k=16 trial=1 warmup=0 ok=16 failed=0 batch_wall_ms=19750
+[03:44:13] provision git/clone_full k=16 trial=2 warmup=0 ok=16 failed=0 batch_wall_ms=22635
+[03:44:51] provision git/clone_full k=16 trial=3 warmup=0 ok=16 failed=0 batch_wall_ms=19741
+[03:45:30] provision git/clone_full k=16 trial=4 warmup=0 ok=16 failed=0 batch_wall_ms=18628
+[03:46:07] provision git/clone_full k=16 trial=5 warmup=0 ok=16 failed=0 batch_wall_ms=16947
+[03:47:37] provision git/clone_full k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=48071
+[03:49:05] provision git/clone_full k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=48241
+[03:50:37] provision git/clone_full k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=53537
+[03:52:21] provision git/clone_full k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=55623
+[03:54:42] provision git/clone_full k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=84033
+[03:54:43] provision git/clone_sparse k=1 trial=0 warmup=1 ok=1 failed=0 batch_wall_ms=734
+[03:54:43] provision git/clone_sparse k=1 trial=1 warmup=0 ok=1 failed=0 batch_wall_ms=345
+[03:54:44] provision git/clone_sparse k=1 trial=2 warmup=0 ok=1 failed=0 batch_wall_ms=369
+[03:54:44] provision git/clone_sparse k=1 trial=3 warmup=0 ok=1 failed=0 batch_wall_ms=358
+[03:54:45] provision git/clone_sparse k=1 trial=4 warmup=0 ok=1 failed=0 batch_wall_ms=354
+[03:54:45] provision git/clone_sparse k=1 trial=5 warmup=0 ok=1 failed=0 batch_wall_ms=445
+[03:54:46] provision git/clone_sparse k=8 trial=1 warmup=0 ok=8 failed=0 batch_wall_ms=790
+[03:54:47] provision git/clone_sparse k=8 trial=2 warmup=0 ok=8 failed=0 batch_wall_ms=834
+[03:54:48] provision git/clone_sparse k=8 trial=3 warmup=0 ok=8 failed=0 batch_wall_ms=739
+[03:54:50] provision git/clone_sparse k=8 trial=4 warmup=0 ok=8 failed=0 batch_wall_ms=966
+[03:54:52] provision git/clone_sparse k=8 trial=5 warmup=0 ok=8 failed=0 batch_wall_ms=2627
+[03:54:56] provision git/clone_sparse k=16 trial=1 warmup=0 ok=16 failed=0 batch_wall_ms=3470
+[03:55:02] provision git/clone_sparse k=16 trial=2 warmup=0 ok=16 failed=0 batch_wall_ms=4705
+[03:55:04] provision git/clone_sparse k=16 trial=3 warmup=0 ok=16 failed=0 batch_wall_ms=1670
+[03:55:08] provision git/clone_sparse k=16 trial=4 warmup=0 ok=16 failed=0 batch_wall_ms=3419
+[03:55:12] provision git/clone_sparse k=16 trial=5 warmup=0 ok=16 failed=0 batch_wall_ms=3393
+[03:55:16] provision git/clone_sparse k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=2978
+[03:55:23] provision git/clone_sparse k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=5764
+[03:55:27] provision git/clone_sparse k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=2941
+[03:55:33] provision git/clone_sparse k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=5880
+[03:55:39] provision git/clone_sparse k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=4190
+[03:55:57] provision inr/checkout_full k=1 trial=0 warmup=1 ok=1 failed=0 batch_wall_ms=17415
+[03:56:01] provision inr/checkout_full k=1 trial=1 warmup=0 ok=1 failed=0 batch_wall_ms=3145
+[03:56:05] provision inr/checkout_full k=1 trial=2 warmup=0 ok=1 failed=0 batch_wall_ms=3127
+[03:56:09] provision inr/checkout_full k=1 trial=3 warmup=0 ok=1 failed=0 batch_wall_ms=3284
+[03:56:13] provision inr/checkout_full k=1 trial=4 warmup=0 ok=1 failed=0 batch_wall_ms=3280
+[03:56:17] provision inr/checkout_full k=1 trial=5 warmup=0 ok=1 failed=0 batch_wall_ms=3152
+[03:56:34] provision inr/checkout_full k=8 trial=1 warmup=0 ok=8 failed=0 batch_wall_ms=8620
+[03:57:02] provision inr/checkout_full k=8 trial=2 warmup=0 ok=8 failed=0 batch_wall_ms=17651
+[03:57:21] provision inr/checkout_full k=8 trial=3 warmup=0 ok=8 failed=0 batch_wall_ms=8902
+[03:57:42] provision inr/checkout_full k=8 trial=4 warmup=0 ok=8 failed=0 batch_wall_ms=11480
+[03:58:09] provision inr/checkout_full k=8 trial=5 warmup=0 ok=8 failed=0 batch_wall_ms=17218
+[03:58:09] SKIP provision inr/checkout_full k=16 after 0 of 5 measured trials: predicted peak RSS 6953 MiB (k x 434 MiB) exceeds 90% of the 4628 MiB available to this process
+[03:58:09] SKIP provision inr/checkout_full k=32 after 0 of 5 measured trials: predicted peak RSS 13907 MiB (k x 434 MiB) exceeds 90% of the 4628 MiB available to this process
+[03:58:09] provision inr/checkout_sparse k=1 trial=0 warmup=1 ok=1 failed=0 batch_wall_ms=115
+[03:58:09] provision inr/checkout_sparse k=1 trial=1 warmup=0 ok=1 failed=0 batch_wall_ms=94
+[03:58:09] provision inr/checkout_sparse k=1 trial=2 warmup=0 ok=1 failed=0 batch_wall_ms=91
+[03:58:09] provision inr/checkout_sparse k=1 trial=3 warmup=0 ok=1 failed=0 batch_wall_ms=92
+[03:58:10] provision inr/checkout_sparse k=1 trial=4 warmup=0 ok=1 failed=0 batch_wall_ms=92
+[03:58:10] provision inr/checkout_sparse k=1 trial=5 warmup=0 ok=1 failed=0 batch_wall_ms=91
+[03:58:10] provision inr/checkout_sparse k=8 trial=1 warmup=0 ok=8 failed=0 batch_wall_ms=205
+[03:58:11] provision inr/checkout_sparse k=8 trial=2 warmup=0 ok=8 failed=0 batch_wall_ms=183
+[03:58:11] provision inr/checkout_sparse k=8 trial=3 warmup=0 ok=8 failed=0 batch_wall_ms=188
+[03:58:12] provision inr/checkout_sparse k=8 trial=4 warmup=0 ok=8 failed=0 batch_wall_ms=168
+[03:58:12] provision inr/checkout_sparse k=8 trial=5 warmup=0 ok=8 failed=0 batch_wall_ms=165
+[03:58:13] provision inr/checkout_sparse k=16 trial=1 warmup=0 ok=16 failed=0 batch_wall_ms=333
+[03:58:14] provision inr/checkout_sparse k=16 trial=2 warmup=0 ok=16 failed=0 batch_wall_ms=516
+[03:58:15] provision inr/checkout_sparse k=16 trial=3 warmup=0 ok=16 failed=0 batch_wall_ms=332
+[03:58:15] provision inr/checkout_sparse k=16 trial=4 warmup=0 ok=16 failed=0 batch_wall_ms=364
+[03:58:16] provision inr/checkout_sparse k=16 trial=5 warmup=0 ok=16 failed=0 batch_wall_ms=358
+[03:58:18] provision inr/checkout_sparse k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=688
+[03:58:19] provision inr/checkout_sparse k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=666
+[03:58:21] provision inr/checkout_sparse k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=634
+[03:58:23] provision inr/checkout_sparse k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=647
+[03:58:24] provision inr/checkout_sparse k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=740
+[03:58:24] provision inr/mount k=1 trial=0 warmup=1 ok=1 failed=0 batch_wall_ms=82
+[03:58:24] provision inr/mount k=1 trial=1 warmup=0 ok=1 failed=0 batch_wall_ms=83
+[03:58:25] provision inr/mount k=1 trial=2 warmup=0 ok=1 failed=0 batch_wall_ms=81
+[03:58:25] provision inr/mount k=1 trial=3 warmup=0 ok=1 failed=0 batch_wall_ms=81
+[03:58:25] provision inr/mount k=1 trial=4 warmup=0 ok=1 failed=0 batch_wall_ms=83
+[03:58:25] provision inr/mount k=1 trial=5 warmup=0 ok=1 failed=0 batch_wall_ms=79
+[03:58:25] provision inr/mount k=8 trial=1 warmup=0 ok=8 failed=0 batch_wall_ms=154
+[03:58:26] provision inr/mount k=8 trial=2 warmup=0 ok=8 failed=0 batch_wall_ms=154
+[03:58:26] provision inr/mount k=8 trial=3 warmup=0 ok=8 failed=0 batch_wall_ms=159
+[03:58:26] provision inr/mount k=8 trial=4 warmup=0 ok=8 failed=0 batch_wall_ms=155
+[03:58:27] provision inr/mount k=8 trial=5 warmup=0 ok=8 failed=0 batch_wall_ms=154
+[03:58:27] provision inr/mount k=16 trial=1 warmup=0 ok=16 failed=0 batch_wall_ms=312
+[03:58:28] provision inr/mount k=16 trial=2 warmup=0 ok=16 failed=0 batch_wall_ms=322
+[03:58:28] provision inr/mount k=16 trial=3 warmup=0 ok=16 failed=0 batch_wall_ms=341
+[03:58:29] provision inr/mount k=16 trial=4 warmup=0 ok=16 failed=0 batch_wall_ms=345
+[03:58:29] provision inr/mount k=16 trial=5 warmup=0 ok=16 failed=0 batch_wall_ms=349
+[03:58:31] provision inr/mount k=32 trial=1 warmup=0 ok=32 failed=0 batch_wall_ms=690
+[03:58:32] provision inr/mount k=32 trial=2 warmup=0 ok=32 failed=0 batch_wall_ms=618
+[03:58:33] provision inr/mount k=32 trial=3 warmup=0 ok=32 failed=0 batch_wall_ms=673
+[03:58:34] provision inr/mount k=32 trial=4 warmup=0 ok=32 failed=0 batch_wall_ms=785
+[03:58:36] provision inr/mount k=32 trial=5 warmup=0 ok=32 failed=0 batch_wall_ms=664
+[03:58:36] preparing commit working copies
+Checked out ef879b229462bf982a0b01de5f6c7aa87e7e04ec16d53eaa7f46a9a438bbb28d to <work>/w2-inr-full (50000 files materialized, 100277890 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out ef879b229462bf982a0b01de5f6c7aa87e7e04ec16d53eaa7f46a9a438bbb28d to <work>/w2-inr-sparse (1000 files materialized, 2005557 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+[03:58:43] commit trial=0 warmup=1 done
+[03:58:46] commit trial=1 warmup=0 done
+[03:58:47] commit trial=2 warmup=0 done
+[03:58:49] commit trial=3 warmup=0 done
+[03:58:50] commit trial=4 warmup=0 done
+[03:58:52] commit trial=5 warmup=0 done
+[03:58:53] preparing 32 git clones and 32 inr sparse working copies for land
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-1 (1000 files materialized, 2005557 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-2 (1000 files materialized, 2005557 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-3 (1000 files materialized, 2005557 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-4 (1000 files materialized, 2005557 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-5 (1000 files materialized, 2005557 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-6 (1000 files materialized, 2005557 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-7 (1000 files materialized, 2005557 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-8 (1000 files materialized, 2005557 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-9 (1000 files materialized, 2005557 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-10 (1000 files materialized, 2005557 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-11 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-12 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-13 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-14 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-15 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-16 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-17 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-18 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-19 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-20 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-21 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-22 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-23 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-24 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-25 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-26 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-27 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-28 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-29 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-30 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-31 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Checked out 64b3c6a195f9edbc94f6dcc389ecd41266470c8ff1004ec534341aaaa55f4ea6 to <work>/w3-inr/agent-32 (1000 files materialized, 2005558 bytes, root_fsnode=00bbd0be098e1cf0688cae27d1727ca7d5ec98fa2bcb755da50acd1ef50e977b)
+Velenza Inarch server listening on http://127.0.0.1:17768 (blob_backend=local, meta_backend=local, require_auth=true)
+[04:00:13] inr serve listening on loopback port 17768
+[04:00:13] land git/push_rebase k=1 trial=0 warmup=1 landed=1/1 batch_wall_ms=121
+[04:00:14] land inr/serve_land k=1 trial=0 warmup=1 landed=1/1 batch_wall_ms=421
+Checked out bbb23313d3ba68607409f690864bee5b86b8f836500268888d246441fe1571cc to <work>/w3-inr/agent-1 (1000 files materialized, 2005581 bytes, root_fsnode=cf3d9299c9c728013d8c64b80b04f1219a5fa75bb8bba95f1b783329bad567b4)
+[04:00:14] land git/push_rebase k=1 trial=1 warmup=0 landed=1/1 batch_wall_ms=107
+[04:00:15] land inr/serve_land k=1 trial=1 warmup=0 landed=1/1 batch_wall_ms=145
+Checked out 108335c09a19532a59999b4a7109663b423e0dd3691964a8169762ddadc91360 to <work>/w3-inr/agent-1 (1000 files materialized, 2005605 bytes, root_fsnode=6b76efbcd1a72233708ec7e805b9778ab6d91077b1b419af7880e88d46a69e10)
+[04:00:15] land git/push_rebase k=1 trial=2 warmup=0 landed=1/1 batch_wall_ms=120
+[04:00:15] land inr/serve_land k=1 trial=2 warmup=0 landed=1/1 batch_wall_ms=155
+Checked out 2deed3e3c5c9c37b944fa2f305df122087194f19f1033208ddac2a4ec5ca5475 to <work>/w3-inr/agent-1 (1000 files materialized, 2005629 bytes, root_fsnode=fbc4b103d4d8f1cb340248e060a1b643a58cd027a16f91be7f2f7937874d3d86)
+[04:00:16] land git/push_rebase k=1 trial=3 warmup=0 landed=1/1 batch_wall_ms=104
+[04:00:16] land inr/serve_land k=1 trial=3 warmup=0 landed=1/1 batch_wall_ms=232
+Checked out 9fea003d357ce5461eabcf68ed1cf4507249649f4308f676565feea855f99c15 to <work>/w3-inr/agent-1 (1000 files materialized, 2005653 bytes, root_fsnode=87120031e31b912d9844c23f0c3b2ae178b95543316df1e8e024803ba9819f67)
+[04:00:16] land git/push_rebase k=1 trial=4 warmup=0 landed=1/1 batch_wall_ms=107
+[04:00:17] land inr/serve_land k=1 trial=4 warmup=0 landed=1/1 batch_wall_ms=146
+Checked out e600881d20d30e49bdd0f2526db7cd1b9e0b257926ea078e8e3eec259564f08a to <work>/w3-inr/agent-1 (1000 files materialized, 2005677 bytes, root_fsnode=a0ef6384b13b2824cb88fc89bd323505a5c8dc891f912c913edd714de9e1de97)
+[04:00:17] land git/push_rebase k=1 trial=5 warmup=0 landed=1/1 batch_wall_ms=111
+[04:00:17] land inr/serve_land k=1 trial=5 warmup=0 landed=1/1 batch_wall_ms=140
+Checked out 03bffe1ac675b92eb7ad0687d3f88566b63695e1d1ecc0b7373bcec4e0d5e719 to <work>/w3-inr/agent-1 (1000 files materialized, 2005701 bytes, root_fsnode=2cd608fe147ced7aab6cac8767d1301077f7e1f377e16bc2bd203670d1187a81)
+[04:00:25] land git/push_rebase k=8 trial=1 warmup=0 landed=8/8 batch_wall_ms=4757
+[04:00:26] land inr/serve_land k=8 trial=1 warmup=0 landed=8/8 batch_wall_ms=1109
+Checked out fd0e3aca077af15e71d85049a73c89381af0c7d3d0103a3a8ce594a9e7648b32 to <work>/w3-inr/agent-1 (1000 files materialized, 2005725 bytes, root_fsnode=7d40bee4a7a6c41b0cc070b0f628ff56dc54a170e6de645e5a51c9f3e6d9b823)
+Checked out fd0e3aca077af15e71d85049a73c89381af0c7d3d0103a3a8ce594a9e7648b32 to <work>/w3-inr/agent-2 (1000 files materialized, 2005581 bytes, root_fsnode=7d40bee4a7a6c41b0cc070b0f628ff56dc54a170e6de645e5a51c9f3e6d9b823)
+Checked out fd0e3aca077af15e71d85049a73c89381af0c7d3d0103a3a8ce594a9e7648b32 to <work>/w3-inr/agent-3 (1000 files materialized, 2005581 bytes, root_fsnode=7d40bee4a7a6c41b0cc070b0f628ff56dc54a170e6de645e5a51c9f3e6d9b823)
+Checked out fd0e3aca077af15e71d85049a73c89381af0c7d3d0103a3a8ce594a9e7648b32 to <work>/w3-inr/agent-4 (1000 files materialized, 2005581 bytes, root_fsnode=7d40bee4a7a6c41b0cc070b0f628ff56dc54a170e6de645e5a51c9f3e6d9b823)
+Checked out fd0e3aca077af15e71d85049a73c89381af0c7d3d0103a3a8ce594a9e7648b32 to <work>/w3-inr/agent-5 (1000 files materialized, 2005581 bytes, root_fsnode=7d40bee4a7a6c41b0cc070b0f628ff56dc54a170e6de645e5a51c9f3e6d9b823)
+Checked out fd0e3aca077af15e71d85049a73c89381af0c7d3d0103a3a8ce594a9e7648b32 to <work>/w3-inr/agent-6 (1000 files materialized, 2005581 bytes, root_fsnode=7d40bee4a7a6c41b0cc070b0f628ff56dc54a170e6de645e5a51c9f3e6d9b823)
+Checked out fd0e3aca077af15e71d85049a73c89381af0c7d3d0103a3a8ce594a9e7648b32 to <work>/w3-inr/agent-7 (1000 files materialized, 2005581 bytes, root_fsnode=7d40bee4a7a6c41b0cc070b0f628ff56dc54a170e6de645e5a51c9f3e6d9b823)
+Checked out fd0e3aca077af15e71d85049a73c89381af0c7d3d0103a3a8ce594a9e7648b32 to <work>/w3-inr/agent-8 (1000 files materialized, 2005581 bytes, root_fsnode=7d40bee4a7a6c41b0cc070b0f628ff56dc54a170e6de645e5a51c9f3e6d9b823)
+[04:00:33] land git/push_rebase k=8 trial=2 warmup=0 landed=8/8 batch_wall_ms=4222
+[04:00:34] land inr/serve_land k=8 trial=2 warmup=0 landed=8/8 batch_wall_ms=699
+Checked out 813bc04ab670c4fd4786513d79cdd41ca9e95dd013d438fb603829f2fe7e043c to <work>/w3-inr/agent-1 (1000 files materialized, 2005749 bytes, root_fsnode=1c41f2f2c910ada818c300f8bd5c21c5303e2b029976f1c4329181e5341ca59c)
+Checked out 813bc04ab670c4fd4786513d79cdd41ca9e95dd013d438fb603829f2fe7e043c to <work>/w3-inr/agent-2 (1000 files materialized, 2005605 bytes, root_fsnode=1c41f2f2c910ada818c300f8bd5c21c5303e2b029976f1c4329181e5341ca59c)
+Checked out 813bc04ab670c4fd4786513d79cdd41ca9e95dd013d438fb603829f2fe7e043c to <work>/w3-inr/agent-3 (1000 files materialized, 2005605 bytes, root_fsnode=1c41f2f2c910ada818c300f8bd5c21c5303e2b029976f1c4329181e5341ca59c)
+Checked out 813bc04ab670c4fd4786513d79cdd41ca9e95dd013d438fb603829f2fe7e043c to <work>/w3-inr/agent-4 (1000 files materialized, 2005605 bytes, root_fsnode=1c41f2f2c910ada818c300f8bd5c21c5303e2b029976f1c4329181e5341ca59c)
+Checked out 813bc04ab670c4fd4786513d79cdd41ca9e95dd013d438fb603829f2fe7e043c to <work>/w3-inr/agent-5 (1000 files materialized, 2005605 bytes, root_fsnode=1c41f2f2c910ada818c300f8bd5c21c5303e2b029976f1c4329181e5341ca59c)
+Checked out 813bc04ab670c4fd4786513d79cdd41ca9e95dd013d438fb603829f2fe7e043c to <work>/w3-inr/agent-6 (1000 files materialized, 2005605 bytes, root_fsnode=1c41f2f2c910ada818c300f8bd5c21c5303e2b029976f1c4329181e5341ca59c)
+Checked out 813bc04ab670c4fd4786513d79cdd41ca9e95dd013d438fb603829f2fe7e043c to <work>/w3-inr/agent-7 (1000 files materialized, 2005605 bytes, root_fsnode=1c41f2f2c910ada818c300f8bd5c21c5303e2b029976f1c4329181e5341ca59c)
+Checked out 813bc04ab670c4fd4786513d79cdd41ca9e95dd013d438fb603829f2fe7e043c to <work>/w3-inr/agent-8 (1000 files materialized, 2005605 bytes, root_fsnode=1c41f2f2c910ada818c300f8bd5c21c5303e2b029976f1c4329181e5341ca59c)
+[04:00:41] land git/push_rebase k=8 trial=3 warmup=0 landed=8/8 batch_wall_ms=5112
+[04:00:42] land inr/serve_land k=8 trial=3 warmup=0 landed=8/8 batch_wall_ms=685
+Checked out 16403f444900a23f33f87810a4cbf20a7f2e122c4c8d22d60b3d3d467056cb79 to <work>/w3-inr/agent-1 (1000 files materialized, 2005773 bytes, root_fsnode=4cb2334c672f439af4e31ee04780eb04b90f364e053df3d397920fee997a2f3d)
+Checked out 16403f444900a23f33f87810a4cbf20a7f2e122c4c8d22d60b3d3d467056cb79 to <work>/w3-inr/agent-2 (1000 files materialized, 2005629 bytes, root_fsnode=4cb2334c672f439af4e31ee04780eb04b90f364e053df3d397920fee997a2f3d)
+Checked out 16403f444900a23f33f87810a4cbf20a7f2e122c4c8d22d60b3d3d467056cb79 to <work>/w3-inr/agent-3 (1000 files materialized, 2005629 bytes, root_fsnode=4cb2334c672f439af4e31ee04780eb04b90f364e053df3d397920fee997a2f3d)
+Checked out 16403f444900a23f33f87810a4cbf20a7f2e122c4c8d22d60b3d3d467056cb79 to <work>/w3-inr/agent-4 (1000 files materialized, 2005629 bytes, root_fsnode=4cb2334c672f439af4e31ee04780eb04b90f364e053df3d397920fee997a2f3d)
+Checked out 16403f444900a23f33f87810a4cbf20a7f2e122c4c8d22d60b3d3d467056cb79 to <work>/w3-inr/agent-5 (1000 files materialized, 2005629 bytes, root_fsnode=4cb2334c672f439af4e31ee04780eb04b90f364e053df3d397920fee997a2f3d)
+Checked out 16403f444900a23f33f87810a4cbf20a7f2e122c4c8d22d60b3d3d467056cb79 to <work>/w3-inr/agent-6 (1000 files materialized, 2005629 bytes, root_fsnode=4cb2334c672f439af4e31ee04780eb04b90f364e053df3d397920fee997a2f3d)
+Checked out 16403f444900a23f33f87810a4cbf20a7f2e122c4c8d22d60b3d3d467056cb79 to <work>/w3-inr/agent-7 (1000 files materialized, 2005629 bytes, root_fsnode=4cb2334c672f439af4e31ee04780eb04b90f364e053df3d397920fee997a2f3d)
+Checked out 16403f444900a23f33f87810a4cbf20a7f2e122c4c8d22d60b3d3d467056cb79 to <work>/w3-inr/agent-8 (1000 files materialized, 2005629 bytes, root_fsnode=4cb2334c672f439af4e31ee04780eb04b90f364e053df3d397920fee997a2f3d)
+[04:00:48] land git/push_rebase k=8 trial=4 warmup=0 landed=8/8 batch_wall_ms=4439
+[04:00:49] land inr/serve_land k=8 trial=4 warmup=0 landed=8/8 batch_wall_ms=667
+Checked out 53fb050f27ffeaa61f7b75f166bf48d66aedf6077104432daec32d00a9ed3c5a to <work>/w3-inr/agent-1 (1000 files materialized, 2005797 bytes, root_fsnode=569ccd709f769431731b6ea4b36d26940c250171dd0d9738c8672203ecf73307)
+Checked out 53fb050f27ffeaa61f7b75f166bf48d66aedf6077104432daec32d00a9ed3c5a to <work>/w3-inr/agent-2 (1000 files materialized, 2005653 bytes, root_fsnode=569ccd709f769431731b6ea4b36d26940c250171dd0d9738c8672203ecf73307)
+Checked out 53fb050f27ffeaa61f7b75f166bf48d66aedf6077104432daec32d00a9ed3c5a to <work>/w3-inr/agent-3 (1000 files materialized, 2005653 bytes, root_fsnode=569ccd709f769431731b6ea4b36d26940c250171dd0d9738c8672203ecf73307)
+Checked out 53fb050f27ffeaa61f7b75f166bf48d66aedf6077104432daec32d00a9ed3c5a to <work>/w3-inr/agent-4 (1000 files materialized, 2005653 bytes, root_fsnode=569ccd709f769431731b6ea4b36d26940c250171dd0d9738c8672203ecf73307)
+Checked out 53fb050f27ffeaa61f7b75f166bf48d66aedf6077104432daec32d00a9ed3c5a to <work>/w3-inr/agent-5 (1000 files materialized, 2005653 bytes, root_fsnode=569ccd709f769431731b6ea4b36d26940c250171dd0d9738c8672203ecf73307)
+Checked out 53fb050f27ffeaa61f7b75f166bf48d66aedf6077104432daec32d00a9ed3c5a to <work>/w3-inr/agent-6 (1000 files materialized, 2005653 bytes, root_fsnode=569ccd709f769431731b6ea4b36d26940c250171dd0d9738c8672203ecf73307)
+Checked out 53fb050f27ffeaa61f7b75f166bf48d66aedf6077104432daec32d00a9ed3c5a to <work>/w3-inr/agent-7 (1000 files materialized, 2005653 bytes, root_fsnode=569ccd709f769431731b6ea4b36d26940c250171dd0d9738c8672203ecf73307)
+Checked out 53fb050f27ffeaa61f7b75f166bf48d66aedf6077104432daec32d00a9ed3c5a to <work>/w3-inr/agent-8 (1000 files materialized, 2005653 bytes, root_fsnode=569ccd709f769431731b6ea4b36d26940c250171dd0d9738c8672203ecf73307)
+[04:00:56] land git/push_rebase k=8 trial=5 warmup=0 landed=8/8 batch_wall_ms=4585
+[04:00:57] land inr/serve_land k=8 trial=5 warmup=0 landed=8/8 batch_wall_ms=938
+Checked out 183d27333abab0dcc2aa978e17b55ec70cfb06c0f7b0db67841c92919ba24472 to <work>/w3-inr/agent-1 (1000 files materialized, 2005821 bytes, root_fsnode=a0467950b3f2d165fc1e0cc274bcf76630677b680c71b8c60d69a49e9ffc8142)
+Checked out 183d27333abab0dcc2aa978e17b55ec70cfb06c0f7b0db67841c92919ba24472 to <work>/w3-inr/agent-2 (1000 files materialized, 2005677 bytes, root_fsnode=a0467950b3f2d165fc1e0cc274bcf76630677b680c71b8c60d69a49e9ffc8142)
+Checked out 183d27333abab0dcc2aa978e17b55ec70cfb06c0f7b0db67841c92919ba24472 to <work>/w3-inr/agent-3 (1000 files materialized, 2005677 bytes, root_fsnode=a0467950b3f2d165fc1e0cc274bcf76630677b680c71b8c60d69a49e9ffc8142)
+Checked out 183d27333abab0dcc2aa978e17b55ec70cfb06c0f7b0db67841c92919ba24472 to <work>/w3-inr/agent-4 (1000 files materialized, 2005677 bytes, root_fsnode=a0467950b3f2d165fc1e0cc274bcf76630677b680c71b8c60d69a49e9ffc8142)
+Checked out 183d27333abab0dcc2aa978e17b55ec70cfb06c0f7b0db67841c92919ba24472 to <work>/w3-inr/agent-5 (1000 files materialized, 2005677 bytes, root_fsnode=a0467950b3f2d165fc1e0cc274bcf76630677b680c71b8c60d69a49e9ffc8142)
+Checked out 183d27333abab0dcc2aa978e17b55ec70cfb06c0f7b0db67841c92919ba24472 to <work>/w3-inr/agent-6 (1000 files materialized, 2005677 bytes, root_fsnode=a0467950b3f2d165fc1e0cc274bcf76630677b680c71b8c60d69a49e9ffc8142)
+Checked out 183d27333abab0dcc2aa978e17b55ec70cfb06c0f7b0db67841c92919ba24472 to <work>/w3-inr/agent-7 (1000 files materialized, 2005677 bytes, root_fsnode=a0467950b3f2d165fc1e0cc274bcf76630677b680c71b8c60d69a49e9ffc8142)
+Checked out 183d27333abab0dcc2aa978e17b55ec70cfb06c0f7b0db67841c92919ba24472 to <work>/w3-inr/agent-8 (1000 files materialized, 2005677 bytes, root_fsnode=a0467950b3f2d165fc1e0cc274bcf76630677b680c71b8c60d69a49e9ffc8142)
+[04:01:18] land git/push_rebase k=16 trial=1 warmup=0 landed=16/16 batch_wall_ms=14577
+[04:01:21] land inr/serve_land k=16 trial=1 warmup=0 landed=16/16 batch_wall_ms=2714
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-1 (1000 files materialized, 2005845 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-2 (1000 files materialized, 2005701 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-3 (1000 files materialized, 2005701 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-4 (1000 files materialized, 2005701 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-5 (1000 files materialized, 2005701 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-6 (1000 files materialized, 2005701 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-7 (1000 files materialized, 2005701 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-8 (1000 files materialized, 2005701 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-9 (1000 files materialized, 2005581 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-10 (1000 files materialized, 2005582 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-11 (1000 files materialized, 2005583 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-12 (1000 files materialized, 2005583 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-13 (1000 files materialized, 2005583 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-14 (1000 files materialized, 2005583 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-15 (1000 files materialized, 2005583 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+Checked out 013e1485fc992804f08345a8b3c9d5258b83b85021e62e297100c6e54301e0e4 to <work>/w3-inr/agent-16 (1000 files materialized, 2005583 bytes, root_fsnode=d01193484da6405d04ee4759c7f7d730f61bcc04190b27a9d6f574f99ea13026)
+[04:01:43] land git/push_rebase k=16 trial=2 warmup=0 landed=16/16 batch_wall_ms=15688
+[04:01:45] land inr/serve_land k=16 trial=2 warmup=0 landed=16/16 batch_wall_ms=1783
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-1 (1000 files materialized, 2005869 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-2 (1000 files materialized, 2005725 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-3 (1000 files materialized, 2005725 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-4 (1000 files materialized, 2005725 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-5 (1000 files materialized, 2005725 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-6 (1000 files materialized, 2005725 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-7 (1000 files materialized, 2005725 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-8 (1000 files materialized, 2005725 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-9 (1000 files materialized, 2005605 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-10 (1000 files materialized, 2005607 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-11 (1000 files materialized, 2005608 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-12 (1000 files materialized, 2005608 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-13 (1000 files materialized, 2005608 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-14 (1000 files materialized, 2005608 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-15 (1000 files materialized, 2005608 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+Checked out 84cc8a46e8999b354e7279dd269c7caa3a0c71951cee97c826f18b828de90035 to <work>/w3-inr/agent-16 (1000 files materialized, 2005608 bytes, root_fsnode=a2947db236016ced8b9743337d87dfce27c60e0efb4453d3a2b9557a32bb177d)
+[04:02:05] land git/push_rebase k=16 trial=3 warmup=0 landed=16/16 batch_wall_ms=15287
+[04:02:07] land inr/serve_land k=16 trial=3 warmup=0 landed=16/16 batch_wall_ms=1611
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-1 (1000 files materialized, 2005893 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-2 (1000 files materialized, 2005749 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-3 (1000 files materialized, 2005749 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-4 (1000 files materialized, 2005749 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-5 (1000 files materialized, 2005749 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-6 (1000 files materialized, 2005749 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-7 (1000 files materialized, 2005749 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-8 (1000 files materialized, 2005749 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-9 (1000 files materialized, 2005629 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-10 (1000 files materialized, 2005632 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-11 (1000 files materialized, 2005633 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-12 (1000 files materialized, 2005633 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-13 (1000 files materialized, 2005633 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-14 (1000 files materialized, 2005633 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-15 (1000 files materialized, 2005633 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+Checked out 30fb34b20bee17d0e83ae889e8399fe4eca867b92db4186425ed868e70c051ba to <work>/w3-inr/agent-16 (1000 files materialized, 2005633 bytes, root_fsnode=29145a46af3c50d9835879c898f5c1dfccce7252e92eab2f798580738981f036)
+[04:02:27] land git/push_rebase k=16 trial=4 warmup=0 landed=16/16 batch_wall_ms=15401
+[04:02:29] land inr/serve_land k=16 trial=4 warmup=0 landed=16/16 batch_wall_ms=1601
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-1 (1000 files materialized, 2005917 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-2 (1000 files materialized, 2005773 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-3 (1000 files materialized, 2005773 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-4 (1000 files materialized, 2005773 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-5 (1000 files materialized, 2005773 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-6 (1000 files materialized, 2005773 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-7 (1000 files materialized, 2005773 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-8 (1000 files materialized, 2005773 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-9 (1000 files materialized, 2005653 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-10 (1000 files materialized, 2005657 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-11 (1000 files materialized, 2005658 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-12 (1000 files materialized, 2005658 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-13 (1000 files materialized, 2005658 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-14 (1000 files materialized, 2005658 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-15 (1000 files materialized, 2005658 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+Checked out 05bce78444c33b832273915efddc9119076862e673e84f0b11decc98997e2415 to <work>/w3-inr/agent-16 (1000 files materialized, 2005658 bytes, root_fsnode=fe2e9d050c378260afce62843cc4aab0120ee460eb8b6cac00ed0e39bdaf13ab)
+[04:02:47] land git/push_rebase k=16 trial=5 warmup=0 landed=16/16 batch_wall_ms=13994
+[04:02:49] land inr/serve_land k=16 trial=5 warmup=0 landed=16/16 batch_wall_ms=1738
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-1 (1000 files materialized, 2005941 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-2 (1000 files materialized, 2005797 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-3 (1000 files materialized, 2005797 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-4 (1000 files materialized, 2005797 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-5 (1000 files materialized, 2005797 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-6 (1000 files materialized, 2005797 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-7 (1000 files materialized, 2005797 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-8 (1000 files materialized, 2005797 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-9 (1000 files materialized, 2005677 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-10 (1000 files materialized, 2005682 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-11 (1000 files materialized, 2005683 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-12 (1000 files materialized, 2005683 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-13 (1000 files materialized, 2005683 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-14 (1000 files materialized, 2005683 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-15 (1000 files materialized, 2005683 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+Checked out 6b602e8d5c248448e460617a08c6d8c4dbd55425318fd27855659f08e3951937 to <work>/w3-inr/agent-16 (1000 files materialized, 2005683 bytes, root_fsnode=fcd2dbf205ce55184fcbc16d9f398835bf45eaca2d83ac0e682d083c52998eb4)
+[04:04:06] land git/push_rebase k=32 trial=1 warmup=0 landed=32/32 batch_wall_ms=52320
+[04:04:13] land inr/serve_land k=32 trial=1 warmup=0 landed=32/32 batch_wall_ms=6488
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-1 (1000 files materialized, 2005965 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-2 (1000 files materialized, 2005821 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-3 (1000 files materialized, 2005821 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-4 (1000 files materialized, 2005821 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-5 (1000 files materialized, 2005821 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-6 (1000 files materialized, 2005821 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-7 (1000 files materialized, 2005821 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-8 (1000 files materialized, 2005821 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-9 (1000 files materialized, 2005701 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-10 (1000 files materialized, 2005707 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-11 (1000 files materialized, 2005708 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-12 (1000 files materialized, 2005708 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-13 (1000 files materialized, 2005708 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-14 (1000 files materialized, 2005708 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-15 (1000 files materialized, 2005708 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-16 (1000 files materialized, 2005708 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-17 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-18 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-19 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-20 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-21 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-22 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-23 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-24 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-25 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-26 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-27 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-28 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-29 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-30 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-31 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+Checked out 7a31e0d434d960d450ef98b3e74a01924d7ed0de077687b155bb95fc930fee71 to <work>/w3-inr/agent-32 (1000 files materialized, 2005583 bytes, root_fsnode=223ab44c8d1c44d2df507098e80108865eeb17dd2c5f5bbd89d3bada20c96d39)
+[04:05:37] land git/push_rebase k=32 trial=2 warmup=0 landed=32/32 batch_wall_ms=57935
+[04:05:42] land inr/serve_land k=32 trial=2 warmup=0 landed=32/32 batch_wall_ms=4941
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-1 (1000 files materialized, 2005989 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-2 (1000 files materialized, 2005845 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-3 (1000 files materialized, 2005845 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-4 (1000 files materialized, 2005845 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-5 (1000 files materialized, 2005845 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-6 (1000 files materialized, 2005845 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-7 (1000 files materialized, 2005845 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-8 (1000 files materialized, 2005845 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-9 (1000 files materialized, 2005725 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-10 (1000 files materialized, 2005732 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-11 (1000 files materialized, 2005733 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-12 (1000 files materialized, 2005733 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-13 (1000 files materialized, 2005733 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-14 (1000 files materialized, 2005733 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-15 (1000 files materialized, 2005733 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-16 (1000 files materialized, 2005733 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-17 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-18 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-19 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-20 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-21 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-22 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-23 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-24 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-25 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-26 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-27 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-28 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-29 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-30 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-31 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+Checked out 06cb7734780b3b1b5edccc9336d8b137b37de0ff879090ac0b1063f8ac49d03f to <work>/w3-inr/agent-32 (1000 files materialized, 2005608 bytes, root_fsnode=a15984a66b3ef24f070f1a3a8d506ca85db2d73031370478ff031c38d96f4a00)
+[04:07:06] land git/push_rebase k=32 trial=3 warmup=0 landed=32/32 batch_wall_ms=58848
+[04:07:11] land inr/serve_land k=32 trial=3 warmup=0 landed=32/32 batch_wall_ms=4475
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-1 (1000 files materialized, 2006013 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-2 (1000 files materialized, 2005869 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-3 (1000 files materialized, 2005869 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-4 (1000 files materialized, 2005869 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-5 (1000 files materialized, 2005869 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-6 (1000 files materialized, 2005869 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-7 (1000 files materialized, 2005869 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-8 (1000 files materialized, 2005869 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-9 (1000 files materialized, 2005749 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-10 (1000 files materialized, 2005757 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-11 (1000 files materialized, 2005758 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-12 (1000 files materialized, 2005758 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-13 (1000 files materialized, 2005758 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-14 (1000 files materialized, 2005758 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-15 (1000 files materialized, 2005758 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-16 (1000 files materialized, 2005758 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-17 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-18 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-19 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-20 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-21 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-22 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-23 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-24 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-25 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-26 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-27 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-28 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-29 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-30 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-31 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+Checked out b6ad5ca5092e23a6f8b439d3c65bb01e604cfd6124755899a29a2b6a8f26dd0b to <work>/w3-inr/agent-32 (1000 files materialized, 2005633 bytes, root_fsnode=0823b0b89d9b82c036350d4387e8013b20a36b93a4865486911417ed354c13fd)
+[04:08:53] land git/push_rebase k=32 trial=4 warmup=0 landed=32/32 batch_wall_ms=77878
+[04:08:59] land inr/serve_land k=32 trial=4 warmup=0 landed=32/32 batch_wall_ms=5262
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-1 (1000 files materialized, 2006037 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-2 (1000 files materialized, 2005893 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-3 (1000 files materialized, 2005893 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-4 (1000 files materialized, 2005893 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-5 (1000 files materialized, 2005893 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-6 (1000 files materialized, 2005893 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-7 (1000 files materialized, 2005893 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-8 (1000 files materialized, 2005893 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-9 (1000 files materialized, 2005773 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-10 (1000 files materialized, 2005782 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-11 (1000 files materialized, 2005783 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-12 (1000 files materialized, 2005783 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-13 (1000 files materialized, 2005783 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-14 (1000 files materialized, 2005783 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-15 (1000 files materialized, 2005783 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-16 (1000 files materialized, 2005783 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-17 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-18 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-19 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-20 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-21 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-22 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-23 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-24 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-25 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-26 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-27 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-28 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-29 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-30 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-31 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+Checked out 920c34e0e2bd8910ecf0ac1b1492a93bcc3a8866ce70f3f8e41b9fddeb11c7bc to <work>/w3-inr/agent-32 (1000 files materialized, 2005658 bytes, root_fsnode=259ae73abd82454fa14d9d7a11c41d204ab931f9663f7b8fe9522ec2d2320a8c)
+[04:10:30] land git/push_rebase k=32 trial=5 warmup=0 landed=32/32 batch_wall_ms=64439
+[04:10:36] land inr/serve_land k=32 trial=5 warmup=0 landed=32/32 batch_wall_ms=5025
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-1 (1000 files materialized, 2006061 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-2 (1000 files materialized, 2005917 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-3 (1000 files materialized, 2005917 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-4 (1000 files materialized, 2005917 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-5 (1000 files materialized, 2005917 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-6 (1000 files materialized, 2005917 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-7 (1000 files materialized, 2005917 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-8 (1000 files materialized, 2005917 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-9 (1000 files materialized, 2005797 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-10 (1000 files materialized, 2005807 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-11 (1000 files materialized, 2005808 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-12 (1000 files materialized, 2005808 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-13 (1000 files materialized, 2005808 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-14 (1000 files materialized, 2005808 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-15 (1000 files materialized, 2005808 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-16 (1000 files materialized, 2005808 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-17 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-18 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-19 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-20 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-21 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-22 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-23 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-24 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-25 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-26 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-27 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-28 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-29 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-30 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-31 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+Checked out 49e85f2e5f69619cad075e5d16253ad156609af0848e4a71e700e6ec2009dd89 to <work>/w3-inr/agent-32 (1000 files materialized, 2005683 bytes, root_fsnode=4cf9ad720fb41572a010f076957fc018d5af9b72391a98caec9accd13fe1a531)
+[04:11:16] done: results in 20261021T032742Z-n50000
