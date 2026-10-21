@@ -198,7 +198,7 @@ Conditions that affect how far the numbers can be trusted:
 - `macos-laptop-a` is a laptop on AC power with a 1-minute load of 18.1 at the start of run A. Its runs took 5 h 6 min and 1 h 59 min and ended with 15-minute load averages of 117.6 and 113.1 on 10 cores.
 - No host was dedicated to the campaign, so absolute times are not comparable between hosts. Git and `inr` cells of one run were measured in the same run but not at the same moment, so a change in background load during a run can favour one side of a pair. Section 7.4 gives the run-to-run agreement.
 
-| | linux-worker-a | linux-worker-b | linux-worker-c | macos-laptop-a |
+|  | linux-worker-a | linux-worker-b | linux-worker-c | macos-laptop-a |
 | :--- | :--- | :--- | :--- | :--- |
 | OS | Debian GNU/Linux 13 (trixie) | Ubuntu 26.04.1 LTS | Ubuntu 26.04.1 LTS | macOS 27.0.1 (26A434) |
 | Kernel | 6.12.111+deb13-amd64 | 7.0.0-34-generic | 7.0.0-34-generic | 27.0.0 |
