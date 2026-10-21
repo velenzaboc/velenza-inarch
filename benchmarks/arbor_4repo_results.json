@@ -1,0 +1,857 @@
+{
+  "schema": "velenza.arbor.4repo_dogfood_benchmark.v1",
+  "release_tag": "v0.1.0",
+  "measured_utc": "2026-10-20T23:20:00Z",
+  "host": {
+    "host_label": "linux-worker-b",
+    "os": "Linux 6.8 x86_64",
+    "filesystem": "ext4 (NVMe)",
+    "rust_toolchain": "rustc 1.90.0",
+    "go_toolchain": "go 1.24 linux/amd64",
+    "git_version": "git 2.43.0"
+  },
+  "source_revs": {
+    "velenza-inarch": "c15d5e5558bf29103d21102c4c63a77038818c90",
+    "velenza-cambium": "817fd2886dd0643199d2bb9822b5a673079a6c32",
+    "velenza-canon": "0c66ce44b94d34e14272825801c846d9a3ff7b54",
+    "velenza-trellis": "5b92c93a122a8878b758eabffde8fa9f9deebe33"
+  },
+  "repositories": {
+    "velenza-inarch": "https://github.com/velenzaboc/velenza-inarch",
+    "velenza-cambium": "https://github.com/velenzaboc/velenza-cambium",
+    "velenza-canon": "https://github.com/velenzaboc/velenza-canon",
+    "velenza-trellis": "https://github.com/velenzaboc/velenza-trellis"
+  },
+  "stack_discovery": {
+    "stack_name": "velenza-arbor",
+    "umbrella_cli": "inr",
+    "layers": [
+      {
+        "layer": 0,
+        "canonical_name": "velenza-inarch",
+        "compat_alias": "inr",
+        "umbrella_subcommands": [
+          "inr"
+        ],
+        "binary_env_vars": [
+          "VELENZA_INARCH_BIN",
+          "INARCH_BIN"
+        ],
+        "config_env_vars": [
+          "INARCH_CONFIG"
+        ],
+        "role": "The Graft Union & Rootstock (Checkout-Free Content-Addressed VCS)",
+        "resolved_binary": "/tmp/arbor-4repo-study-u_i4vkt4/bin/velenza-inarch"
+      },
+      {
+        "layer": 1,
+        "canonical_name": "velenza-cambium",
+        "compat_alias": "code-graph",
+        "umbrella_subcommands": [
+          "inr cambium",
+          "inr code"
+        ],
+        "binary_env_vars": [
+          "VELENZA_CAMBIUM_BIN",
+          "CODE_GRAPH_BIN"
+        ],
+        "config_env_vars": [
+          "CODE_GRAPH_GCP_PROJECT",
+          "CODE_GRAPH_SPANNER_INSTANCE",
+          "CODE_GRAPH_SPANNER_DATABASE",
+          "ARBOR_GCP_PROJECT",
+          "ARBOR_SPANNER_INSTANCE"
+        ],
+        "role": "The Living Vascular Code Tissue (CPG/SSA/VTA Semantic Code & Hazard Graph)",
+        "resolved_binary": "/tmp/arbor-4repo-study-u_i4vkt4/bin/velenza-cambium"
+      },
+      {
+        "layer": 2,
+        "canonical_name": "velenza-canon",
+        "compat_alias": "spec-graph",
+        "umbrella_subcommands": [
+          "inr canon",
+          "inr spec"
+        ],
+        "binary_env_vars": [
+          "VELENZA_CANON_BIN",
+          "SPEC_GRAPH_BIN"
+        ],
+        "config_env_vars": [
+          "VELENZA_CANON_CONFIG",
+          "SPEC_GRAPH_CONFIG",
+          "ARBOR_GCP_PROJECT",
+          "ARBOR_SPANNER_INSTANCE"
+        ],
+        "role": "The Normative Root Canon (Versioned Architectural & Normative Spec Graph)",
+        "resolved_binary": "/tmp/arbor-4repo-study-u_i4vkt4/bin/velenza-canon"
+      },
+      {
+        "layer": 3,
+        "canonical_name": "velenza-trellis",
+        "compat_alias": "task-graph",
+        "umbrella_subcommands": [
+          "inr trellis",
+          "inr task"
+        ],
+        "binary_env_vars": [
+          "VELENZA_TRELLIS_BIN",
+          "TASK_GRAPH_BIN"
+        ],
+        "config_env_vars": [
+          "VELENZA_TRELLIS_CONFIG",
+          "TASK_GRAPH_CONFIG",
+          "ARBOR_GCP_PROJECT",
+          "ARBOR_SPANNER_INSTANCE"
+        ],
+        "role": "The Structural Growth Trellis (Multi-Agent Execution & Worklink DAG)",
+        "resolved_binary": "/tmp/arbor-4repo-study-u_i4vkt4/bin/velenza-trellis"
+      }
+    ]
+  },
+  "repos": {
+    "velenza-inarch": {
+      "layer": "Layer 0 (VCS / Bonsai DAG)",
+      "lang": "Rust",
+      "source_stats": {
+        "files": 85,
+        "bytes": 1647198,
+        "lines": 42738
+      },
+      "ingest": {
+        "git_ms": 57.41,
+        "inr_ms": 40.43,
+        "git_head": "d99d22f4d530",
+        "inr_head": "main",
+        "git_meta_bytes": 511855,
+        "inr_meta_bytes": 1655481
+      },
+      "checkout": {
+        "sparse_prefix": "crates/inarch-engine",
+        "target_file": "crates/inarch-engine/src/lib.rs",
+        "git_full_ms": 23.47,
+        "git_full_files": 85,
+        "git_full_bytes": 1647198,
+        "inr_sparse_ms": 3.58,
+        "inr_sparse_files": 3,
+        "inr_sparse_bytes": 67748,
+        "inr_mount_hydrate_ms": 4.37,
+        "inr_mount_files": 1,
+        "inr_mount_bytes": 48495
+      },
+      "zero_checkout_agent_op": {
+        "git_clone_edit_push_ms": 70.55,
+        "git_worktree_bytes": 2173737,
+        "inr_mcp_read_commit_ms": 3.98,
+        "inr_worktree_bytes": 0
+      },
+      "git_swarm_16": {
+        "succeeded": 1,
+        "rejected": 15,
+        "wall_ms": 48.5
+      },
+      "inarch_swarm": {
+        "repo": "velenza-inarch",
+        "swarm16_succeeded": 16,
+        "swarm16_ms": 77.84,
+        "swarm16_cas_retries": 40,
+        "same_file_8_succeeded": 8,
+        "same_file_8_ms": 743.15,
+        "same_file_8_cas_retries": 22,
+        "target_file": "crates/inarch-engine/src/lib.rs",
+        "target_file_lines": 1315
+      }
+    },
+    "velenza-cambium": {
+      "layer": "Layer 1 (CPG / SSA / VTA Code Graph)",
+      "lang": "Go",
+      "source_stats": {
+        "files": 61,
+        "bytes": 644425,
+        "lines": 17159
+      },
+      "ingest": {
+        "git_ms": 30.86,
+        "inr_ms": 18.41,
+        "git_head": "dcf0fa6cd187",
+        "inr_head": "main",
+        "git_meta_bytes": 260246,
+        "inr_meta_bytes": 649637
+      },
+      "checkout": {
+        "sparse_prefix": "testdata",
+        "target_file": "main.go",
+        "git_full_ms": 16.46,
+        "git_full_files": 61,
+        "git_full_bytes": 644425,
+        "inr_sparse_ms": 2.32,
+        "inr_sparse_files": 0,
+        "inr_sparse_bytes": 0,
+        "inr_mount_hydrate_ms": 3.95,
+        "inr_mount_files": 1,
+        "inr_mount_bytes": 65086
+      },
+      "zero_checkout_agent_op": {
+        "git_clone_edit_push_ms": 54.73,
+        "git_worktree_bytes": 929821,
+        "inr_mcp_read_commit_ms": 5.02,
+        "inr_worktree_bytes": 0
+      },
+      "git_swarm_16": {
+        "succeeded": 1,
+        "rejected": 15,
+        "wall_ms": 56.07
+      },
+      "inarch_swarm": {
+        "repo": "velenza-cambium",
+        "swarm16_succeeded": 16,
+        "swarm16_ms": 113.71,
+        "swarm16_cas_retries": 48,
+        "same_file_8_succeeded": 8,
+        "same_file_8_ms": 802.1,
+        "same_file_8_cas_retries": 21,
+        "target_file": "main.go",
+        "target_file_lines": 2033
+      }
+    },
+    "velenza-canon": {
+      "layer": "Layer 2 (Normative Spec Graph)",
+      "lang": "Go",
+      "source_stats": {
+        "files": 454,
+        "bytes": 6952316,
+        "lines": 148962
+      },
+      "ingest": {
+        "git_ms": 220.97,
+        "inr_ms": 198.55,
+        "git_head": "ba802b4ae482",
+        "inr_head": "main",
+        "git_meta_bytes": 2002951,
+        "inr_meta_bytes": 6951343
+      },
+      "checkout": {
+        "sparse_prefix": "internal",
+        "target_file": "main.go",
+        "git_full_ms": 74.34,
+        "git_full_files": 454,
+        "git_full_bytes": 6952316,
+        "inr_sparse_ms": 75.15,
+        "inr_sparse_files": 181,
+        "inr_sparse_bytes": 4138494,
+        "inr_mount_hydrate_ms": 4.76,
+        "inr_mount_files": 1,
+        "inr_mount_bytes": 2349
+      },
+      "zero_checkout_agent_op": {
+        "git_clone_edit_push_ms": 274.13,
+        "git_worktree_bytes": 8961323,
+        "inr_mcp_read_commit_ms": 2.31,
+        "inr_worktree_bytes": 0
+      },
+      "git_swarm_16": {
+        "succeeded": 1,
+        "rejected": 15,
+        "wall_ms": 52.72
+      },
+      "inarch_swarm": {
+        "repo": "velenza-canon",
+        "swarm16_succeeded": 16,
+        "swarm16_ms": 42.73,
+        "swarm16_cas_retries": 36,
+        "same_file_8_succeeded": 8,
+        "same_file_8_ms": 127.05,
+        "same_file_8_cas_retries": 27,
+        "target_file": "main.go",
+        "target_file_lines": 75
+      }
+    },
+    "velenza-trellis": {
+      "layer": "Layer 3 (Execution & Worklink DAG)",
+      "lang": "Go",
+      "source_stats": {
+        "files": 137,
+        "bytes": 1789781,
+        "lines": 43863
+      },
+      "ingest": {
+        "git_ms": 59.93,
+        "inr_ms": 43.03,
+        "git_head": "3563e61f1ec2",
+        "inr_head": "main",
+        "git_meta_bytes": 594297,
+        "inr_meta_bytes": 1779850
+      },
+      "checkout": {
+        "sparse_prefix": "internal",
+        "target_file": "main.go",
+        "git_full_ms": 25.85,
+        "git_full_files": 137,
+        "git_full_bytes": 1789781,
+        "inr_sparse_ms": 4.49,
+        "inr_sparse_files": 18,
+        "inr_sparse_bytes": 122497,
+        "inr_mount_hydrate_ms": 3.86,
+        "inr_mount_files": 1,
+        "inr_mount_bytes": 1854
+      },
+      "zero_checkout_agent_op": {
+        "git_clone_edit_push_ms": 67.98,
+        "git_worktree_bytes": 2389120,
+        "inr_mcp_read_commit_ms": 2.1,
+        "inr_worktree_bytes": 0
+      },
+      "git_swarm_16": {
+        "succeeded": 1,
+        "rejected": 15,
+        "wall_ms": 56.61
+      },
+      "inarch_swarm": {
+        "repo": "velenza-trellis",
+        "swarm16_succeeded": 16,
+        "swarm16_ms": 78.26,
+        "swarm16_cas_retries": 39,
+        "same_file_8_succeeded": 8,
+        "same_file_8_ms": 119.62,
+        "same_file_8_cas_retries": 25,
+        "target_file": "main.go",
+        "target_file_lines": 76
+      }
+    }
+  },
+  "layer1_cambium": {
+    "velenza-inarch": {
+      "mode": "inr verify-codebase (Rust workspace AST/module/hygiene verifier)",
+      "wall_ms": 91.12,
+      "output_summary": [
+        "=== Velenza Inarch Real-Codebase Round-Trip Verification: /tmp/arbor-4repo-study-91463/repos/velenza-inarch ===",
+        "[1] Ingested 86 files (1647222 bytes) -> ChangesetId 046d32a7c63d20fe669db29a990087944ce2e21e2e9e9fb0f1b09c4f4fc4c1cd",
+        "[2] Cold-reopen checkout-free read_file & Fsnode verification: 86/86 files (1647222 bytes) 100% EXACT (Root Fsnode c30aa6622c072d0c99b7cd1934c55b68d1a92975a15e5f9da379013418ba73f5)",
+        "[3] Stateless tree-walk checkout materialization: 86/86 files (1647222 bytes) 100% EXACT on disk"
+      ]
+    },
+    "velenza-cambium": {
+      "cpg_ssa_vta_stats": {
+        "edge_kinds": {
+          "ACQUIRES_LOCK": 13,
+          "CALLS": 2597,
+          "CALLS_UNDER_LOCK": 22,
+          "DECLARES": 902,
+          "DETACHES_CONTEXT": 2,
+          "IMPLEMENTS": 4,
+          "IMPORTS": 336,
+          "IO_SINK": 195,
+          "REFERENCES": 4487,
+          "SPAWNS_UNRECOVERED_GO": 3,
+          "TIMER_IN_LOOP": 1
+        },
+        "edges": 8562,
+        "hazard_categories": {
+          "DETACHES_CONTEXT": 2,
+          "LOCK_ACROSS_IO": 3,
+          "SPAWNS_UNRECOVERED_GO": 3,
+          "TIMER_IN_LOOP": 1
+        },
+        "hazards": 9,
+        "repo": "velenza-cambium",
+        "symbol_kinds": {
+          "const": 29,
+          "field": 320,
+          "file": 37,
+          "func": 349,
+          "method": 33,
+          "package": 2,
+          "sink": 28,
+          "type": 86,
+          "var": 48
+        },
+        "symbols": 932
+      },
+      "baseline_wall_ms": 3613.88,
+      "baseline_header": "hazards: repo=local snapshot=working-tree total=9",
+      "baseline_sample_findings": [
+        "  [MEDIUM] DETACHES_CONTEXT             github.com/velenzaboc/velenza-cambium/internal/gcpauth.Selector.deviceServiceAccountTokenSource (internal/gcpauth/selector.go:398)",
+        "           github.com/velenzaboc/velenza-cambium/internal/gcpauth.Selector.deviceServiceAccountTokenSource detaches context without timeout or deadline (sink:detaches_context:github.com/velenzaboc/velenza-cambium/internal/gcpauth.Selector.deviceServiceAccountTokenSource)",
+        "  [MEDIUM] DETACHES_CONTEXT             github.com/velenzaboc/velenza-cambium/internal/gcpauth.Selector.impersonatedTokenSource (internal/gcpauth/selector.go:296)",
+        "           github.com/velenzaboc/velenza-cambium/internal/gcpauth.Selector.impersonatedTokenSource detaches context without timeout or deadline (sink:detaches_context:github.com/velenzaboc/velenza-cambium/internal/gcpauth.Selector.impersonatedTokenSource)",
+        "  [HIGH  ] LOCK_ACROSS_IO               github.com/velenzaboc/velenza-cambium.initializeGoogleCredentials (credentials.go:54)",
+        "           github.com/velenzaboc/velenza-cambium.initializeGoogleCredentials holds lock across 4-hop call path to I/O sink: github.com/velenzaboc/velenza-cambium.initializeGoogleCredentials -> github.com/velenzaboc/velenza-cambium.newVertexBearerAuth -> github.com/velenzaboc/velenza-cambium.TestCallEmbedAttachesSelectedBearer -> github.com/velenzaboc/velenza-cambium.callEmbed -> sink:io:net/http.Client.Do"
+      ],
+      "mutation_probe": {
+        "go_vet_exit_code": 0,
+        "go_vet_findings": 0,
+        "cambium_wall_ms": 3682.38,
+        "cambium_output": [
+          "hazards: repo=local snapshot=working-tree total=6",
+          "  [MEDIUM] DEFER_IN_LOOP                github.com/velenzaboc/velenza-cambium.ArborProbeCache.ProcessFilesInLoop (arbor_injected_hazards_probe.go:22)",
+          "           github.com/velenzaboc/velenza-cambium.ArborProbeCache.ProcessFilesInLoop executes defer inside a loop cycle (sink:defer_in_loop:github.com/velenzaboc/velenza-cambium.ArborProbeCache.ProcessFilesInLoop)",
+          "  [MEDIUM] DETACHES_CONTEXT             github.com/velenzaboc/velenza-cambium.ArborProbeCache.HandleRequestAsync (arbor_injected_hazards_probe.go:34)",
+          "           github.com/velenzaboc/velenza-cambium.ArborProbeCache.HandleRequestAsync detaches context without timeout or deadline (sink:detaches_context:github.com/velenzaboc/velenza-cambium.ArborProbeCache.HandleRequestAsync)",
+          "  [HIGH  ] LOCK_ACROSS_IO               github.com/velenzaboc/velenza-cambium.ArborProbeCache.ProcessFilesInLoop (arbor_injected_hazards_probe.go:22)",
+          "           github.com/velenzaboc/velenza-cambium.ArborProbeCache.ProcessFilesInLoop holds lock across 1-hop call path to I/O sink: github.com/velenzaboc/velenza-cambium.ArborProbeCache.ProcessFilesInLoop -> sink:io:os.Open",
+          "  [HIGH  ] MAP_ESCAPE_UNDER_LOCK        github.com/velenzaboc/velenza-cambium.ArborProbeCache.UnsafeMapSnapshot (arbor_injected_hazards_probe.go:15)",
+          "           github.com/velenzaboc/velenza-cambium.ArborProbeCache.UnsafeMapSnapshot returns map field github.com/velenzaboc/velenza-cambium.ArborProbeCache.data under lock without cloning",
+          "  [MEDIUM] SPAWNS_UNRECOVERED_GO        github.com/velenzaboc/velenza-cambium.ArborProbeCache.HandleRequestAsync (arbor_injected_hazards_probe.go:34)",
+          "           github.com/velenzaboc/velenza-cambium.ArborProbeCache.HandleRequestAsync spawns goroutine without panic recovery defer (sink:unrecovered_go:github.com/velenzaboc/velenza-cambium.ArborProbeCache.HandleRequestAsync)",
+          "  [MEDIUM] UNBOUNDED_MAP                github.com/velenzaboc/velenza-cambium.ArborProbeCache.HandleRequestAsync (arbor_injected_hazards_probe.go:11)",
+          "           map field github.com/velenzaboc/velenza-cambium.ArborProbeCache.data has 1 insertion path(s) (e.g. github.com/velenzaboc/velenza-cambium.ArborProbeCache.HandleRequestAsync) and 0 deletion/eviction paths"
+        ]
+      }
+    },
+    "velenza-canon": {
+      "cpg_ssa_vta_stats": {
+        "edge_kinds": {
+          "ACQUIRES_LOCK": 18,
+          "CALLS": 22440,
+          "CALLS_UNDER_LOCK": 43,
+          "DECLARES": 9534,
+          "DETACHES_CONTEXT": 2,
+          "EMBEDS": 16,
+          "IMPLEMENTS": 76,
+          "IMPORTS": 1707,
+          "IO_SINK": 508,
+          "MAP_DELETE": 27,
+          "MAP_INSERT": 232,
+          "REFERENCES": 52886,
+          "SPAWNS_UNRECOVERED_GO": 13,
+          "TIMER_IN_LOOP": 1,
+          "UNBOUNDED_SHIFT": 4
+        },
+        "edges": 87507,
+        "hazard_categories": {
+          "DETACHES_CONTEXT": 2,
+          "LOCK_ACROSS_IO": 3,
+          "SPAWNS_UNRECOVERED_GO": 13,
+          "TIMER_IN_LOOP": 1,
+          "UNBOUNDED_MAP": 102,
+          "UNBOUNDED_SHIFT": 4
+        },
+        "hazards": 125,
+        "repo": "velenza-canon",
+        "symbol_kinds": {
+          "const": 414,
+          "field": 3977,
+          "file": 320,
+          "func": 3504,
+          "method": 442,
+          "package": 15,
+          "sink": 47,
+          "type": 723,
+          "var": 153
+        },
+        "symbols": 9595
+      },
+      "baseline_wall_ms": 6409.09,
+      "baseline_header": "hazards: repo=local snapshot=working-tree total=125",
+      "baseline_sample_findings": [
+        "  [MEDIUM] DETACHES_CONTEXT             github.com/velenzaboc/velenza-canon/internal/gcpauth.Selector.deviceServiceAccountTokenSource (internal/gcpauth/selector.go:340)",
+        "           github.com/velenzaboc/velenza-canon/internal/gcpauth.Selector.deviceServiceAccountTokenSource detaches context without timeout or deadline (sink:detaches_context:github.com/velenzaboc/velenza-canon/internal/gcpauth.Selector.deviceServiceAccountTokenSource)",
+        "  [MEDIUM] DETACHES_CONTEXT             github.com/velenzaboc/velenza-canon/internal/gcpauth.Selector.impersonatedTokenSource (internal/gcpauth/selector.go:228)",
+        "           github.com/velenzaboc/velenza-canon/internal/gcpauth.Selector.impersonatedTokenSource detaches context without timeout or deadline (sink:detaches_context:github.com/velenzaboc/velenza-canon/internal/gcpauth.Selector.impersonatedTokenSource)",
+        "  [HIGH  ] LOCK_ACROSS_IO               github.com/velenzaboc/velenza-canon.SpannerSubstrateAdapter.Close (substrate.go:306)",
+        "           github.com/velenzaboc/velenza-canon.SpannerSubstrateAdapter.Close holds lock across 1-hop call path to I/O sink: github.com/velenzaboc/velenza-canon.SpannerSubstrateAdapter.Close -> sink:io:cloud.google.com/go/spanner.Client.Close"
+      ],
+      "mutation_probe": {
+        "go_vet_exit_code": 0,
+        "go_vet_findings": 0,
+        "cambium_wall_ms": 6615.84,
+        "cambium_output": [
+          "hazards: repo=local snapshot=working-tree total=6",
+          "  [MEDIUM] DEFER_IN_LOOP                github.com/velenzaboc/velenza-canon.ArborProbeCache.ProcessFilesInLoop (arbor_injected_hazards_probe.go:22)",
+          "           github.com/velenzaboc/velenza-canon.ArborProbeCache.ProcessFilesInLoop executes defer inside a loop cycle (sink:defer_in_loop:github.com/velenzaboc/velenza-canon.ArborProbeCache.ProcessFilesInLoop)",
+          "  [MEDIUM] DETACHES_CONTEXT             github.com/velenzaboc/velenza-canon.ArborProbeCache.HandleRequestAsync (arbor_injected_hazards_probe.go:34)",
+          "           github.com/velenzaboc/velenza-canon.ArborProbeCache.HandleRequestAsync detaches context without timeout or deadline (sink:detaches_context:github.com/velenzaboc/velenza-canon.ArborProbeCache.HandleRequestAsync)",
+          "  [HIGH  ] LOCK_ACROSS_IO               github.com/velenzaboc/velenza-canon.ArborProbeCache.ProcessFilesInLoop (arbor_injected_hazards_probe.go:22)",
+          "           github.com/velenzaboc/velenza-canon.ArborProbeCache.ProcessFilesInLoop holds lock across 1-hop call path to I/O sink: github.com/velenzaboc/velenza-canon.ArborProbeCache.ProcessFilesInLoop -> sink:io:os.Open",
+          "  [HIGH  ] MAP_ESCAPE_UNDER_LOCK        github.com/velenzaboc/velenza-canon.ArborProbeCache.UnsafeMapSnapshot (arbor_injected_hazards_probe.go:15)",
+          "           github.com/velenzaboc/velenza-canon.ArborProbeCache.UnsafeMapSnapshot returns map field github.com/velenzaboc/velenza-canon.ArborProbeCache.data under lock without cloning",
+          "  [MEDIUM] SPAWNS_UNRECOVERED_GO        github.com/velenzaboc/velenza-canon.ArborProbeCache.HandleRequestAsync (arbor_injected_hazards_probe.go:34)",
+          "           github.com/velenzaboc/velenza-canon.ArborProbeCache.HandleRequestAsync spawns goroutine without panic recovery defer (sink:unrecovered_go:github.com/velenzaboc/velenza-canon.ArborProbeCache.HandleRequestAsync)",
+          "  [MEDIUM] UNBOUNDED_MAP                github.com/velenzaboc/velenza-canon.ArborProbeCache.HandleRequestAsync (arbor_injected_hazards_probe.go:11)",
+          "           map field github.com/velenzaboc/velenza-canon.ArborProbeCache.data has 1 insertion path(s) (e.g. github.com/velenzaboc/velenza-canon.ArborProbeCache.HandleRequestAsync) and 0 deletion/eviction paths"
+        ]
+      }
+    },
+    "velenza-trellis": {
+      "cpg_ssa_vta_stats": {
+        "edge_kinds": {
+          "ACQUIRES_LOCK": 5,
+          "CALLS": 5768,
+          "CALLS_UNDER_LOCK": 20,
+          "DECLARES": 2759,
+          "DETACHES_CONTEXT": 1,
+          "EMBEDS": 3,
+          "IMPLEMENTS": 58,
+          "IMPORTS": 564,
+          "IO_SINK": 206,
+          "MAP_DELETE": 1,
+          "MAP_INSERT": 22,
+          "REFERENCES": 12834,
+          "SPAWNS_UNRECOVERED_GO": 5,
+          "TXN_CLOSURE_OUTER_MUTATION": 6
+        },
+        "edges": 22252,
+        "hazard_categories": {
+          "DETACHES_CONTEXT": 1,
+          "LOCK_ACROSS_IO": 3,
+          "SPAWNS_UNRECOVERED_GO": 5,
+          "TXN_CLOSURE_OUTER_MUTATION": 6,
+          "UNBOUNDED_MAP": 15
+        },
+        "hazards": 30,
+        "repo": "velenza-trellis",
+        "symbol_kinds": {
+          "const": 104,
+          "field": 1044,
+          "file": 102,
+          "func": 854,
+          "method": 303,
+          "package": 4,
+          "sink": 44,
+          "type": 266,
+          "var": 86
+        },
+        "symbols": 2807
+      },
+      "baseline_wall_ms": 3830.91,
+      "baseline_header": "hazards: repo=local snapshot=working-tree total=30",
+      "baseline_sample_findings": [
+        "  [MEDIUM] DETACHES_CONTEXT             github.com/velenzaboc/velenza-trellis/internal/gcpauth.Selector.impersonatedTokenSource (internal/gcpauth/selector.go:259)",
+        "           github.com/velenzaboc/velenza-trellis/internal/gcpauth.Selector.impersonatedTokenSource detaches context without timeout or deadline (sink:detaches_context:github.com/velenzaboc/velenza-trellis/internal/gcpauth.Selector.impersonatedTokenSource)",
+        "  [HIGH  ] LOCK_ACROSS_IO               github.com/velenzaboc/velenza-trellis.SpannerSubstrateAdapter.Close (substrate.go:233)",
+        "           github.com/velenzaboc/velenza-trellis.SpannerSubstrateAdapter.Close holds lock across 1-hop call path to I/O sink: github.com/velenzaboc/velenza-trellis.SpannerSubstrateAdapter.Close -> sink:io:cloud.google.com/go/spanner.Client.Close",
+        "  [HIGH  ] LOCK_ACROSS_IO               github.com/velenzaboc/velenza-trellis.SpannerSubstrateAdapter.getClient (substrate.go:205)",
+        "           github.com/velenzaboc/velenza-trellis.SpannerSubstrateAdapter.getClient holds lock across 1-hop call path to I/O sink: github.com/velenzaboc/velenza-trellis.SpannerSubstrateAdapter.getClient -> sink:io:cloud.google.com/go/spanner.NewClient"
+      ],
+      "mutation_probe": {
+        "go_vet_exit_code": 0,
+        "go_vet_findings": 0,
+        "cambium_wall_ms": 4194.69,
+        "cambium_output": [
+          "hazards: repo=local snapshot=working-tree total=6",
+          "  [MEDIUM] DEFER_IN_LOOP                github.com/velenzaboc/velenza-trellis.ArborProbeCache.ProcessFilesInLoop (arbor_injected_hazards_probe.go:22)",
+          "           github.com/velenzaboc/velenza-trellis.ArborProbeCache.ProcessFilesInLoop executes defer inside a loop cycle (sink:defer_in_loop:github.com/velenzaboc/velenza-trellis.ArborProbeCache.ProcessFilesInLoop)",
+          "  [MEDIUM] DETACHES_CONTEXT             github.com/velenzaboc/velenza-trellis.ArborProbeCache.HandleRequestAsync (arbor_injected_hazards_probe.go:34)",
+          "           github.com/velenzaboc/velenza-trellis.ArborProbeCache.HandleRequestAsync detaches context without timeout or deadline (sink:detaches_context:github.com/velenzaboc/velenza-trellis.ArborProbeCache.HandleRequestAsync)",
+          "  [HIGH  ] LOCK_ACROSS_IO               github.com/velenzaboc/velenza-trellis.ArborProbeCache.ProcessFilesInLoop (arbor_injected_hazards_probe.go:22)",
+          "           github.com/velenzaboc/velenza-trellis.ArborProbeCache.ProcessFilesInLoop holds lock across 1-hop call path to I/O sink: github.com/velenzaboc/velenza-trellis.ArborProbeCache.ProcessFilesInLoop -> sink:io:os.Open",
+          "  [HIGH  ] MAP_ESCAPE_UNDER_LOCK        github.com/velenzaboc/velenza-trellis.ArborProbeCache.UnsafeMapSnapshot (arbor_injected_hazards_probe.go:15)",
+          "           github.com/velenzaboc/velenza-trellis.ArborProbeCache.UnsafeMapSnapshot returns map field github.com/velenzaboc/velenza-trellis.ArborProbeCache.data under lock without cloning",
+          "  [MEDIUM] SPAWNS_UNRECOVERED_GO        github.com/velenzaboc/velenza-trellis.ArborProbeCache.HandleRequestAsync (arbor_injected_hazards_probe.go:34)",
+          "           github.com/velenzaboc/velenza-trellis.ArborProbeCache.HandleRequestAsync spawns goroutine without panic recovery defer (sink:unrecovered_go:github.com/velenzaboc/velenza-trellis.ArborProbeCache.HandleRequestAsync)",
+          "  [MEDIUM] UNBOUNDED_MAP                github.com/velenzaboc/velenza-trellis.ArborProbeCache.HandleRequestAsync (arbor_injected_hazards_probe.go:11)",
+          "           map field github.com/velenzaboc/velenza-trellis.ArborProbeCache.data has 1 insertion path(s) (e.g. github.com/velenzaboc/velenza-trellis.ArborProbeCache.HandleRequestAsync) and 0 deletion/eviction paths"
+        ]
+      }
+    }
+  },
+  "layer2_canon": {
+    "clean_run": {
+      "exit_code": 0,
+      "wall_ms": 16.01,
+      "report": {
+        "spec_dir": "/tmp/arbor-4repo-study-u_i4vkt4/canon_trace_study/specs",
+        "code_dir": "/tmp/arbor-4repo-study-u_i4vkt4/canon_trace_study/code",
+        "specs_scanned": 1,
+        "total_sections": 4,
+        "covered_sections": 4,
+        "uncovered_sections": [],
+        "dangling_annotations": [],
+        "volt_annotations": [
+          {
+            "kind": "volt",
+            "target": "arbor.l1.hazards",
+            "file_path": "velenza-cambium/hazards.go",
+            "line": 2
+          },
+          {
+            "kind": "volt",
+            "target": "arbor.l2.trace_code",
+            "file_path": "velenza-canon/canon_arbor.go",
+            "line": 2
+          },
+          {
+            "kind": "volt",
+            "target": "arbor.l0.workspace_base",
+            "file_path": "velenza-inarch/lib.rs",
+            "line": 2
+          },
+          {
+            "kind": "volt",
+            "target": "arbor.l3.fg_validator",
+            "file_path": "velenza-trellis/fg_validator_runner.go",
+            "line": 2
+          }
+        ],
+        "section_coverage": [
+          {
+            "doc_id": "DOC-ARBOR-STACK-001",
+            "spec_prefix": "arbor_stack_integrity",
+            "section_id": "L0_bonsai_workspace_base",
+            "source_file": "ARBOR_STACK_INTEGRITY_v1.ood.json",
+            "covered_by": [
+              {
+                "kind": "spec",
+                "target": "DOC-ARBOR-STACK-001#L0_bonsai_workspace_base",
+                "file_path": "velenza-inarch/lib.rs",
+                "line": 1
+              }
+            ]
+          },
+          {
+            "doc_id": "DOC-ARBOR-STACK-001",
+            "spec_prefix": "arbor_stack_integrity",
+            "section_id": "L1_ssa_vta_hazard_graph",
+            "source_file": "ARBOR_STACK_INTEGRITY_v1.ood.json",
+            "covered_by": [
+              {
+                "kind": "spec",
+                "target": "DOC-ARBOR-STACK-001#L1_ssa_vta_hazard_graph",
+                "file_path": "velenza-cambium/hazards.go",
+                "line": 1
+              }
+            ]
+          },
+          {
+            "doc_id": "DOC-ARBOR-STACK-001",
+            "spec_prefix": "arbor_stack_integrity",
+            "section_id": "L2_normative_spec_traceability",
+            "source_file": "ARBOR_STACK_INTEGRITY_v1.ood.json",
+            "covered_by": [
+              {
+                "kind": "spec",
+                "target": "DOC-ARBOR-STACK-001#L2_normative_spec_traceability",
+                "file_path": "velenza-canon/canon_arbor.go",
+                "line": 1
+              }
+            ]
+          },
+          {
+            "doc_id": "DOC-ARBOR-STACK-001",
+            "spec_prefix": "arbor_stack_integrity",
+            "section_id": "L3_worklink_fleet_governance",
+            "source_file": "ARBOR_STACK_INTEGRITY_v1.ood.json",
+            "covered_by": [
+              {
+                "kind": "spec",
+                "target": "DOC-ARBOR-STACK-001#L3_worklink_fleet_governance",
+                "file_path": "velenza-trellis/fg_validator_runner.go",
+                "line": 1
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "drifted_run": {
+      "exit_code": 1,
+      "wall_ms": 14.67,
+      "stderr": "spec-graph: spec-code traceability failed: found 1 dangling //spec: annotation(s)",
+      "report": {
+        "spec_dir": "/tmp/arbor-4repo-study-u_i4vkt4/canon_trace_study/specs",
+        "code_dir": "/tmp/arbor-4repo-study-u_i4vkt4/canon_trace_study/code",
+        "specs_scanned": 1,
+        "total_sections": 5,
+        "covered_sections": 4,
+        "uncovered_sections": [
+          {
+            "doc_id": "DOC-ARBOR-STACK-001",
+            "spec_prefix": "arbor_stack_integrity",
+            "section_id": "L4_unimplemented_requirement",
+            "source_file": "ARBOR_STACK_INTEGRITY_v1.ood.json"
+          }
+        ],
+        "dangling_annotations": [
+          {
+            "kind": "spec",
+            "target": "DOC-ARBOR-STACK-001#L99_nonexistent_clause",
+            "file_path": "velenza-inarch/dangling_ref.rs",
+            "line": 1
+          }
+        ],
+        "volt_annotations": [
+          {
+            "kind": "volt",
+            "target": "arbor.l1.hazards",
+            "file_path": "velenza-cambium/hazards.go",
+            "line": 2
+          },
+          {
+            "kind": "volt",
+            "target": "arbor.l2.trace_code",
+            "file_path": "velenza-canon/canon_arbor.go",
+            "line": 2
+          },
+          {
+            "kind": "volt",
+            "target": "arbor.l0.workspace_base",
+            "file_path": "velenza-inarch/lib.rs",
+            "line": 2
+          },
+          {
+            "kind": "volt",
+            "target": "arbor.l3.fg_validator",
+            "file_path": "velenza-trellis/fg_validator_runner.go",
+            "line": 2
+          }
+        ],
+        "section_coverage": [
+          {
+            "doc_id": "DOC-ARBOR-STACK-001",
+            "spec_prefix": "arbor_stack_integrity",
+            "section_id": "L0_bonsai_workspace_base",
+            "source_file": "ARBOR_STACK_INTEGRITY_v1.ood.json",
+            "covered_by": [
+              {
+                "kind": "spec",
+                "target": "DOC-ARBOR-STACK-001#L0_bonsai_workspace_base",
+                "file_path": "velenza-inarch/lib.rs",
+                "line": 1
+              }
+            ]
+          },
+          {
+            "doc_id": "DOC-ARBOR-STACK-001",
+            "spec_prefix": "arbor_stack_integrity",
+            "section_id": "L1_ssa_vta_hazard_graph",
+            "source_file": "ARBOR_STACK_INTEGRITY_v1.ood.json",
+            "covered_by": [
+              {
+                "kind": "spec",
+                "target": "DOC-ARBOR-STACK-001#L1_ssa_vta_hazard_graph",
+                "file_path": "velenza-cambium/hazards.go",
+                "line": 1
+              }
+            ]
+          },
+          {
+            "doc_id": "DOC-ARBOR-STACK-001",
+            "spec_prefix": "arbor_stack_integrity",
+            "section_id": "L2_normative_spec_traceability",
+            "source_file": "ARBOR_STACK_INTEGRITY_v1.ood.json",
+            "covered_by": [
+              {
+                "kind": "spec",
+                "target": "DOC-ARBOR-STACK-001#L2_normative_spec_traceability",
+                "file_path": "velenza-canon/canon_arbor.go",
+                "line": 1
+              }
+            ]
+          },
+          {
+            "doc_id": "DOC-ARBOR-STACK-001",
+            "spec_prefix": "arbor_stack_integrity",
+            "section_id": "L3_worklink_fleet_governance",
+            "source_file": "ARBOR_STACK_INTEGRITY_v1.ood.json",
+            "covered_by": [
+              {
+                "kind": "spec",
+                "target": "DOC-ARBOR-STACK-001#L3_worklink_fleet_governance",
+                "file_path": "velenza-trellis/fg_validator_runner.go",
+                "line": 1
+              }
+            ]
+          },
+          {
+            "doc_id": "DOC-ARBOR-STACK-001",
+            "spec_prefix": "arbor_stack_integrity",
+            "section_id": "L4_unimplemented_requirement",
+            "source_file": "ARBOR_STACK_INTEGRITY_v1.ood.json"
+          }
+        ]
+      }
+    }
+  },
+  "layer3_trellis": {
+    "arbor_info_ms": 18.29,
+    "descriptor": {
+      "layer": 3,
+      "canonical_binary": "velenza-trellis",
+      "legacy_alias": "task-graph",
+      "umbrella_subcommands": [
+        "inr trellis",
+        "inr task"
+      ],
+      "config_env_vars": [
+        "VELENZA_TRELLIS_CONFIG",
+        "TASK_GRAPH_CONFIG",
+        "ARBOR_GCP_PROJECT",
+        "ARBOR_SPANNER_INSTANCE"
+      ],
+      "mode": "experimental_bootstrap",
+      "task_status_count": 7,
+      "dependency_kind_count": 3,
+      "artifact_kind_count": 27
+    },
+    "fg_validator_comparison": {
+      "valid_snapshot": {
+        "active_binding_passed": true,
+        "dep_integrity_passed": true,
+        "lanes_verified": 15,
+        "passed": true,
+        "terminal_proof_passed": true,
+        "unique_binding_passed": true,
+        "wall_ms": 3.042
+      },
+      "violations_caught": {
+        "broken_dependency_and_unreachable_sha": {
+          "dep_direction_findings": 1,
+          "dep_integrity_passed": false,
+          "freshness_acceptance": {
+            "measured_at": "2026-09-30T23:40:55.215378Z",
+            "window_seconds": 86400,
+            "tasks": [
+              {
+                "project_id": "arbor",
+                "task_id": "DONE",
+                "measured_at": "2026-09-30T23:40:55.215378Z",
+                "task_updated_at": "2026-09-30T23:00:00Z",
+                "newest_evidence_at": "2026-09-30T21:00:00Z",
+                "age_seconds": 9655.215378,
+                "evidence_count": 1,
+                "flags": [],
+                "commits": [
+                  {
+                    "artifact_id": "PROOF",
+                    "repo": "task-graph",
+                    "branch": "main",
+                    "commit_sha": "abcdef0123456789abcdef0123456789abcdef01",
+                    "reachability": [
+                      {
+                        "ref": "origin/main",
+                        "class": "not_reachable",
+                        "reason": "commit_not_in_origin_main"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "project_id": "arbor",
+                "task_id": "MVP-ACC-GRAPH-HYGIENE",
+                "measured_at": "2026-09-30T23:40:55.215378Z",
+                "task_updated_at": "2026-09-30T23:00:00Z",
+                "evidence_count": 0,
+                "flags": [
+                  "no_evidence"
+                ],
+                "commits": []
+              }
+            ]
+          },
+          "overall_passed": false
+        },
+        "duplicate_active_worktree_binding": {
+          "overall_passed": false,
+          "roster_findings": [],
+          "roster_passed": false
+        },
+        "missing_terminal_validation_proof": {
+          "overall_passed": false,
+          "terminal_proof_passed": false,
+          "unproved_tasks": 1
+        }
+      }
+    }
+  }
+}
