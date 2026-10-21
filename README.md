@@ -297,6 +297,8 @@ steps:
 
 ## Documentation
 
+- **[`benchmarks/REPORT.md`](benchmarks/REPORT.md)**: Multi-host `N=50,000`-file empirical benchmark report, methodology, fairness controls, raw datasets ([`benchmarks/results/`](benchmarks/results/)), and independent verification guide.
+- **[`benchmarks/ARBOR_4REPO_STUDY.md`](benchmarks/ARBOR_4REPO_STUDY.md)**: 4-codebase Velenza Arbor Stack (`velenza-inarch`, `velenza-cambium`, `velenza-canon`, `velenza-trellis`) dogfood study and reproducible runner ([`benchmarks/bench-arbor-4repos.py`](benchmarks/bench-arbor-4repos.py)).
 - **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**: Data structures, wire formats (`INARCHBC01`, `INRCBLK1`, `OSRP`), complexity bounds, and security model.
 - **[`docs/CENTRALIZED_DEPLOYMENT.md`](docs/CENTRALIZED_DEPLOYMENT.md)**: Deployment guide for standalone local mode, single-VM NVMe server mode, and cloud-native mode (GCP Cloud Spanner + GCS).
 - **[`deploy/spanner-schema.sql`](deploy/spanner-schema.sql)**: Cloud Spanner DDL schema (`ScionChangesets`, `ScionRefs`, `ScionDerivedMappings`, `ScionPrincipals`, `ScionLeases`).
