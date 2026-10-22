@@ -180,7 +180,12 @@ fn independent_process_filesystem_cas_has_exactly_one_winner() {
 fn accept_before(listener: &TcpListener, deadline: Instant) -> Option<TcpStream> {
     loop {
         match listener.accept() {
-            Ok((stream, _)) => return Some(stream),
+            Ok((stream, _)) => {
+                stream
+                    .set_nonblocking(false)
+                    .expect("make accepted audit RPC stream blocking");
+                return Some(stream);
+            }
             Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
                 if Instant::now() >= deadline {
                     return None;
