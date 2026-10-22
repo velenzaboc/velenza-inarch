@@ -1,3 +1,4 @@
+#[path = "../common/mod.rs"]
 mod common;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -179,7 +180,7 @@ fn audit_i4_batch_get_rejects_malformed_zero_chunk_and_size_mismatch_manifests()
 #[test]
 fn audit_i4_untrusted_claimed_size_is_rejected_in_bounded_child() {
     run_child_test_with_memory_limit(
-        "audit_i4_claimed_size_child",
+        "audit_regression::audit_i4_claimed_size_child",
         &[("INARCH_AUDIT_CHILD_CASE", "claimed-size")],
         Duration::from_secs(3),
         512 * 1024,
@@ -446,7 +447,7 @@ printf '\n__HTTP_STATUS__:200'
             &path
         };
         run_child_test(
-            "audit_i6_cloud_temp_child",
+            "audit_regression::audit_i6_cloud_temp_child",
             &[
                 ("INARCH_AUDIT_CHILD_CASE", case),
                 ("AUDIT_ROOT", &root),

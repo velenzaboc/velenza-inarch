@@ -9,6 +9,8 @@
 //!    in the repository (enforced via cryptographic `BlobId` token digests and optional local
 //!    `.git/info/forbidden-patterns.txt`).
 
+mod audit_regression;
+
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
