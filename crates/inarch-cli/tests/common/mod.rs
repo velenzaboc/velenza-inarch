@@ -109,17 +109,8 @@ pub fn response_header(response: &[u8], wanted: &str) -> Option<String> {
     None
 }
 
-pub fn run_child_test(test_name: &str, envs: &[(&str, &str)], timeout: Duration) {
-    let mut command = Command::new(std::env::current_exe().expect("current test executable"));
-    command
-        .arg("--exact")
-        .arg(test_name)
-        .arg("--nocapture")
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped());
-    for (key, value) in envs {
-        command.env(key, value);
-    }
+fn run_child_command(test_name: &str, command: &mut Command, timeout: Duration) {
+    command.stdout(Stdio::piped()).stderr(Stdio::piped());
     let mut child = command.spawn().expect("spawn isolated audit child");
     let deadline = Instant::now() + timeout;
     let status = loop {
@@ -144,6 +135,39 @@ pub fn run_child_test(test_name: &str, envs: &[(&str, &str)], timeout: Duration)
         String::from_utf8_lossy(&output.stdout),
         String::from_utf8_lossy(&output.stderr)
     );
+}
+
+pub fn run_child_test(test_name: &str, envs: &[(&str, &str)], timeout: Duration) {
+    let mut command = Command::new(std::env::current_exe().expect("current test executable"));
+    command.arg("--exact").arg(test_name).arg("--nocapture");
+    for (key, value) in envs {
+        command.env(key, value);
+    }
+    run_child_command(test_name, &mut command, timeout);
+}
+
+#[cfg(target_os = "linux")]
+pub fn run_child_test_with_memory_limit(
+    test_name: &str,
+    envs: &[(&str, &str)],
+    timeout: Duration,
+    memory_kib: u64,
+) {
+    let executable = std::env::current_exe().expect("current test executable");
+    let mut command = Command::new("sh");
+    command
+        .arg("-c")
+        .arg("set -eu; ulimit -v \"$1\"; shift; exec \"$@\"")
+        .arg("inarch-audit-child")
+        .arg(memory_kib.to_string())
+        .arg(executable)
+        .arg("--exact")
+        .arg(test_name)
+        .arg("--nocapture");
+    for (key, value) in envs {
+        command.env(key, value);
+    }
+    run_child_command(test_name, &mut command, timeout);
 }
 
 #[cfg(unix)]

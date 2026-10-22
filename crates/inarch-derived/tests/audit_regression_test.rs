@@ -130,6 +130,10 @@ fn similar_copy_detection_considers_same_directory_when_extension_changes() {
         vec![
             ("docs/copy.md", Some(b"one\ntwo\nthree\nchanged\n")),
             ("docs/README", Some(b"one\ntwo\nthree\nother\n")),
+            (
+                "docs/unrelated.bin",
+                Some(b"alpha\nbeta\ngamma\ndelta\n"),
+            ),
         ],
     );
 
@@ -153,6 +157,14 @@ fn similar_copy_detection_considers_same_directory_when_extension_changes() {
     assert_eq!(extensionless.source_path.as_str(), "docs/source.txt");
     assert_eq!(extensionless.kind, CopyKind::SimilarCopy);
     assert!(extensionless.similarity_bps >= 5_000);
+
+    assert!(
+        report
+            .records
+            .iter()
+            .all(|record| record.dest_path.as_str() != "docs/unrelated.bin"),
+        "same-directory files below the similarity threshold must not be reported as copies"
+    );
 }
 
 #[test]

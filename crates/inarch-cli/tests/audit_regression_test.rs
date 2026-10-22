@@ -1,17 +1,21 @@
 mod common;
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::io::{ErrorKind, Read, Write};
 use std::net::TcpStream;
 use std::path::Path;
+use std::process::{Command, Stdio};
 use std::sync::Mutex;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use common::{
     AuditTempDir, make_webdav_engine, response_header, response_status, run_child_test,
     send_raw_http,
 };
+#[cfg(target_os = "linux")]
+use common::run_child_test_with_memory_limit;
+use inarch_cli::AclRuleConfig;
 use inarch_cli::{InarchConfig, spawn_webdav_virtual_mount};
 use inarch_store::{BlobStore, GcsBlobStore, MemBlobStore, RemoteRpcClient};
 use inarch_types::{BlobId, MPath, MPathElement, ObjectDomain, ObjectHash};
@@ -45,7 +49,10 @@ fn audit_i3_repository_paths_reject_windows_structure_on_every_host() {
         r"\rooted",
         r"\\server\share",
         r"C:\outside",
+        r"c:\outside",
         "C:",
+        "C:outside",
+        "c:outside",
     ] {
         assert!(
             MPathElement::new(invalid).is_err(),
@@ -168,15 +175,18 @@ fn audit_i4_batch_get_rejects_malformed_zero_chunk_and_size_mismatch_manifests()
     );
 }
 
+#[cfg(target_os = "linux")]
 #[test]
 fn audit_i4_untrusted_claimed_size_is_rejected_in_bounded_child() {
-    run_child_test(
+    run_child_test_with_memory_limit(
         "audit_i4_claimed_size_child",
         &[("INARCH_AUDIT_CHILD_CASE", "claimed-size")],
         Duration::from_secs(3),
+        512 * 1024,
     );
 }
 
+#[cfg(target_os = "linux")]
 #[test]
 fn audit_i4_claimed_size_child() {
     if std::env::var("INARCH_AUDIT_CHILD_CASE")
@@ -191,7 +201,7 @@ fn audit_i4_claimed_size_child() {
     let blob = BlobId::from_content(content);
     let chunk_hash = ObjectHash::from_domain(ObjectDomain::Chunk, content);
     store.insert_raw(ObjectDomain::Chunk, chunk_hash, content.to_vec());
-    let manifest = audit_chunk_manifest(blob, u64::MAX, &[chunk_hash]);
+    let manifest = audit_chunk_manifest(blob, 1024 * 1024 * 1024, &[chunk_hash]);
     store.insert_raw(ObjectDomain::Blob, blob.0, manifest);
     assert!(
         store.get_blobs_batch(&[blob]).is_err(),
@@ -239,10 +249,111 @@ required_reviewers = []
         .expect("supported actor-only ACL still builds");
 }
 
+fn audit_i5_programmatic_config() -> InarchConfig {
+    let mut programmatic = InarchConfig::default();
+    programmatic.acl_rules = vec![AclRuleConfig {
+        prefix: "protected".to_string(),
+        allowed_actors: vec!["author@example.invalid".to_string()],
+        required_reviewers: vec!["reviewer@example.invalid".to_string()],
+    }];
+    programmatic.jit_signing_key = "synthetic-audit-private-signing-key".to_string();
+    programmatic
+}
+
+#[test]
+fn audit_i5_programmatic_open_engine_refuses_required_reviewers() {
+    let programmatic = audit_i5_programmatic_config();
+    let engine_root = AuditTempDir::new("reviewer_open_engine");
+    let engine_refusal = match programmatic.open_engine(engine_root.path()) {
+        Ok(_) => panic!("open_engine must refuse an unsupported reviewer policy"),
+        Err(err) => err.to_string(),
+    };
+    assert_required_reviewers_refusal(&engine_refusal, "open_engine");
+}
+
+#[test]
+fn audit_i5_cli_serve_refuses_required_reviewers() {
+    let programmatic = audit_i5_programmatic_config();
+    let serve_root = AuditTempDir::new("reviewer_serve");
+    let config_path = serve_root.path().join("serve.toml");
+    fs::write(&config_path, programmatic.to_toml_string()).expect("write serve config");
+    let mut command = Command::new(env!("CARGO_BIN_EXE_inr"));
+    command
+        .arg("--config")
+        .arg(&config_path)
+        .arg("serve")
+        .arg("--listen")
+        .arg("127.0.0.1:0")
+        .current_dir(serve_root.path())
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
+    for (key, _) in std::env::vars() {
+        if key.starts_with("INARCH_") {
+            command.env_remove(key);
+        }
+    }
+    let mut child = command
+        .spawn()
+        .expect("spawn inr serve reviewer-policy probe");
+    let deadline = Instant::now() + Duration::from_secs(3);
+    let status = loop {
+        if let Some(status) = child.try_wait().expect("poll inr serve") {
+            break status;
+        }
+        if Instant::now() >= deadline {
+            let _ = child.kill();
+            let output = child
+                .wait_with_output()
+                .expect("reap inr serve after reviewer-policy timeout");
+            panic!(
+                "inr serve accepted unsupported required_reviewers and remained running\nstdout:\n{}\nstderr:\n{}",
+                String::from_utf8_lossy(&output.stdout),
+                String::from_utf8_lossy(&output.stderr)
+            );
+        }
+        std::thread::sleep(Duration::from_millis(10));
+    };
+    let output = child
+        .wait_with_output()
+        .expect("collect inr serve reviewer-policy refusal");
+    assert!(
+        !status.success(),
+        "inr serve must fail closed for unsupported required_reviewers"
+    );
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert_required_reviewers_refusal(&stderr, "inr serve");
+}
+
+fn assert_required_reviewers_refusal(message: &str, boundary: &str) {
+    let message_lower = message.to_ascii_lowercase();
+    assert!(
+        message_lower.contains("required_reviewers")
+            && (message_lower.contains("unsupported")
+                || message_lower.contains("not implemented")),
+        "{boundary} refusal must identify the unsupported reviewer policy: {message}"
+    );
+}
+
 #[cfg(unix)]
 fn audit_mock_path(bin_dir: &Path) -> String {
     let inherited = std::env::var("PATH").unwrap_or_else(|_| "/usr/bin:/bin".to_string());
     format!("{}:{inherited}", bin_dir.display())
+}
+
+#[cfg(unix)]
+fn audit_staging_entries(root: &Path) -> BTreeSet<std::path::PathBuf> {
+    fs::read_dir(root)
+        .expect("enumerate isolated staging directory")
+        .map(|entry| entry.expect("read staging entry").path())
+        .filter(|path| {
+            path.file_name()
+                .and_then(|name| name.to_str())
+                .is_some_and(|name| {
+                    name.starts_with("inarch_sakey_") || name.starts_with("inarch_req_")
+                })
+        })
+        .collect()
 }
 
 #[cfg(unix)]
@@ -258,7 +369,11 @@ fn audit_i6_cloud_temp_files_are_private_exclusive_and_cleaned() {
         r#"#!/bin/sh
 key=""
 for arg in "$@"; do key="$arg"; done
-mode=$(stat -f %Lp "$key" 2>/dev/null || stat -c %a "$key")
+case "$AUDIT_STAT_STYLE" in
+  bsd) mode=$(stat -f %Lp "$key") ;;
+  gnu) mode=$(stat -c %a "$key") ;;
+  *) exit 8 ;;
+esac
 printf '%s\n%s\n' "$key" "$mode" > "$AUDIT_RECORD"
 cat >/dev/null
 printf 'synthetic-signature'
@@ -279,7 +394,11 @@ while IFS= read -r line; do
   esac
 done
 if [ -z "$body_path" ]; then exit 9; fi
-mode=$(stat -f %Lp "$body_path" 2>/dev/null || stat -c %a "$body_path")
+case "$AUDIT_STAT_STYLE" in
+  bsd) mode=$(stat -f %Lp "$body_path") ;;
+  gnu) mode=$(stat -c %a "$body_path") ;;
+  *) exit 8 ;;
+esac
 printf '%s\n%s\n' "$body_path" "$mode" > "$AUDIT_RECORD"
 cat "$body_path" > "$AUDIT_RECORD.body"
 printf '\n__HTTP_STATUS__:200'
@@ -301,11 +420,17 @@ printf '\n__HTTP_STATUS__:200'
     let empty_bin = child_root.join("empty-bin");
     fs::create_dir(&empty_bin).expect("create empty executable directory");
     let empty_path = empty_bin.to_string_lossy().into_owned();
+    let stat_style = match std::env::consts::OS {
+        "macos" => "bsd",
+        "linux" => "gnu",
+        other => panic!("audit mode probe is not configured for Unix target {other}"),
+    };
     for case in [
         "key-secure",
         "key-symlink",
         "body-secure",
         "body-symlink",
+        "key-spawn-failure",
         "body-spawn-failure",
     ] {
         let record = child_root.join(format!("{case}.record"));
@@ -315,7 +440,7 @@ printf '\n__HTTP_STATUS__:200'
         } else {
             "gcs"
         };
-        let child_path = if case == "body-spawn-failure" {
+        let child_path = if case.ends_with("spawn-failure") {
             &empty_path
         } else {
             &path
@@ -328,6 +453,7 @@ printf '\n__HTTP_STATUS__:200'
                 ("AUDIT_RECORD", &record),
                 ("AUDIT_CREDENTIALS", &credentials),
                 ("AUDIT_CURL_MODE", curl_mode),
+                ("AUDIT_STAT_STYLE", stat_style),
                 ("TMPDIR", &temp_dir),
                 ("INARCH_GCP_ACCESS_TOKEN", "synthetic-access-token"),
                 ("PATH", child_path),
@@ -351,6 +477,7 @@ fn audit_i6_cloud_temp_child() {
             | "key-symlink"
             | "body-secure"
             | "body-symlink"
+            | "key-spawn-failure"
             | "body-spawn-failure"
     ) {
         return;
@@ -360,10 +487,17 @@ fn audit_i6_cloud_temp_child() {
     let credentials =
         std::path::PathBuf::from(std::env::var("AUDIT_CREDENTIALS").expect("AUDIT_CREDENTIALS"));
 
-    if case == "body-spawn-failure" {
-        let staged = root.join(format!("inarch_req_{}_1.tmp", std::process::id()));
-        let body = b"synthetic gcs request body";
-        let result =
+    if case.ends_with("spawn-failure") {
+        let before = audit_staging_entries(&root);
+        let result = if case == "key-spawn-failure" {
+            inarch_store::mint_service_account_id_token(
+                &credentials,
+                Some("https://oauth.invalid/token"),
+                "audit-key-spawn-failure",
+            )
+            .map(|_| ())
+        } else {
+            let body = b"synthetic gcs request body";
             GcsBlobStore::with_endpoint("audit-bucket", "audit-prefix", "http://gcs.invalid")
                 .and_then(|store| {
                     store.put_object(
@@ -371,11 +505,13 @@ fn audit_i6_cloud_temp_child() {
                         ObjectHash::from_domain(ObjectDomain::Blob, body),
                         body,
                     )
-                });
-        assert!(result.is_err(), "missing curl must fail the synthetic upload");
-        assert!(
-            !staged.exists(),
-            "request body staging file survived curl spawn failure"
+                })
+        };
+        assert!(result.is_err(), "missing command must fail {case}");
+        assert_eq!(
+            audit_staging_entries(&root),
+            before,
+            "{case} leaked a key or request-body staging file"
         );
         return;
     }
@@ -389,6 +525,7 @@ fn audit_i6_cloud_temp_child() {
             root.join(format!("inarch_req_{}_1.tmp", std::process::id()))
         };
         symlink(&canary, &staged).expect("precreate hostile staging symlink");
+        let before = audit_staging_entries(&root);
         let result = if case == "key-symlink" {
             inarch_store::mint_service_account_id_token(
                 &credentials,
@@ -407,18 +544,33 @@ fn audit_i6_cloud_temp_child() {
                     )
                 })
         };
-        assert!(
-            result.is_err(),
-            "pre-existing staging path must be refused for {case}"
-        );
         assert_eq!(
             fs::read(&canary).expect("read collision canary"),
             b"canary-must-remain",
             "staging followed a hostile symlink for {case}"
         );
+        assert_eq!(
+            audit_staging_entries(&root),
+            before,
+            "{case} leaked a staging file"
+        );
+        if result.is_ok() {
+            let observation = fs::read_to_string(&record)
+                .expect("secure collision recovery must record the alternate staged path");
+            let mut lines = observation.lines();
+            let actual = lines.next().expect("recorded alternate staged path");
+            let mode = lines.next().expect("recorded alternate staged mode");
+            assert_ne!(Path::new(actual), staged);
+            assert_eq!(mode, "600", "alternate staged {case} file was not owner-only");
+            assert!(
+                !Path::new(actual).exists(),
+                "alternate staged {case} file was not removed"
+            );
+        }
         return;
     }
 
+    let before = audit_staging_entries(&root);
     if case == "key-secure" {
         let token = inarch_store::mint_service_account_id_token(
             &credentials,
@@ -452,10 +604,18 @@ fn audit_i6_cloud_temp_child() {
     let mut lines = observation.lines();
     let staged_path = lines.next().expect("recorded staged path");
     let mode = lines.next().expect("recorded staged mode");
+    // This subprocess observation proves the mode visible to the consumer. It cannot distinguish
+    // owner-only mode at creation from a chmod before exec; code review must separately require an
+    // exclusive OpenOptions create with mode(0o600) at the creation call.
     assert_eq!(mode, "600", "staged {case} file was not owner-only");
     assert!(
         !Path::new(staged_path).exists(),
         "staged {case} file was not removed after command completion"
+    );
+    assert_eq!(
+        audit_staging_entries(&root),
+        before,
+        "successful {case} leaked a staging file"
     );
 }
 
@@ -552,6 +712,26 @@ fn audit_i12_unlock_requires_exact_token_and_refusal_preserves_lock() {
         response_status(&conflict_after_wrong),
         423,
         "wrong-token refusal must preserve the active lock"
+    );
+
+    let token_superstring = format!("{}-attacker-suffix", lock_token.trim_end_matches('>'));
+    let superstring = audit_webdav_request(
+        addr,
+        &auth,
+        "UNLOCK",
+        "/README.md",
+        &format!("Lock-Token: {token_superstring}>\r\n"),
+    );
+    assert!(
+        response_status(&superstring) >= 400,
+        "UNLOCK must refuse a Lock-Token that merely contains the active token"
+    );
+    let conflict_after_superstring =
+        audit_webdav_request(addr, &auth, "LOCK", "/README.md", "");
+    assert_eq!(
+        response_status(&conflict_after_superstring),
+        423,
+        "superstring-token refusal must preserve the active lock"
     );
 
     let exact = audit_webdav_request(

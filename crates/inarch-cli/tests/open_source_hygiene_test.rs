@@ -134,12 +134,12 @@ fn config_toml_roundtrip_and_acl_policy_construction() {
                     "secops@example.com".to_string(),
                     "release-bot@example.com".to_string(),
                 ],
-                required_reviewers: vec!["ciso@example.com".to_string()],
+                required_reviewers: Vec::new(),
             },
             AclRuleConfig {
                 prefix: "billing/ledger".to_string(),
                 allowed_actors: vec!["finance-lead@example.com".to_string()],
-                required_reviewers: vec!["auditor@example.com".to_string()],
+                required_reviewers: Vec::new(),
             },
         ],
     };
@@ -164,7 +164,7 @@ fn config_toml_roundtrip_and_acl_policy_construction() {
     assert_eq!(example_cfg.default_ref, "main");
     assert_eq!(example_cfg.chunk_avg_size, 65536);
 
-    // Verify ACL policy construction from config
+    // Verify the supported actor-only ACL policy construction from config.
     let acl_policy = parsed.build_acl_policy().expect("build ACL policy");
     let restricted_path = MPath::new("security/keys/root.pem").unwrap();
     let unrestricted_path = MPath::new("crates/core/lib.rs").unwrap();
