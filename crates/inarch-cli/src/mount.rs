@@ -2234,9 +2234,13 @@ mod tests {
             lock_conflict
         );
 
+        let lock_token = lock_resp
+            .lines()
+            .find_map(|line| line.strip_prefix("Lock-Token: "))
+            .expect("LOCK response must carry its token");
         let unlock_req = format!(
-            "UNLOCK /docs/renamed.txt HTTP/1.1\r\nHost: 127.0.0.1\r\nAuthorization: Bearer {}\r\n\r\n",
-            token
+            "UNLOCK /docs/renamed.txt HTTP/1.1\r\nHost: 127.0.0.1\r\nAuthorization: Bearer {}\r\nLock-Token: {}\r\n\r\n",
+            token, lock_token
         );
         let unlock_resp = send_raw_http(addr, &unlock_req, b"");
         assert!(
