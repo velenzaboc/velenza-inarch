@@ -130,6 +130,11 @@ fn run_child_command(test_name: &str, command: &mut Command, timeout: Duration) 
     };
     let output = child.wait_with_output().expect("collect isolated audit child");
     assert!(
+        String::from_utf8_lossy(&output.stdout).lines().any(|line| line == "running 1 test"),
+        "isolated audit child {test_name} did not execute exactly one test: {}",
+        String::from_utf8_lossy(&output.stdout)
+    );
+    assert!(
         status.success(),
         "isolated audit child {test_name} failed with {status}\nstdout:\n{}\nstderr:\n{}",
         String::from_utf8_lossy(&output.stdout),
