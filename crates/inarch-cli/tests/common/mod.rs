@@ -81,10 +81,44 @@ pub fn send_raw_http(addr: SocketAddr, request: &[u8]) -> Vec<u8> {
         .shutdown(Shutdown::Write)
         .expect("finish WebDAV request");
     let mut response = Vec::new();
-    stream
-        .read_to_end(&mut response)
-        .expect("read WebDAV response");
-    response
+    let mut chunk = [0u8; 8192];
+    loop {
+        if let Some(expected_len) = complete_http_response_len(&response) {
+            response.truncate(expected_len);
+            return response;
+        }
+        match stream.read(&mut chunk) {
+            Ok(0) => panic!(
+                "WebDAV server closed before its complete Content-Length response body arrived"
+            ),
+            Ok(read) => response.extend_from_slice(&chunk[..read]),
+            Err(error) => panic!(
+                "WebDAV response failed before its complete Content-Length body arrived: {error}"
+            ),
+        }
+    }
+}
+
+fn complete_http_response_len(response: &[u8]) -> Option<usize> {
+    let header_start = response.windows(4).position(|window| window == b"\r\n\r\n")?;
+    let header_end = header_start + 4;
+    let headers = String::from_utf8_lossy(&response[..header_start]);
+    let content_length = headers
+        .lines()
+        .skip(1)
+        .find_map(|line| {
+            let (name, value) = line.split_once(':')?;
+            name.trim()
+                .eq_ignore_ascii_case("content-length")
+                .then(|| value.trim())
+        })
+        .expect("WebDAV response must declare Content-Length")
+        .parse::<usize>()
+        .expect("WebDAV response Content-Length must be numeric");
+    let expected_len = header_end
+        .checked_add(content_length)
+        .expect("WebDAV response length overflow");
+    (response.len() >= expected_len).then_some(expected_len)
 }
 
 pub fn response_status(response: &[u8]) -> u16 {

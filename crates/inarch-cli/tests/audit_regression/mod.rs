@@ -669,22 +669,88 @@ fn main() {
 
 #[cfg(windows)]
 fn audit_windows_sddl(path: &Path) -> String {
-    let output = Command::new("powershell.exe")
-        .args([
-            "-NoProfile",
-            "-NonInteractive",
-            "-Command",
-            "(Get-Acl -LiteralPath $env:INARCH_AUDIT_ACL_PATH).Sddl",
-        ])
-        .env("INARCH_AUDIT_ACL_PATH", path)
-        .output()
-        .expect("read Windows security descriptor");
-    assert!(
-        output.status.success(),
+    use std::ffi::c_void;
+    use std::os::windows::ffi::OsStrExt;
+    use std::ptr::null_mut;
+
+    #[link(name = "advapi32")]
+    unsafe extern "system" {
+        fn GetNamedSecurityInfoW(
+            object_name: *const u16,
+            object_type: u32,
+            security_info: u32,
+            owner: *mut *mut c_void,
+            group: *mut *mut c_void,
+            dacl: *mut *mut c_void,
+            sacl: *mut *mut c_void,
+            security_descriptor: *mut *mut c_void,
+        ) -> u32;
+        fn ConvertSecurityDescriptorToStringSecurityDescriptorW(
+            security_descriptor: *const c_void,
+            string_sd_revision: u32,
+            security_info: u32,
+            string_security_descriptor: *mut *mut u16,
+            string_security_descriptor_len: *mut u32,
+        ) -> i32;
+    }
+
+    #[link(name = "kernel32")]
+    unsafe extern "system" {
+        fn LocalFree(memory: *mut c_void) -> *mut c_void;
+    }
+
+    const SE_FILE_OBJECT: u32 = 1;
+    const DACL_SECURITY_INFORMATION: u32 = 0x0000_0004;
+    const SDDL_REVISION_1: u32 = 1;
+
+    let path_wide: Vec<u16> = path.as_os_str().encode_wide().chain(Some(0)).collect();
+    let mut descriptor = null_mut();
+    let status = unsafe {
+        GetNamedSecurityInfoW(
+            path_wide.as_ptr(),
+            SE_FILE_OBJECT,
+            DACL_SECURITY_INFORMATION,
+            null_mut(),
+            null_mut(),
+            null_mut(),
+            null_mut(),
+            &mut descriptor,
+        )
+    };
+    assert_eq!(
+        status,
+        0,
         "read Windows security descriptor: {}",
-        String::from_utf8_lossy(&output.stderr)
+        std::io::Error::from_raw_os_error(status as i32)
     );
-    String::from_utf8_lossy(&output.stdout).trim().to_string()
+
+    let mut sddl = null_mut();
+    let mut sddl_len = 0;
+    let converted = unsafe {
+        ConvertSecurityDescriptorToStringSecurityDescriptorW(
+            descriptor,
+            SDDL_REVISION_1,
+            DACL_SECURITY_INFORMATION,
+            &mut sddl,
+            &mut sddl_len,
+        )
+    };
+    let convert_error = (converted == 0).then(std::io::Error::last_os_error);
+    unsafe {
+        LocalFree(descriptor);
+    }
+    if let Some(error) = convert_error {
+        panic!("render Windows security descriptor as SDDL: {error}");
+    }
+
+    let rendered = unsafe { std::slice::from_raw_parts(sddl, sddl_len as usize) };
+    let rendered = String::from_utf16_lossy(rendered)
+        .trim_end_matches('\0')
+        .to_string();
+    unsafe {
+        LocalFree(sddl.cast());
+    }
+    rendered
 }
 
 #[cfg(windows)]
