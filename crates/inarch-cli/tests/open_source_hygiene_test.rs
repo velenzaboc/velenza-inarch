@@ -90,6 +90,31 @@ fn unique_temp_dir(label: &str) -> PathBuf {
 }
 
 #[test]
+fn readme_advertises_the_workspace_minimum_supported_rust_version() {
+    let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let repo_root = manifest_dir
+        .parent()
+        .and_then(Path::parent)
+        .expect("workspace root above inarch-cli crate");
+    let workspace_manifest = fs::read_to_string(repo_root.join("Cargo.toml"))
+        .expect("read workspace Cargo.toml");
+    let declared = workspace_manifest
+        .lines()
+        .find_map(|line| {
+            line.trim()
+                .strip_prefix("rust-version = \"")
+                .and_then(|value| value.strip_suffix('\"'))
+        })
+        .expect("workspace rust-version declaration");
+    let readme = fs::read_to_string(repo_root.join("README.md")).expect("read workspace README");
+    let advertised = format!("Requires **Rust {declared}+**");
+    assert!(
+        readme.contains(&advertised),
+        "README build prerequisites must advertise the Cargo.toml MSRV exactly; expected {advertised:?}"
+    );
+}
+
+#[test]
 fn config_toml_roundtrip_and_acl_policy_construction() {
     let custom_cfg = InarchConfig {
         repo_id: "acme-monorepo".to_string(),

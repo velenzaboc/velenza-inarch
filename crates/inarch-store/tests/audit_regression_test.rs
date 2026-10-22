@@ -1,10 +1,14 @@
 //! Regression contracts for the storage defects found by the 2026-10-22 audit.
 
 use std::collections::BTreeMap;
+use std::io::{BufRead, BufReader, Read, Write};
+use std::net::{TcpListener, TcpStream};
 use std::process::{Child, Command, Stdio};
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
-use inarch_store::{FsMetadataStore, MetadataStore, StoreError};
+use inarch_store::{
+    FsMetadataStore, MetadataStore, RemoteMetadataStore, RpcRequest, RpcResponse, StoreError,
+};
 use inarch_types::bonsai::{BonsaiChangeset, FileChange, FileType};
 use inarch_types::hash::{BlobId, ChangesetId};
 use inarch_types::path::MPath;
@@ -171,4 +175,138 @@ fn independent_process_filesystem_cas_has_exactly_one_winner() {
     );
     assert_eq!(store.get_ref("main").expect("read final ref"), Some(candidate_id));
 
+}
+
+fn accept_before(listener: &TcpListener, deadline: Instant) -> Option<TcpStream> {
+    loop {
+        match listener.accept() {
+            Ok((stream, _)) => return Some(stream),
+            Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
+                if Instant::now() >= deadline {
+                    return None;
+                }
+                std::thread::sleep(Duration::from_millis(2));
+            }
+            Err(error) => panic!("accept audit RPC connection: {error}"),
+        }
+    }
+}
+
+fn read_rpc_request(stream: &TcpStream) -> RpcRequest {
+    stream
+        .set_read_timeout(Some(Duration::from_secs(2)))
+        .expect("set audit RPC read timeout");
+    let mut reader = BufReader::new(stream.try_clone().expect("clone audit RPC stream"));
+    let mut request_line = String::new();
+    reader
+        .read_line(&mut request_line)
+        .expect("read audit RPC request line");
+    assert!(
+        request_line.starts_with("POST /v1/rpc "),
+        "unexpected audit RPC request line: {request_line:?}"
+    );
+    let mut content_length = None;
+    loop {
+        let mut line = String::new();
+        reader.read_line(&mut line).expect("read audit RPC header");
+        if line == "\r\n" || line == "\n" {
+            break;
+        }
+        if let Some((name, value)) = line.split_once(':')
+            && name.eq_ignore_ascii_case("content-length")
+        {
+            content_length = Some(
+                value
+                    .trim()
+                    .parse::<usize>()
+                    .expect("numeric audit RPC content length"),
+            );
+        }
+    }
+    let mut body = vec![0u8; content_length.expect("audit RPC content length")];
+    reader
+        .read_exact(&mut body)
+        .expect("read complete audit RPC body");
+    RpcRequest::decode(&body).expect("decode audit RPC request")
+}
+
+fn write_rpc_response(stream: &mut TcpStream, response: RpcResponse) {
+    let body = response.encode();
+    let header = format!(
+        "HTTP/1.1 200 OK\r\nContent-Type: application/x-velenza-inarch-rpc\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+        body.len()
+    );
+    stream
+        .write_all(header.as_bytes())
+        .expect("write audit RPC response header");
+    stream
+        .write_all(&body)
+        .expect("write audit RPC response body");
+    stream.flush().expect("flush audit RPC response");
+}
+
+#[test]
+fn remote_cas_lost_response_is_ambiguous_and_never_replayed_after_an_intervening_writer() {
+    let h0 = changeset(None, "rpc-h0", 1_760_010_000).changeset_id();
+    let target_a = changeset(Some(h0), "rpc-a", 1_760_010_001).changeset_id();
+    let target_b = changeset(Some(target_a), "rpc-b", 1_760_010_002).changeset_id();
+
+    let listener = TcpListener::bind("127.0.0.1:0").expect("bind audit RPC listener");
+    listener
+        .set_nonblocking(true)
+        .expect("make audit RPC listener nonblocking");
+    let address = listener.local_addr().expect("audit RPC listener address");
+    let server = std::thread::spawn(move || {
+        let mut requests = Vec::new();
+        let first_deadline = Instant::now() + Duration::from_secs(2);
+        let first = accept_before(&listener, first_deadline).expect("first CAS transport request");
+        requests.push(read_rpc_request(&first));
+
+        // The server committed H0 -> A, then an independent writer committed A -> B.
+        // Closing without A's response makes the first result unknowable to the client.
+        drop(first);
+
+        // A correct client returns an explicit ambiguous result. The old client reconnects and
+        // blindly sends H0 -> A again, so answer that replay with the now-visible B conflict.
+        let replay_deadline = Instant::now() + Duration::from_millis(750);
+        if let Some(mut replay) = accept_before(&listener, replay_deadline) {
+            requests.push(read_rpc_request(&replay));
+            write_rpc_response(
+                &mut replay,
+                RpcResponse::CasRefConflict {
+                    ref_name: "main".to_string(),
+                    expected: Some(h0),
+                    actual: Some(target_b),
+                },
+            );
+        }
+        requests
+    });
+
+    let remote = RemoteMetadataStore::new(&format!("http://{address}"), None, "audit-repo")
+        .expect("construct actual transport metadata client");
+    let result = remote.cas_ref("main", Some(h0), target_a);
+    let requests = server.join().expect("audit RPC server thread");
+
+    assert_eq!(
+        requests.len(),
+        1,
+        "a response-lost CAS is not safe to replay after another writer may have advanced the ref: {requests:?}"
+    );
+    assert_eq!(
+        requests[0],
+        RpcRequest::CasRef {
+            repo_id: "audit-repo".to_string(),
+            ref_name: "main".to_string(),
+            expected: Some(h0),
+            new_target: target_a,
+        }
+    );
+    match result {
+        Err(StoreError::Io(message)) => assert!(
+            message.to_ascii_lowercase().contains("ambiguous"),
+            "the caller must be told that the CAS outcome is ambiguous: {message}"
+        ),
+        other => panic!("lost CAS response must be an explicit ambiguous error: {other:?}"),
+    }
 }

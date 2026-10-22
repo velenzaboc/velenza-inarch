@@ -620,6 +620,208 @@ fn audit_i6_cloud_temp_child() {
     );
 }
 
+#[cfg(windows)]
+fn audit_staging_entries(root: &Path) -> BTreeSet<std::path::PathBuf> {
+    fs::read_dir(root)
+        .expect("enumerate isolated Windows staging directory")
+        .map(|entry| entry.expect("read Windows staging entry").path())
+        .filter(|path| {
+            path.file_name()
+                .and_then(|name| name.to_str())
+                .is_some_and(|name| {
+                    name.starts_with("inarch_sakey_") || name.starts_with("inarch_req_")
+                })
+        })
+        .collect()
+}
+
+#[cfg(windows)]
+fn compile_windows_staging_probe(bin_dir: &Path) {
+    let source = bin_dir.join("staging_probe.rs");
+    fs::write(
+        &source,
+        r#"
+use std::time::Duration;
+
+fn main() {
+    std::thread::sleep(Duration::from_millis(1500));
+    std::process::exit(7);
+}
+"#,
+    )
+    .expect("write Windows staging probe source");
+    let rustc = std::env::var_os("RUSTC").unwrap_or_else(|| "rustc".into());
+    let openssl = bin_dir.join("openssl.exe");
+    let output = Command::new(rustc)
+        .arg("--edition=2024")
+        .arg(&source)
+        .arg("-o")
+        .arg(&openssl)
+        .output()
+        .expect("compile Windows staging probe");
+    assert!(
+        output.status.success(),
+        "compile Windows staging probe: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    fs::copy(&openssl, bin_dir.join("curl.exe")).expect("copy curl staging probe");
+}
+
+#[cfg(windows)]
+fn audit_windows_sddl(path: &Path) -> String {
+    let output = Command::new("powershell.exe")
+        .args([
+            "-NoProfile",
+            "-NonInteractive",
+            "-Command",
+            "(Get-Acl -LiteralPath $args[0]).Sddl",
+        ])
+        .arg(path)
+        .output()
+        .expect("read Windows security descriptor");
+    assert!(
+        output.status.success(),
+        "read Windows security descriptor: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    String::from_utf8_lossy(&output.stdout).trim().to_string()
+}
+
+#[cfg(windows)]
+#[test]
+fn audit_i6_windows_staging_is_private_at_the_platform_acl_boundary_or_refused() {
+    let temp = AuditTempDir::new("cloud_windows_parent");
+    let bin_dir = temp.path().join("bin");
+    let shared_temp = temp.path().join("shared-temp");
+    fs::create_dir(&bin_dir).expect("create Windows probe directory");
+    fs::create_dir(&shared_temp).expect("create permissive Windows temp directory");
+    compile_windows_staging_probe(&bin_dir);
+
+    let acl = Command::new("icacls")
+        .arg(&shared_temp)
+        .args(["/inheritance:r", "/grant:r", "*S-1-1-0:(OI)(CI)F"])
+        .output()
+        .expect("make Windows audit temp directory intentionally shared");
+    assert!(
+        acl.status.success(),
+        "configure permissive Windows ACL: {}",
+        String::from_utf8_lossy(&acl.stderr)
+    );
+    let acl_text = audit_windows_sddl(&shared_temp);
+    assert!(
+        acl_text.contains(";;;WD)"),
+        "fixture must prove its temp directory is shared: {acl_text}"
+    );
+
+    let credentials = temp.path().join("credentials.json");
+    fs::write(
+        &credentials,
+        r#"{"client_email":"audit@example.invalid","private_key":"synthetic-private-key","token_uri":"https://oauth.invalid/token"}"#,
+    )
+    .expect("write synthetic Windows credentials");
+    let inherited_path = std::env::var("PATH").unwrap_or_default();
+    let probe_path = format!("{};{inherited_path}", bin_dir.display());
+    let shared_temp = shared_temp.to_string_lossy().into_owned();
+    let credentials = credentials.to_string_lossy().into_owned();
+
+    for case in ["key", "body"] {
+        let acl_record = temp.path().join(format!("{case}.acl"));
+        let acl_record = acl_record.to_string_lossy().into_owned();
+        run_child_test(
+            "audit_regression::audit_i6_windows_cloud_temp_child",
+            &[
+                ("INARCH_AUDIT_CHILD_CASE", case),
+                ("AUDIT_ROOT", &shared_temp),
+                ("AUDIT_CREDENTIALS", &credentials),
+                ("AUDIT_ACL_RECORD", &acl_record),
+                ("TMP", &shared_temp),
+                ("TEMP", &shared_temp),
+                ("PATH", &probe_path),
+                ("INARCH_GCP_ACCESS_TOKEN", "synthetic-access-token"),
+            ],
+            Duration::from_secs(8),
+        );
+    }
+}
+
+#[cfg(windows)]
+#[test]
+fn audit_i6_windows_cloud_temp_child() {
+    use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
+
+    let Ok(case) = std::env::var("INARCH_AUDIT_CHILD_CASE") else {
+        return;
+    };
+    if case != "key" && case != "body" {
+        return;
+    }
+    let root = std::path::PathBuf::from(std::env::var("AUDIT_ROOT").expect("AUDIT_ROOT"));
+    let credentials =
+        std::path::PathBuf::from(std::env::var("AUDIT_CREDENTIALS").expect("AUDIT_CREDENTIALS"));
+    let acl_record = std::path::PathBuf::from(
+        std::env::var("AUDIT_ACL_RECORD").expect("AUDIT_ACL_RECORD"),
+    );
+    let stop = Arc::new(AtomicBool::new(false));
+    let observer_stop = stop.clone();
+    let observer_root = root.clone();
+    let observer_record = acl_record.clone();
+    let observer = std::thread::spawn(move || {
+        let deadline = Instant::now() + Duration::from_secs(3);
+        while !observer_stop.load(Ordering::Acquire) && Instant::now() < deadline {
+            if let Some(staged) = audit_staging_entries(&observer_root).into_iter().next() {
+                let sddl = audit_windows_sddl(&staged);
+                fs::write(&observer_record, sddl).expect("record staged Windows ACL");
+                return;
+            }
+            std::thread::sleep(Duration::from_millis(1));
+        }
+    });
+
+    let result = if case == "key" {
+        inarch_store::mint_service_account_id_token(
+            &credentials,
+            Some("https://oauth.invalid/token"),
+            "audit-windows-private-key",
+        )
+        .map(|_| ())
+    } else {
+        let body = b"synthetic Windows request body";
+        GcsBlobStore::with_endpoint("audit-bucket", "audit-prefix", "http://gcs.invalid")
+            .and_then(|store| {
+                store.put_object(
+                    ObjectDomain::Blob,
+                    ObjectHash::from_domain(ObjectDomain::Blob, body),
+                    body,
+                )
+            })
+    };
+    stop.store(true, Ordering::Release);
+    observer.join().expect("join Windows ACL observer");
+    let error = result.expect_err("the deliberate probe command must fail").to_string();
+
+    if acl_record.exists() {
+        let acl = fs::read_to_string(&acl_record).expect("read observed staged Windows ACL");
+        assert!(
+            !acl.contains(";;;WD)"),
+            "staged {case} inherited a shared Windows ACL: {acl}"
+        );
+    } else {
+        let error_lower = error.to_ascii_lowercase();
+        assert!(
+            error_lower.contains("private")
+                || error_lower.contains("secure")
+                || error_lower.contains("acl")
+                || error_lower.contains("permission"),
+            "safe refusal must identify why private Windows staging is unavailable: {error}"
+        );
+    }
+    assert!(
+        audit_staging_entries(&root).is_empty(),
+        "Windows {case} probe leaked a staged key or request body"
+    );
+}
+
 fn assert_incomplete_webdav_input_is_bounded(addr: std::net::SocketAddr, bytes: &[u8]) {
     let mut stream = TcpStream::connect(addr).expect("connect incomplete WebDAV request");
     stream
