@@ -240,8 +240,13 @@ fn engine_lcs_memory_child() {
     let theirs: String = (0..15_000)
         .map(|i| format!("theirs-{i:05}\n"))
         .collect();
-    let merged = three_way_merge_lines(&base, &theirs, &base);
-    assert_eq!(merged.as_deref(), Some(theirs.as_str()));
+    let ours: String = (0..15_000)
+        .map(|i| format!("ours-{i:05}\n"))
+        .collect();
+    // Both sides differ from the base: an unchanged-side shortcut must not
+    // bypass the quadratic diff that this regression is intended to exercise.
+    let merged = three_way_merge_lines(&base, &theirs, &ours);
+    assert_eq!(merged, None, "overlapping replacements must remain a conflict");
 }
 
 #[test]

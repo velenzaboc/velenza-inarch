@@ -15,7 +15,18 @@ const CAS_EXPECTED_ENV: &str = "INARCH_AUDIT_FS_CAS_EXPECTED";
 const CAS_TARGET_ENV: &str = "INARCH_AUDIT_FS_CAS_TARGET";
 const CAS_INDEX_ENV: &str = "INARCH_AUDIT_FS_CAS_INDEX";
 
-fn unique_temp_dir(label: &str) -> std::path::PathBuf {
+struct ScratchDir(std::path::PathBuf);
+
+impl std::ops::Deref for ScratchDir {
+    type Target = std::path::Path;
+    fn deref(&self) -> &Self::Target { &self.0 }
+}
+
+impl Drop for ScratchDir {
+    fn drop(&mut self) { let _ = std::fs::remove_dir_all(&self.0); }
+}
+
+fn unique_temp_dir(label: &str) -> ScratchDir {
     let nanos = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .expect("clock before epoch")
@@ -25,7 +36,7 @@ fn unique_temp_dir(label: &str) -> std::path::PathBuf {
         std::process::id()
     ));
     std::fs::create_dir_all(&dir).expect("create audit temp directory");
-    dir
+    ScratchDir(dir)
 }
 
 fn changeset(parent: Option<ChangesetId>, label: &str, timestamp: i64) -> BonsaiChangeset {
@@ -101,7 +112,7 @@ fn independent_process_filesystem_cas_has_exactly_one_winner() {
         let child = Command::new(&executable)
             .args(["--exact", "fs_cas_child_process", "--nocapture"])
             .env(CAS_CHILD_MARKER, "1")
-            .env(CAS_ROOT_ENV, &root)
+            .env(CAS_ROOT_ENV, root.as_os_str())
             .env(CAS_EXPECTED_ENV, seed_id.to_hex())
             .env(CAS_TARGET_ENV, candidate_id.to_hex())
             .env(CAS_INDEX_ENV, index.to_string())
@@ -124,6 +135,7 @@ fn independent_process_filesystem_cas_has_exactly_one_winner() {
             let _ = std::fs::write(root.join("go"), b"go");
             for child in &mut children {
                 let _ = child.kill();
+                let _ = child.wait();
             }
             panic!("only {ready}/{process_count} CAS children reached the barrier");
         }
@@ -159,5 +171,4 @@ fn independent_process_filesystem_cas_has_exactly_one_winner() {
     );
     assert_eq!(store.get_ref("main").expect("read final ref"), Some(candidate_id));
 
-    let _ = std::fs::remove_dir_all(root);
 }
