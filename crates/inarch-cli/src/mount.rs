@@ -35,6 +35,9 @@ use crate::CliError;
 
 /// Maximum allowed HTTP/WebDAV request body size (64 MiB).
 pub const MAX_WEBDAV_BODY_BYTES: usize = 64 * 1024 * 1024;
+const MAX_WEBDAV_REQUEST_LINE_BYTES: usize = 8 * 1024;
+const MAX_WEBDAV_HEADER_LINE_BYTES: usize = 16 * 1024;
+const MAX_WEBDAV_HEADERS_BYTES: usize = 32 * 1024;
 
 /// Manifest persisted at `<mount_dir>/.inarch/virtual_mount.toml`.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1032,10 +1035,13 @@ fn handle_webdav_connection(
     state: &WebDavMountState,
 ) -> Result<(), CliError> {
     let mut reader = BufReader::new(stream.try_clone()?);
-    let mut request_line = String::new();
-    if reader.read_line(&mut request_line)? == 0 {
+    let Some(request_line) = read_http_line_limited(
+        &mut reader,
+        MAX_WEBDAV_REQUEST_LINE_BYTES,
+        "request line",
+    )? else {
         return Ok(());
-    }
+    };
     let parts: Vec<&str> = request_line.split_whitespace().collect();
     if parts.len() < 2 {
         return Ok(());
@@ -1058,10 +1064,22 @@ fn handle_webdav_connection(
     let mut lock_token_header: Option<String> = None;
     let mut file_type_header: Option<String> = None;
 
+    let mut total_header_bytes = 0usize;
     loop {
-        let mut line = String::new();
-        if reader.read_line(&mut line)? == 0 {
+        let Some(line) = read_http_line_limited(
+            &mut reader,
+            MAX_WEBDAV_HEADER_LINE_BYTES,
+            "header line",
+        )? else {
             break;
+        };
+        total_header_bytes = total_header_bytes
+            .checked_add(line.len())
+            .ok_or_else(|| CliError::Io("WebDAV header length overflow".to_string()))?;
+        if total_header_bytes > MAX_WEBDAV_HEADERS_BYTES {
+            return Err(CliError::Io(
+                "WebDAV headers exceed the 32 KiB limit".to_string(),
+            ));
         }
         let trimmed = line.trim();
         if trimmed.is_empty() {
@@ -1689,11 +1707,9 @@ fn handle_webdav_connection(
         }
         "UNLOCK" => {
             let mut locks_guard = state.locks.lock().expect("locks mutex poisoned");
-            if let Some(existing) = locks_guard.get(&rel_path)
-                && let Some(ref hdr) = lock_token_header
-            {
-                let cleaned = hdr.trim().trim_start_matches('<').trim_end_matches('>');
-                if cleaned != existing {
+            if let Some(existing) = locks_guard.get(&rel_path) {
+                let expected = format!("<{existing}>");
+                if lock_token_header.as_deref().map(str::trim) != Some(expected.as_str()) {
                     return write_http_response(
                         &mut stream,
                         "423 Locked",
@@ -1716,6 +1732,28 @@ fn handle_webdav_connection(
         }
     }
     Ok(())
+}
+
+fn read_http_line_limited<R: BufRead>(
+    reader: &mut R,
+    max_bytes: usize,
+    label: &str,
+) -> Result<Option<String>, CliError> {
+    let mut bytes = Vec::with_capacity(max_bytes.min(1024));
+    let read = reader
+        .take((max_bytes + 1) as u64)
+        .read_until(b'\n', &mut bytes)?;
+    if read == 0 {
+        return Ok(None);
+    }
+    if bytes.len() > max_bytes {
+        return Err(CliError::Io(format!(
+            "WebDAV {label} exceeds the {max_bytes}-byte limit"
+        )));
+    }
+    String::from_utf8(bytes)
+        .map(Some)
+        .map_err(|_| CliError::Io(format!("WebDAV {label} is not valid UTF-8")))
 }
 
 fn write_detached_readonly_error(stream: &mut TcpStream) -> Result<(), CliError> {

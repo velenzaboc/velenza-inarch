@@ -503,11 +503,19 @@ impl ScionEngine {
                     self.meta.put_changeset(&template_cs)?;
                     last_written_cs_id = Some(cs_id);
                 }
-                match self
+                let cas_committed = match self
                     .meta
                     .cas_ref(&submission.target_ref, current_head, cs_id)
                 {
-                    Ok(()) => {
+                    Ok(()) => true,
+                    Err(StoreError::CasMismatch {
+                        actual: Some(actual),
+                        ..
+                    }) if actual == cs_id => true,
+                    Err(StoreError::CasMismatch { .. }) => false,
+                    Err(other) => return Err(EngineError::Store(other)),
+                };
+                if cas_committed {
                         self.telemetry.emit(
                             &TelemetryEvent::info(
                                 "engine",
@@ -532,10 +540,8 @@ impl ScionEngine {
                             rebased_across: 0,
                             cas_retries: attempt,
                         });
-                    }
-                    Err(StoreError::CasMismatch { .. }) => continue,
-                    Err(other) => return Err(EngineError::Store(other)),
                 }
+                continue;
             }
 
             // Speculative rebase path: `target_ref` advanced from `base` to `head`
@@ -739,11 +745,19 @@ impl ScionEngine {
                 last_written_cs_id = Some(rebased_id);
             }
 
-            match self
+            let cas_committed = match self
                 .meta
                 .cas_ref(&submission.target_ref, Some(head), rebased_id)
             {
-                Ok(()) => {
+                Ok(()) => true,
+                Err(StoreError::CasMismatch {
+                    actual: Some(actual),
+                    ..
+                }) if actual == rebased_id => true,
+                Err(StoreError::CasMismatch { .. }) => false,
+                Err(other) => return Err(EngineError::Store(other)),
+            };
+            if cas_committed {
                     self.telemetry.emit(
                         &TelemetryEvent::info(
                             "engine",
@@ -769,10 +783,8 @@ impl ScionEngine {
                         rebased_across: intermediates.len(),
                         cas_retries: attempt,
                     });
-                }
-                Err(StoreError::CasMismatch { .. }) => continue,
-                Err(other) => return Err(EngineError::Store(other)),
             }
+            continue;
         }
 
         Err(EngineError::InvalidPatch(format!(
@@ -1160,31 +1172,10 @@ fn compute_diff_hunks<'a>(base: &[&'a str], target: &[&'a str]) -> Vec<DiffHunk<
         return Vec::new();
     }
 
-    let mut dp = vec![0u32; (bn + 1) * (tm + 1)];
-    let stride = tm + 1;
-    for i in (0..bn).rev() {
-        for j in (0..tm).rev() {
-            dp[i * stride + j] = if b_mid[i] == t_mid[j] {
-                dp[(i + 1) * stride + (j + 1)] + 1
-            } else {
-                dp[(i + 1) * stride + j].max(dp[i * stride + (j + 1)])
-            };
-        }
-    }
-
+    let base_values: BTreeSet<&str> = b_mid.iter().copied().collect();
     let mut matches = Vec::new();
-    let mut i = 0usize;
-    let mut j = 0usize;
-    while i < bn && j < tm {
-        if b_mid[i] == t_mid[j] {
-            matches.push((prefix + i, prefix + j));
-            i += 1;
-            j += 1;
-        } else if dp[(i + 1) * stride + j] >= dp[i * stride + (j + 1)] {
-            i += 1;
-        } else {
-            j += 1;
-        }
+    if t_mid.iter().any(|line| base_values.contains(*line)) {
+        collect_lcs_matches(b_mid, t_mid, prefix, prefix, &mut matches);
     }
 
     let mut hunks = Vec::new();
@@ -1211,6 +1202,88 @@ fn compute_diff_hunks<'a>(base: &[&'a str], target: &[&'a str]) -> Vec<DiffHunk<
         });
     }
     hunks
+}
+
+fn collect_lcs_matches(
+    base: &[&str],
+    target: &[&str],
+    base_offset: usize,
+    target_offset: usize,
+    matches: &mut Vec<(usize, usize)>,
+) {
+    if base.is_empty() || target.is_empty() {
+        return;
+    }
+    if base.len() == 1 {
+        if let Some(target_index) = target.iter().position(|line| *line == base[0]) {
+            matches.push((base_offset, target_offset + target_index));
+        }
+        return;
+    }
+
+    let midpoint = base.len() / 2;
+    let forward = lcs_prefix_lengths(&base[..midpoint], target);
+    let suffix = lcs_suffix_lengths(&base[midpoint..], target);
+    let mut split = 0usize;
+    let mut best_score = 0usize;
+    for index in 0..=target.len() {
+        let score = forward[index] + suffix[index];
+        if score > best_score {
+            best_score = score;
+            split = index;
+        }
+    }
+    drop(forward);
+    drop(suffix);
+
+    collect_lcs_matches(
+        &base[..midpoint],
+        &target[..split],
+        base_offset,
+        target_offset,
+        matches,
+    );
+    collect_lcs_matches(
+        &base[midpoint..],
+        &target[split..],
+        base_offset + midpoint,
+        target_offset + split,
+        matches,
+    );
+}
+
+fn lcs_prefix_lengths(base: &[&str], target: &[&str]) -> Vec<usize> {
+    let mut previous = vec![0usize; target.len() + 1];
+    let mut current = vec![0usize; target.len() + 1];
+    for base_line in base {
+        current[0] = 0;
+        for (index, target_line) in target.iter().enumerate() {
+            current[index + 1] = if base_line == target_line {
+                previous[index] + 1
+            } else {
+                previous[index + 1].max(current[index])
+            };
+        }
+        std::mem::swap(&mut previous, &mut current);
+    }
+    previous
+}
+
+fn lcs_suffix_lengths(base: &[&str], target: &[&str]) -> Vec<usize> {
+    let mut previous = vec![0usize; target.len() + 1];
+    let mut current = vec![0usize; target.len() + 1];
+    for base_line in base.iter().rev() {
+        current[target.len()] = 0;
+        for index in (0..target.len()).rev() {
+            current[index] = if *base_line == target[index] {
+                previous[index + 1] + 1
+            } else {
+                previous[index].max(current[index + 1])
+            };
+        }
+        std::mem::swap(&mut previous, &mut current);
+    }
+    previous
 }
 
 /// Deterministic 3-way line-level merge of `their_str` and `our_str` relative to `base_str`.
@@ -1306,7 +1379,16 @@ pub fn three_way_merge_lines(base_str: &str, their_str: &str, our_str: &str) -> 
         out_lines.extend_from_slice(&base_lines[base_idx..]);
     }
 
-    let trailing_newline = our_str.ends_with('\n') || their_str.ends_with('\n');
+    let base_trailing_newline = base_str.ends_with('\n');
+    let their_trailing_newline = their_str.ends_with('\n');
+    let our_trailing_newline = our_str.ends_with('\n');
+    let trailing_newline = if their_trailing_newline == our_trailing_newline {
+        their_trailing_newline
+    } else if their_trailing_newline == base_trailing_newline {
+        our_trailing_newline
+    } else {
+        their_trailing_newline
+    };
     let mut result = out_lines.join("\n");
     if trailing_newline && !result.is_empty() {
         result.push('\n');

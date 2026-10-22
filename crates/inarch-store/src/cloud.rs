@@ -8,6 +8,7 @@
 
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
+use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::sync::{Arc, Mutex, RwLock};
 use std::time::{Duration, Instant};
@@ -22,6 +23,47 @@ use crate::{
 
 static SA_ID_TOKEN_CACHE: std::sync::OnceLock<Mutex<HashMap<String, (String, Instant)>>> =
     std::sync::OnceLock::new();
+
+struct StagedTempFile {
+    path: PathBuf,
+}
+
+impl StagedTempFile {
+    fn create(prefix: &str, suffix: &str, data: &[u8]) -> Result<Self, StoreError> {
+        let unique = format!(
+            "{prefix}_{}_{}{suffix}",
+            std::process::id(),
+            NEXT_REQ_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+        );
+        let path = std::env::temp_dir().join(unique);
+        let mut options = std::fs::OpenOptions::new();
+        options.write(true).create_new(true);
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::OpenOptionsExt;
+            options.mode(0o600);
+        }
+        let mut file = options.open(&path).map_err(|e| {
+            StoreError::Io(format!("failed to create exclusive staged file: {e}"))
+        })?;
+        if let Err(error) = file.write_all(data) {
+            drop(file);
+            let _ = std::fs::remove_file(&path);
+            return Err(StoreError::Io(format!("failed to write staged file: {error}")));
+        }
+        Ok(Self { path })
+    }
+
+    fn path(&self) -> &Path {
+        &self.path
+    }
+}
+
+impl Drop for StagedTempFile {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_file(&self.path);
+    }
+}
 
 /// Mints an OIDC `id_token` from a Google Cloud Service Account JSON key file
 /// using `openssl` (RS256 JWT assertion) and `curl --config -` (OAuth2 token exchange),
@@ -80,19 +122,8 @@ pub fn mint_service_account_id_token(
         base64url_encode(claims_json.as_bytes())
     );
 
-    let unique = format!(
-        "inarch_sakey_{}_{}.pem",
-        std::process::id(),
-        NEXT_REQ_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
-    );
-    let key_path = std::env::temp_dir().join(unique);
-    std::fs::write(&key_path, private_key.as_bytes())
-        .map_err(|e| StoreError::Io(format!("failed to stage temp key: {}", e)))?;
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
-        let _ = std::fs::set_permissions(&key_path, std::fs::Permissions::from_mode(0o600));
-    }
+    let key_file = StagedTempFile::create("inarch_sakey", ".pem", private_key.as_bytes())?;
+    let key_path = key_file.path().to_path_buf();
 
     let sign_res = (|| -> Result<Vec<u8>, StoreError> {
         let spawn_openssl = |bin: &str| {
@@ -135,7 +166,7 @@ pub fn mint_service_account_id_token(
         Ok(out.stdout)
     })();
 
-    let _ = std::fs::remove_file(&key_path);
+    drop(key_file);
     let sig_bytes = sign_res?;
     let assertion = format!("{}.{}", signing_input, base64url_encode(&sig_bytes));
 
@@ -340,19 +371,13 @@ fn curl_request_once(
     let mut cmd = Command::new("curl");
     cmd.args(["--config", "-"]);
 
-    let temp_body_path = if let Some(b) = body {
-        let unique = format!(
-            "inarch_req_{}_{}.tmp",
-            std::process::id(),
-            NEXT_REQ_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
-        );
-        let p = std::env::temp_dir().join(unique);
-        std::fs::write(&p, b).map_err(|e| StoreError::Io(e.to_string()))?;
+    let _temp_body = if let Some(b) = body {
+        let staged = StagedTempFile::create("inarch_req", ".tmp", b)?;
         cfg.push_str(&format!(
             "data-binary = \"@{}\"\n",
-            escape_curl_config(&p.to_string_lossy())
+            escape_curl_config(&staged.path().to_string_lossy())
         ));
-        Some(p)
+        Some(staged)
     } else {
         None
     };
@@ -370,10 +395,6 @@ fn curl_request_once(
     let out = child
         .wait_with_output()
         .map_err(|e| StoreError::Io(format!("curl wait error: {}", e)))?;
-
-    if let Some(p) = temp_body_path {
-        let _ = std::fs::remove_file(p);
-    }
 
     if !out.status.success() && out.stdout.is_empty() {
         return Err(StoreError::Io(format!(

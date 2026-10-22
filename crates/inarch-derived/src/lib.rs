@@ -623,9 +623,28 @@ impl DerivedDataEngine {
             })?;
         let content_str = String::from_utf8_lossy(&blob_bytes);
 
-        let blame = if let Some(&first_parent_fid) = unode.parents.first() {
-            let parent_blame = self.derive_blame_for_unode(first_parent_fid)?;
-            BlameV2::derive_from_parent(&parent_blame, &content_str, unode.linknode, &cs.author)
+        let blame = if !unode.parents.is_empty() {
+            let mut candidates = Vec::with_capacity(unode.parents.len());
+            for parent_fid in &unode.parents {
+                let parent_blame = self.derive_blame_for_unode(*parent_fid)?;
+                candidates.push(BlameV2::derive_from_parent(
+                    &parent_blame,
+                    &content_str,
+                    unode.linknode,
+                    &cs.author,
+                ));
+            }
+            let mut combined = candidates.remove(0);
+            for candidate in candidates {
+                for (line, alternative) in combined.lines.iter_mut().zip(candidate.lines) {
+                    if line.changeset_id == unode.linknode
+                        && alternative.changeset_id != unode.linknode
+                    {
+                        *line = alternative;
+                    }
+                }
+            }
+            combined
         } else {
             BlameV2::from_initial(&content_str, unode.linknode, &cs.author)
         };
@@ -1137,9 +1156,12 @@ impl DerivedDataEngine {
                 // If no deleted file matched >= 50%, check existing parent files sharing extension or directory
                 if best_match.is_none() {
                     let dest_ext = dest_path.as_str().rsplit('.').next().unwrap_or("");
+                    let dest_parent = dest_path.parent();
                     for (src_path, parent_entry) in &parent_idx.entries {
                         let src_ext = src_path.as_str().rsplit('.').next().unwrap_or("");
-                        if !dest_ext.is_empty() && dest_ext == src_ext {
+                        let same_directory = src_path.parent() == dest_parent;
+                        let same_extension = !dest_ext.is_empty() && dest_ext == src_ext;
+                        if same_directory || same_extension {
                             if let Some(src_bytes) =
                                 self.blobs.get_blob_content(&parent_entry.blob_id)?
                             {

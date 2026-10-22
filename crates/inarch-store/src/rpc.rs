@@ -1886,11 +1886,26 @@ pub struct RemoteRpcClient {
 }
 
 impl RemoteRpcClient {
+    /// Validates a remote RPC URL without resolving credentials or opening a connection.
+    pub fn validate_remote_url(remote_url: &str) -> Result<(), StoreError> {
+        let trimmed = remote_url.trim();
+        if trimmed
+            .get(..8)
+            .is_some_and(|scheme| scheme.eq_ignore_ascii_case("https://"))
+        {
+            return Err(StoreError::Io(
+                "HTTPS remote URLs are unsupported because this client has no TLS transport"
+                    .to_string(),
+            ));
+        }
+        Ok(())
+    }
+
     pub fn new(remote_url: &str, auth_token: Option<String>) -> Result<Self, StoreError> {
+        Self::validate_remote_url(remote_url)?;
         let trimmed = remote_url.trim().trim_end_matches('/');
         let without_scheme = trimmed
             .strip_prefix("http://")
-            .or_else(|| trimmed.strip_prefix("https://"))
             .unwrap_or(trimmed);
         let host_port = without_scheme
             .split('/')

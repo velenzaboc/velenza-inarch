@@ -16,7 +16,8 @@ use inarch_antique::{PathAclPolicy, PathAclRule};
 use inarch_engine::ScionEngine;
 use inarch_store::{
     BlobStore, FsBlobStore, FsMetadataStore, GcsBlobStore, MemBlobStore, MetadataStore,
-    RemoteBlobStore, RemoteMetadataStore, ScopedMetadataStore, SpannerMetadataStore,
+    RemoteBlobStore, RemoteMetadataStore, RemoteRpcClient, ScopedMetadataStore,
+    SpannerMetadataStore,
     TieredBlobStore,
 };
 use inarch_types::path::MPath;
@@ -772,6 +773,7 @@ impl InarchConfig {
 
     /// Opens a persistent [`ScionEngine`] backed by the configured 3-tier blob store and metadata store.
     pub fn open_engine(&self, workspace_root: &Path) -> Result<Arc<ScionEngine>, CliError> {
+        self.validate_supported_acl_policy()?;
         let tier1: Arc<dyn BlobStore> = match self.resolved_tier1_cache_dir(workspace_root) {
             None => Arc::new(MemBlobStore::new()),
             Some(p) => Arc::new(FsBlobStore::new(p).map_err(inarch_engine::EngineError::Store)?),
@@ -799,6 +801,11 @@ impl InarchConfig {
         } else {
             self.meta_backend.trim()
         };
+
+        if effective_blob_backend == "remote" || effective_meta_backend == "remote" {
+            RemoteRpcClient::validate_remote_url(self.remote_url.trim())
+                .map_err(inarch_engine::EngineError::Store)?;
+        }
 
         let (opt_token, effective_repo_id) =
             if effective_blob_backend == "remote" || effective_meta_backend == "remote" {
@@ -916,6 +923,7 @@ impl InarchConfig {
         &self,
         workspace_root: &Path,
     ) -> Result<(Arc<dyn BlobStore>, Arc<dyn MetadataStore>), CliError> {
+        self.validate_supported_acl_policy()?;
         let tier1: Arc<dyn BlobStore> = if self.tier1_cache_dir.trim().is_empty() {
             Arc::new(MemBlobStore::new())
         } else {
@@ -988,6 +996,7 @@ impl InarchConfig {
 
     /// Builds an Antique [`PathAclPolicy`] from the configured `[[acl_rules]]`.
     pub fn build_acl_policy(&self) -> Result<PathAclPolicy, CliError> {
+        self.validate_supported_acl_policy()?;
         let mut policy = PathAclPolicy::new();
         for rule in &self.acl_rules {
             let trimmed = rule.prefix.trim().trim_matches('/');
@@ -1006,6 +1015,20 @@ impl InarchConfig {
             });
         }
         Ok(policy)
+    }
+
+    fn validate_supported_acl_policy(&self) -> Result<(), CliError> {
+        if let Some(rule) = self
+            .acl_rules
+            .iter()
+            .find(|rule| !rule.required_reviewers.is_empty())
+        {
+            return Err(CliError::InvalidArgument(format!(
+                "required_reviewers is unsupported because reviewer evidence enforcement is not implemented (ACL prefix {:?})",
+                rule.prefix
+            )));
+        }
+        Ok(())
     }
 
     /// Serializes this configuration into a documented TOML string.
@@ -1335,6 +1358,7 @@ impl InarchConfig {
             cfg.acl_rules.push(prev);
         }
 
+        cfg.validate_supported_acl_policy()?;
         Ok(cfg)
     }
 }
