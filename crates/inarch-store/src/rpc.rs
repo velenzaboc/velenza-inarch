@@ -1948,12 +1948,15 @@ impl RemoteRpcClient {
 
     pub fn call(&self, req: &RpcRequest) -> Result<RpcResponse, StoreError> {
         let payload = req.encode();
+        let may_replay_after_transport_failure = !matches!(req, RpcRequest::CasRef { .. });
         let mut guard = self
             .conn
             .lock()
             .map_err(|_| StoreError::Io("remote client lock poisoned".into()))?;
 
-        // Try once on existing keep-alive socket; if broken, reconnect once.
+        // Read and idempotent requests may reconnect once after a broken keep-alive
+        // socket. A CAS response loss leaves the mutation outcome unknowable, so
+        // replaying it could overwrite or conflict with an intervening writer.
         for attempt in 0..2 {
             if guard.is_none() {
                 let stream = TcpStream::connect(&self.host_port)
@@ -1977,6 +1980,11 @@ impl RemoteRpcClient {
                 }
                 Err(e) => {
                     *guard = None;
+                    if !may_replay_after_transport_failure {
+                        return Err(StoreError::Io(format!(
+                            "ambiguous remote CAS outcome after transport failure; request was not replayed: {e}"
+                        )));
+                    }
                     if attempt == 1 {
                         return Err(e);
                     }

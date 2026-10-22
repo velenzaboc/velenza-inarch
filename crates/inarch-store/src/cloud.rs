@@ -28,6 +28,166 @@ struct StagedTempFile {
     path: PathBuf,
 }
 
+#[cfg(unix)]
+fn create_private_staged_file(path: &Path) -> Result<std::fs::File, StoreError> {
+    use std::os::unix::fs::OpenOptionsExt;
+
+    std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .mode(0o600)
+        .open(path)
+        .map_err(|e| {
+            StoreError::Io(format!(
+                "failed to create exclusive private staged file: {e}"
+            ))
+        })
+}
+
+#[cfg(windows)]
+fn create_private_staged_file(path: &Path) -> Result<std::fs::File, StoreError> {
+    use std::ffi::c_void;
+    use std::os::windows::ffi::OsStrExt;
+    use std::os::windows::io::FromRawHandle;
+    use std::ptr::null_mut;
+
+    #[repr(C)]
+    struct SecurityAttributes {
+        length: u32,
+        security_descriptor: *mut c_void,
+        inherit_handle: i32,
+    }
+
+    #[link(name = "advapi32")]
+    unsafe extern "system" {
+        fn ConvertStringSecurityDescriptorToSecurityDescriptorW(
+            string_security_descriptor: *const u16,
+            string_sd_revision: u32,
+            security_descriptor: *mut *mut c_void,
+            security_descriptor_size: *mut u32,
+        ) -> i32;
+    }
+
+    #[link(name = "kernel32")]
+    unsafe extern "system" {
+        fn CreateFileW(
+            file_name: *const u16,
+            desired_access: u32,
+            share_mode: u32,
+            security_attributes: *const SecurityAttributes,
+            creation_disposition: u32,
+            flags_and_attributes: u32,
+            template_file: *mut c_void,
+        ) -> *mut c_void;
+        fn GetVolumeInformationByHandleW(
+            file: *mut c_void,
+            volume_name_buffer: *mut u16,
+            volume_name_size: u32,
+            volume_serial_number: *mut u32,
+            maximum_component_length: *mut u32,
+            file_system_flags: *mut u32,
+            file_system_name_buffer: *mut u16,
+            file_system_name_size: u32,
+        ) -> i32;
+        fn LocalFree(memory: *mut c_void) -> *mut c_void;
+    }
+
+    const SDDL_REVISION_1: u32 = 1;
+    const GENERIC_WRITE: u32 = 0x4000_0000;
+    const FILE_SHARE_READ: u32 = 0x0000_0001;
+    const FILE_SHARE_WRITE: u32 = 0x0000_0002;
+    const FILE_SHARE_DELETE: u32 = 0x0000_0004;
+    const CREATE_NEW: u32 = 1;
+    const FILE_ATTRIBUTE_NORMAL: u32 = 0x0000_0080;
+    const FILE_PERSISTENT_ACLS: u32 = 0x0000_0008;
+    const INVALID_HANDLE_VALUE: *mut c_void = -1isize as *mut c_void;
+
+    // Protect the DACL from inheritance and grant access only to the file owner,
+    // Local System, and the local Administrators group. The descriptor is supplied
+    // to CreateFileW so the file is private from the instant it becomes visible.
+    let sddl: Vec<u16> = "D:P(A;;GA;;;OW)(A;;GA;;;SY)(A;;GA;;;BA)\0"
+        .encode_utf16()
+        .collect();
+    let mut descriptor = null_mut();
+    let converted = unsafe {
+        ConvertStringSecurityDescriptorToSecurityDescriptorW(
+            sddl.as_ptr(),
+            SDDL_REVISION_1,
+            &mut descriptor,
+            null_mut(),
+        )
+    };
+    if converted == 0 {
+        return Err(StoreError::Io(format!(
+            "failed to create private Windows staged-file ACL: {}",
+            std::io::Error::last_os_error()
+        )));
+    }
+
+    let path_wide: Vec<u16> = path.as_os_str().encode_wide().chain(Some(0)).collect();
+    let attributes = SecurityAttributes {
+        length: std::mem::size_of::<SecurityAttributes>() as u32,
+        security_descriptor: descriptor,
+        inherit_handle: 0,
+    };
+    let handle = unsafe {
+        CreateFileW(
+            path_wide.as_ptr(),
+            GENERIC_WRITE,
+            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+            &attributes,
+            CREATE_NEW,
+            FILE_ATTRIBUTE_NORMAL,
+            null_mut(),
+        )
+    };
+    let create_error = (handle == INVALID_HANDLE_VALUE).then(std::io::Error::last_os_error);
+    unsafe {
+        LocalFree(descriptor);
+    }
+    if let Some(error) = create_error {
+        return Err(StoreError::Io(format!(
+            "failed to create exclusive private Windows staged file: {error}"
+        )));
+    }
+
+    let file = unsafe { std::fs::File::from_raw_handle(handle) };
+    let mut file_system_flags = 0;
+    let volume_info_ok = unsafe {
+        GetVolumeInformationByHandleW(
+            handle,
+            null_mut(),
+            0,
+            null_mut(),
+            null_mut(),
+            &mut file_system_flags,
+            null_mut(),
+            0,
+        )
+    };
+    if volume_info_ok == 0 || file_system_flags & FILE_PERSISTENT_ACLS == 0 {
+        let detail = if volume_info_ok == 0 {
+            format!(": {}", std::io::Error::last_os_error())
+        } else {
+            String::new()
+        };
+        drop(file);
+        let _ = std::fs::remove_file(path);
+        return Err(StoreError::Io(format!(
+            "private Windows staged-file ACLs are unavailable on this filesystem{detail}"
+        )));
+    }
+
+    Ok(file)
+}
+
+#[cfg(not(any(unix, windows)))]
+fn create_private_staged_file(_path: &Path) -> Result<std::fs::File, StoreError> {
+    Err(StoreError::Io(
+        "private staged-file creation is unsupported on this platform".to_string(),
+    ))
+}
+
 impl StagedTempFile {
     fn create(prefix: &str, suffix: &str, data: &[u8]) -> Result<Self, StoreError> {
         let unique = format!(
@@ -36,16 +196,7 @@ impl StagedTempFile {
             NEXT_REQ_ID.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
         );
         let path = std::env::temp_dir().join(unique);
-        let mut options = std::fs::OpenOptions::new();
-        options.write(true).create_new(true);
-        #[cfg(unix)]
-        {
-            use std::os::unix::fs::OpenOptionsExt;
-            options.mode(0o600);
-        }
-        let mut file = options.open(&path).map_err(|e| {
-            StoreError::Io(format!("failed to create exclusive staged file: {e}"))
-        })?;
+        let mut file = create_private_staged_file(&path)?;
         if let Err(error) = file.write_all(data) {
             drop(file);
             let _ = std::fs::remove_file(&path);
