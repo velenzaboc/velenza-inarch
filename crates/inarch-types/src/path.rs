@@ -13,6 +13,8 @@ pub enum PathError {
     DotDotComponent,
     NulByte,
     SlashInElement,
+    BackslashInElement,
+    WindowsDrivePrefix,
 }
 
 impl fmt::Display for PathError {
@@ -26,13 +28,19 @@ impl fmt::Display for PathError {
             PathError::DotDotComponent => write!(f, "repository path must not contain '..'"),
             PathError::NulByte => write!(f, "repository path must not contain NUL bytes"),
             PathError::SlashInElement => write!(f, "single path element must not contain '/'"),
+            PathError::BackslashInElement => {
+                write!(f, "single path element must not contain '\\\\'")
+            }
+            PathError::WindowsDrivePrefix => {
+                write!(f, "repository path must not contain a Windows drive prefix")
+            }
         }
     }
 }
 
 impl std::error::Error for PathError {}
 
-/// A single validated directory or file name component (guaranteed non-empty, no `/`, `\0`, `.`, or `..`).
+/// A single portable directory or file name component.
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct MPathElement(String);
 
@@ -48,6 +56,13 @@ impl MPathElement {
         }
         if s.contains('/') {
             return Err(PathError::SlashInElement);
+        }
+        if s.contains('\\') {
+            return Err(PathError::BackslashInElement);
+        }
+        let bytes = s.as_bytes();
+        if bytes.len() >= 2 && bytes[0].is_ascii_alphabetic() && bytes[1] == b':' {
+            return Err(PathError::WindowsDrivePrefix);
         }
         if s == "." {
             return Err(PathError::DotComponent);

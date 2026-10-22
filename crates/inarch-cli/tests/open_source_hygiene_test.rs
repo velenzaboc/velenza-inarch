@@ -9,6 +9,8 @@
 //!    in the repository (enforced via cryptographic `BlobId` token digests and optional local
 //!    `.git/info/forbidden-patterns.txt`).
 
+mod audit_regression;
+
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -88,6 +90,31 @@ fn unique_temp_dir(label: &str) -> PathBuf {
 }
 
 #[test]
+fn readme_advertises_the_workspace_minimum_supported_rust_version() {
+    let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let repo_root = manifest_dir
+        .parent()
+        .and_then(Path::parent)
+        .expect("workspace root above inarch-cli crate");
+    let workspace_manifest = fs::read_to_string(repo_root.join("Cargo.toml"))
+        .expect("read workspace Cargo.toml");
+    let declared = workspace_manifest
+        .lines()
+        .find_map(|line| {
+            line.trim()
+                .strip_prefix("rust-version = \"")
+                .and_then(|value| value.strip_suffix('\"'))
+        })
+        .expect("workspace rust-version declaration");
+    let readme = fs::read_to_string(repo_root.join("README.md")).expect("read workspace README");
+    let advertised = format!("Requires **Rust {declared}+**");
+    assert!(
+        readme.contains(&advertised),
+        "README build prerequisites must advertise the Cargo.toml MSRV exactly; expected {advertised:?}"
+    );
+}
+
+#[test]
 fn config_toml_roundtrip_and_acl_policy_construction() {
     let custom_cfg = InarchConfig {
         repo_id: "acme-monorepo".to_string(),
@@ -134,12 +161,12 @@ fn config_toml_roundtrip_and_acl_policy_construction() {
                     "secops@example.com".to_string(),
                     "release-bot@example.com".to_string(),
                 ],
-                required_reviewers: vec!["ciso@example.com".to_string()],
+                required_reviewers: Vec::new(),
             },
             AclRuleConfig {
                 prefix: "billing/ledger".to_string(),
                 allowed_actors: vec!["finance-lead@example.com".to_string()],
-                required_reviewers: vec!["auditor@example.com".to_string()],
+                required_reviewers: Vec::new(),
             },
         ],
     };
@@ -164,7 +191,7 @@ fn config_toml_roundtrip_and_acl_policy_construction() {
     assert_eq!(example_cfg.default_ref, "main");
     assert_eq!(example_cfg.chunk_avg_size, 65536);
 
-    // Verify ACL policy construction from config
+    // Verify the supported actor-only ACL policy construction from config.
     let acl_policy = parsed.build_acl_policy().expect("build ACL policy");
     let restricted_path = MPath::new("security/keys/root.pem").unwrap();
     let unrestricted_path = MPath::new("crates/core/lib.rs").unwrap();

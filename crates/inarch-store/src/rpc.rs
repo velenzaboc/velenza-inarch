@@ -1886,11 +1886,26 @@ pub struct RemoteRpcClient {
 }
 
 impl RemoteRpcClient {
+    /// Validates a remote RPC URL without resolving credentials or opening a connection.
+    pub fn validate_remote_url(remote_url: &str) -> Result<(), StoreError> {
+        let trimmed = remote_url.trim();
+        if trimmed
+            .get(..8)
+            .is_some_and(|scheme| scheme.eq_ignore_ascii_case("https://"))
+        {
+            return Err(StoreError::Io(
+                "HTTPS remote URLs are unsupported because this client has no TLS transport"
+                    .to_string(),
+            ));
+        }
+        Ok(())
+    }
+
     pub fn new(remote_url: &str, auth_token: Option<String>) -> Result<Self, StoreError> {
+        Self::validate_remote_url(remote_url)?;
         let trimmed = remote_url.trim().trim_end_matches('/');
         let without_scheme = trimmed
             .strip_prefix("http://")
-            .or_else(|| trimmed.strip_prefix("https://"))
             .unwrap_or(trimmed);
         let host_port = without_scheme
             .split('/')
@@ -1933,12 +1948,15 @@ impl RemoteRpcClient {
 
     pub fn call(&self, req: &RpcRequest) -> Result<RpcResponse, StoreError> {
         let payload = req.encode();
+        let may_replay_after_transport_failure = !matches!(req, RpcRequest::CasRef { .. });
         let mut guard = self
             .conn
             .lock()
             .map_err(|_| StoreError::Io("remote client lock poisoned".into()))?;
 
-        // Try once on existing keep-alive socket; if broken, reconnect once.
+        // Read and idempotent requests may reconnect once after a broken keep-alive
+        // socket. A CAS response loss leaves the mutation outcome unknowable, so
+        // replaying it could overwrite or conflict with an intervening writer.
         for attempt in 0..2 {
             if guard.is_none() {
                 let stream = TcpStream::connect(&self.host_port)
@@ -1962,6 +1980,11 @@ impl RemoteRpcClient {
                 }
                 Err(e) => {
                     *guard = None;
+                    if !may_replay_after_transport_failure {
+                        return Err(StoreError::Io(format!(
+                            "ambiguous remote CAS outcome after transport failure; request was not replayed: {e}"
+                        )));
+                    }
                     if attempt == 1 {
                         return Err(e);
                     }

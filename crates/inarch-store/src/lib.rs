@@ -341,11 +341,25 @@ pub trait BlobStore: Send + Sync {
         let mut results = Vec::with_capacity(raw_entries.len());
         for ((blob_id, opt_raw), opt_manifest) in blob_ids.iter().zip(raw_entries).zip(manifests) {
             if let Some((total_size, chunk_hashes)) = opt_manifest {
-                let mut reassembled = Vec::with_capacity(total_size as usize);
+                // `total_size` is untrusted manifest input. Grow only from fetched,
+                // integrity-checked chunks and enforce the declaration as a bound.
+                let mut reassembled = Vec::new();
                 let mut missing = false;
                 for ch in chunk_hashes {
                     let idx = unique_chunk_hashes[&ch];
                     if let Some(chunk_bytes) = &fetched_chunks[idx] {
+                        let next_size = (reassembled.len() as u64)
+                            .checked_add(chunk_bytes.len() as u64)
+                            .ok_or_else(|| {
+                                StoreError::SnapshotCorrupted(
+                                    "chunk manifest reconstructed size overflow".to_string(),
+                                )
+                            })?;
+                        if next_size > total_size {
+                            return Err(StoreError::SnapshotCorrupted(format!(
+                                "chunk manifest declared {total_size} bytes but chunks exceed that size"
+                            )));
+                        }
                         reassembled.extend_from_slice(chunk_bytes);
                     } else {
                         missing = true;
@@ -355,6 +369,12 @@ pub trait BlobStore: Send + Sync {
                 if missing {
                     results.push(None);
                 } else {
+                    if reassembled.len() as u64 != total_size {
+                        return Err(StoreError::SnapshotCorrupted(format!(
+                            "chunk manifest declared {total_size} bytes but reconstructed {} bytes",
+                            reassembled.len()
+                        )));
+                    }
                     let actual = ObjectHash::from_domain(ObjectDomain::Blob, &reassembled);
                     if actual != blob_id.0 {
                         return Err(StoreError::IntegrityMismatch {
@@ -417,7 +437,18 @@ fn decode_chunk_manifest(
     }
     let total_size = u64::from_le_bytes(data[40..48].try_into().unwrap());
     let chunk_count = u32::from_le_bytes(data[48..52].try_into().unwrap()) as usize;
-    if 52 + chunk_count * 32 != data.len() {
+    if chunk_count == 0 {
+        return Err(StoreError::SnapshotCorrupted(
+            "chunk manifest must contain at least one chunk".to_string(),
+        ));
+    }
+    let expected_len = chunk_count
+        .checked_mul(32)
+        .and_then(|chunk_bytes| 52usize.checked_add(chunk_bytes))
+        .ok_or_else(|| {
+            StoreError::SnapshotCorrupted("chunk manifest length overflow".to_string())
+        })?;
+    if expected_len != data.len() {
         return Err(StoreError::IntegrityMismatch {
             domain: ObjectDomain::Blob,
             expected: expected_blob_hash,
@@ -1284,7 +1315,7 @@ pub trait MetadataStore: Send + Sync {
     /// Lists all global refs and their current `ChangesetId` targets.
     fn list_refs(&self) -> Result<BTreeMap<String, ChangesetId>, StoreError>;
 
-    /// Lock-free atomic Compare-And-Swap on a single ref row.
+    /// Atomic Compare-And-Swap on a single ref row.
     /// Succeeds iff the current value of `ref_name` equals `expected` AND `new_target` exists in the store.
     fn cas_ref(
         &self,
@@ -1728,6 +1759,16 @@ impl MetadataStore for FsMetadataStore {
         new_target: ChangesetId,
     ) -> Result<(), StoreError> {
         let _guard = self.lock.write().expect("FsMetadataStore lock poisoned");
+        let refs_lock_path = self.root.join("refs").join(".cas.lock");
+        let refs_lock = std::fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .open(&refs_lock_path)
+            .map_err(|e| StoreError::Io(format!("open ref CAS lock: {e}")))?;
+        refs_lock
+            .lock()
+            .map_err(|e| StoreError::Io(format!("lock refs for CAS: {e}")))?;
         if !self.changeset_path(&new_target).exists() {
             return Err(StoreError::UnknownChangeset(new_target));
         }

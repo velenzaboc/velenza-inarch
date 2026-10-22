@@ -162,7 +162,7 @@ Once implemented, register the backend identifier in [`InarchConfig::open_engine
 
 ### 1. Build & Test
 
-Requires **Rust 1.85+** (Rust 2024 Edition) on macOS, Linux, or Windows:
+Requires **Rust 1.89+** (Rust 2024 Edition) on macOS, Linux, or Windows:
 
 ```bash
 # Build release binaries (`inr` and `velenza-inarch`)

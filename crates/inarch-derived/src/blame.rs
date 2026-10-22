@@ -4,6 +4,8 @@
 //! walks only the file's `UnodeFile` history and applies longest-common-subsequence (LCS)
 //! line diffing between parent and child file blobs.
 
+use std::collections::BTreeSet;
+
 use inarch_types::hash::ChangesetId;
 
 /// Attribution for a single 1-indexed line in a file.
@@ -51,31 +53,26 @@ impl BlameV2 {
         let n = parent_blame.lines.len();
         let m = new_lines.len();
 
-        // Standard dynamic-programming LCS table over (parent_lines, new_lines)
-        let mut dp = vec![vec![0usize; m + 1]; n + 1];
-        for i in (0..n).rev() {
-            for j in (0..m).rev() {
-                if parent_blame.lines[i].content == new_lines[j] {
-                    dp[i][j] = 1 + dp[i + 1][j + 1];
-                } else {
-                    dp[i][j] = dp[i + 1][j].max(dp[i][j + 1]);
-                }
-            }
-        }
-
-        // Reconstruct matched indices (parent_idx -> new_idx)
+        // Reconstruct exact LCS matches with Hirschberg's divide-and-conquer
+        // algorithm. It preserves LCS behavior while using linear memory.
         let mut matched_parent_for_new = vec![None; m];
-        let mut i = 0;
-        let mut j = 0;
-        while i < n && j < m {
-            if parent_blame.lines[i].content == new_lines[j] {
-                matched_parent_for_new[j] = Some(i);
-                i += 1;
-                j += 1;
-            } else if dp[i + 1][j] >= dp[i][j + 1] {
-                i += 1;
-            } else {
-                j += 1;
+        if n > 0 && m > 0 {
+            let parent_values: BTreeSet<&str> = parent_blame
+                .lines
+                .iter()
+                .map(|line| line.content.as_str())
+                .collect();
+            if new_lines
+                .iter()
+                .any(|line| parent_values.contains(*line))
+            {
+                collect_lcs_matches(
+                    &parent_blame.lines,
+                    &new_lines,
+                    0,
+                    0,
+                    &mut matched_parent_for_new,
+                );
             }
         }
 
@@ -104,6 +101,91 @@ impl BlameV2 {
 
         Self { lines }
     }
+}
+
+fn collect_lcs_matches(
+    parent: &[BlameLine],
+    child: &[&str],
+    parent_offset: usize,
+    child_offset: usize,
+    matched_parent_for_new: &mut [Option<usize>],
+) {
+    if parent.is_empty() || child.is_empty() {
+        return;
+    }
+    if parent.len() == 1 {
+        if let Some(child_index) = child
+            .iter()
+            .position(|line| *line == parent[0].content.as_str())
+        {
+            matched_parent_for_new[child_offset + child_index] = Some(parent_offset);
+        }
+        return;
+    }
+
+    let midpoint = parent.len() / 2;
+    let forward = lcs_prefix_lengths(&parent[..midpoint], child);
+    let suffix = lcs_suffix_lengths(&parent[midpoint..], child);
+    let mut split = 0usize;
+    let mut best_score = 0usize;
+    for index in 0..=child.len() {
+        let score = forward[index] + suffix[index];
+        if score > best_score {
+            best_score = score;
+            split = index;
+        }
+    }
+    drop(forward);
+    drop(suffix);
+
+    collect_lcs_matches(
+        &parent[..midpoint],
+        &child[..split],
+        parent_offset,
+        child_offset,
+        matched_parent_for_new,
+    );
+    collect_lcs_matches(
+        &parent[midpoint..],
+        &child[split..],
+        parent_offset + midpoint,
+        child_offset + split,
+        matched_parent_for_new,
+    );
+}
+
+fn lcs_prefix_lengths(parent: &[BlameLine], child: &[&str]) -> Vec<usize> {
+    let mut previous = vec![0usize; child.len() + 1];
+    let mut current = vec![0usize; child.len() + 1];
+    for parent_line in parent {
+        current[0] = 0;
+        for (index, child_line) in child.iter().enumerate() {
+            current[index + 1] = if parent_line.content == *child_line {
+                previous[index] + 1
+            } else {
+                previous[index + 1].max(current[index])
+            };
+        }
+        std::mem::swap(&mut previous, &mut current);
+    }
+    previous
+}
+
+fn lcs_suffix_lengths(parent: &[BlameLine], child: &[&str]) -> Vec<usize> {
+    let mut previous = vec![0usize; child.len() + 1];
+    let mut current = vec![0usize; child.len() + 1];
+    for parent_line in parent.iter().rev() {
+        current[child.len()] = 0;
+        for index in (0..child.len()).rev() {
+            current[index] = if parent_line.content == child[index] {
+                previous[index + 1] + 1
+            } else {
+                previous[index].max(current[index + 1])
+            };
+        }
+        std::mem::swap(&mut previous, &mut current);
+    }
+    previous
 }
 
 fn split_lines(text: &str) -> Vec<&str> {
