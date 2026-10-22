@@ -674,9 +674,9 @@ fn audit_windows_sddl(path: &Path) -> String {
             "-NoProfile",
             "-NonInteractive",
             "-Command",
-            "(Get-Acl -LiteralPath $args[0]).Sddl",
+            "(Get-Acl -LiteralPath $env:INARCH_AUDIT_ACL_PATH).Sddl",
         ])
-        .arg(path)
+        .env("INARCH_AUDIT_ACL_PATH", path)
         .output()
         .expect("read Windows security descriptor");
     assert!(
