@@ -1,0 +1,148 @@
+# Table-driven lint cases for the replay corpus protocol tests.
+#
+# corpus_case: start from corpus_manifest.toml, apply every `mutate` entry, lint.
+#   mutate entry grammar:  <repo name or *>:<field>=<value>
+#   fields: commit_sha, commit_count, language, synthetic, remove (value ignored)
+#   expect_exit:  0 only when the lint finds nothing, otherwise 1
+#   expect_kinds: the exact set of violation kinds, sorted, without repeats
+#   expect_repo:  optional, the repository the per-repository violation names
+#
+# mix_case: measure the commits of workload_sample.json after dropping the listed
+#   zero-based indexes, then lint that measurement against the full sample.
+#   expect_violations: exact set of "<distribution>:<moment>" labels past 10%
+#   expect_relative:   optional "<label>=<relative deviation>" pins, independently
+#                      computed from the recorded sample with jq
+
+[[corpus_case]]
+name = "committed_manifest_is_clean"
+mutate = []
+expect_exit = 0
+expect_kinds = []
+
+[[corpus_case]]
+name = "branch_name_is_not_a_pin"
+mutate = ["kubernetes:commit_sha=master"]
+expect_exit = 1
+expect_kinds = ["unpinned_repo"]
+expect_repo = "kubernetes"
+
+[[corpus_case]]
+name = "symbolic_head_is_not_a_pin"
+mutate = ["vscode:commit_sha=HEAD"]
+expect_exit = 1
+expect_kinds = ["unpinned_repo"]
+expect_repo = "vscode"
+
+[[corpus_case]]
+name = "release_tag_is_not_a_pin"
+mutate = ["kubernetes:commit_sha=v1.31.0"]
+expect_exit = 1
+expect_kinds = ["unpinned_repo"]
+expect_repo = "kubernetes"
+
+[[corpus_case]]
+name = "abbreviated_sha_is_not_a_pin"
+mutate = ["home-assistant:commit_sha=e40dde763b82"]
+expect_exit = 1
+expect_kinds = ["unpinned_repo"]
+expect_repo = "home-assistant"
+
+[[corpus_case]]
+name = "empty_sha_is_not_a_pin"
+mutate = ["kubernetes:commit_sha="]
+expect_exit = 1
+expect_kinds = ["unpinned_repo"]
+expect_repo = "kubernetes"
+
+[[corpus_case]]
+name = "forty_non_hex_characters_are_not_a_pin"
+mutate = ["vscode:commit_sha=gggggggggggggggggggggggggggggggggggggggg"]
+expect_exit = 1
+expect_kinds = ["unpinned_repo"]
+expect_repo = "vscode"
+
+[[corpus_case]]
+name = "all_zero_object_id_is_not_a_pin"
+mutate = ["home-assistant:commit_sha=0000000000000000000000000000000000000000"]
+expect_exit = 1
+expect_kinds = ["unpinned_repo"]
+expect_repo = "home-assistant"
+
+[[corpus_case]]
+name = "synthetic_repository_is_refused"
+mutate = ["home-assistant:synthetic=true"]
+expect_exit = 1
+expect_kinds = ["synthetic_repo"]
+expect_repo = "home-assistant"
+
+[[corpus_case]]
+name = "unpinned_and_synthetic_are_both_reported"
+mutate = ["kubernetes:commit_sha=master", "kubernetes:synthetic=true"]
+expect_exit = 1
+expect_kinds = ["synthetic_repo", "unpinned_repo"]
+expect_repo = "kubernetes"
+
+[[corpus_case]]
+name = "exactly_one_hundred_thousand_commits_passes"
+mutate = ["*:commit_count=100000"]
+expect_exit = 0
+expect_kinds = []
+
+[[corpus_case]]
+name = "one_below_one_hundred_thousand_everywhere_fails"
+mutate = ["*:commit_count=99999"]
+expect_exit = 1
+expect_kinds = ["no_large_history"]
+
+[[corpus_case]]
+name = "a_single_large_repository_is_enough"
+mutate = ["kubernetes:commit_count=100000", "vscode:commit_count=10", "home-assistant:commit_count=10"]
+expect_exit = 0
+expect_kinds = []
+
+[[corpus_case]]
+name = "two_languages_only_fails"
+mutate = ["vscode:language=Go"]
+expect_exit = 1
+expect_kinds = ["too_few_languages"]
+
+[[corpus_case]]
+name = "language_names_compare_without_case"
+mutate = ["vscode:language=go"]
+expect_exit = 1
+expect_kinds = ["too_few_languages"]
+
+[[corpus_case]]
+name = "removing_the_only_python_repository_fails"
+mutate = ["home-assistant:remove="]
+expect_exit = 1
+expect_kinds = ["too_few_languages"]
+
+[[corpus_case]]
+name = "empty_corpus_fails"
+mutate = ["*:remove="]
+expect_exit = 1
+expect_kinds = ["no_large_history", "too_few_languages"]
+
+[[mix_case]]
+name = "identical_cell_is_accepted"
+drop = []
+expect_violations = []
+
+[[mix_case]]
+name = "dropping_the_last_commit_pushes_touch_rate_third_moment_past_ten_percent"
+drop = ["23"]
+expect_violations = ["touch_rate:3"]
+expect_relative = ["touch_rate:3=0.13898140953037638", "touch_rate:2=0.09011598799930563", "commit_size:1=0.02885006095083315", "file_overlap:1=0.04347826086956525"]
+
+[[mix_case]]
+name = "dropping_the_largest_commit_breaks_size_and_touch_moments"
+drop = ["4"]
+expect_violations = ["commit_size:1", "commit_size:2", "commit_size:3", "touch_rate:2", "touch_rate:3"]
+expect_relative = ["commit_size:1=0.2734660707029662", "commit_size:2=0.46431898079985573", "commit_size:3=0.5287229191966161", "touch_rate:2=0.12826611633845492", "touch_rate:3=0.22295150070608213", "touch_rate:1=0.05677662443205076"]
+
+[[mix_case]]
+name = "dropping_the_first_commit_breaks_size_and_touch_moments"
+drop = ["0"]
+expect_violations = ["commit_size:1", "commit_size:2", "commit_size:3", "touch_rate:2", "touch_rate:3"]
+expect_relative = ["commit_size:1=0.2442096708655018", "touch_rate:3=0.21177124392473137"]

@@ -1,0 +1,29 @@
+# Steps that need the network or a full history clone, so they cannot run in the
+# default offline test pass. Each step names the acceptance clause it backs.
+#
+# A step with a `test` key is an ignored Rust test in replay_corpus_protocol_test.rs;
+# the offline pass checks that the named function exists and is marked ignored.
+# `clause` numbers the five acceptance clauses in the order the test file lists them.
+
+[[step]]
+id = "pins_resolve_on_the_remote"
+clause = 1
+test = "real_corpus_pins_resolve_on_the_remote"
+command = "cargo test -p inarch-cli --test replay_corpus_protocol_test -- --ignored real_corpus_pins_resolve_on_the_remote"
+network = true
+expect = "exit 0: every commit_sha in corpus_manifest.toml is fetchable from its url and fetches back as the same commit id"
+
+[[step]]
+id = "commit_counts_match_the_pins"
+clause = 1
+command = "for each repo in corpus_manifest.toml: git clone --bare --filter=tree:0 URL scratch.git, then git -C scratch.git rev-list --count COMMIT_SHA"
+network = true
+expect = "the printed count equals commit_count for that repo, and at least one repo prints 100000 or more"
+
+[[step]]
+id = "workload_sample_is_reproducible"
+clause = 5
+command = "gh api repos/kubernetes/kubernetes/commits/COMMIT_ID --jq FILTER, once per commit id in workload_sample.json, FILTER being the jq program below"
+jq = '{lines: .stats.total, files: [.files[].filename | explode | reduce .[] as $c (5381; (. * 33 + $c) % 2147483647)]}'
+network = true
+expect = "for every commit id in workload_sample.json the printed lines and files equal the recorded lines and files"

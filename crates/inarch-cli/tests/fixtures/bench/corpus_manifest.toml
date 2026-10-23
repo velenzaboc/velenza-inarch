@@ -1,0 +1,38 @@
+# Pinned replay corpus for the swarm benchmark.
+#
+# Every entry is a real public repository fixed to one commit. Nothing here is
+# generated. commit_count is the number of commits reachable from commit_sha,
+# read on 2026-10-23 from the host's commit listing (page count at one commit
+# per page). The pins were resolved on the same day with `git ls-remote <url> HEAD`.
+#
+# Two further source datasets are named by the benchmark plan as leads and are
+# deliberately not listed yet, because no repository from them has been resolved
+# to a commit: the AIDev dataset (arXiv 2607.04697) and the AgenticFlict dataset
+# (Zenodo 10.5281/zenodo.19396917). A repository is added only together with the
+# commit it was resolved to.
+
+schema_version = 1
+
+[[repo]]
+name = "kubernetes"
+url = "https://github.com/kubernetes/kubernetes.git"
+language = "Go"
+commit_sha = "d285472482503c249133440979b51e49949030ea"
+commit_count = 142463
+synthetic = false
+
+[[repo]]
+name = "vscode"
+url = "https://github.com/microsoft/vscode.git"
+language = "TypeScript"
+commit_sha = "bc656dfadffd56f41fd93e03c550a2c3f3e49c94"
+commit_count = 168861
+synthetic = false
+
+[[repo]]
+name = "home-assistant"
+url = "https://github.com/home-assistant/core.git"
+language = "Python"
+commit_sha = "e40dde763b8243aa6a26db0e28926fb8dc633e22"
+commit_count = 121184
+synthetic = false
