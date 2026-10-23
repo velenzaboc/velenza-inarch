@@ -1,0 +1,105 @@
+# Pinned real repositories for the closure_hash cross-host, mutation-sensitivity and outside-edit
+# probes.
+#
+# Every entry names one public repository by URL, default branch and the 40-hex commit that
+# branch pointed at when it was resolved with `git ls-remote <url> refs/heads/<branch>` on
+# 2026-10-23 (UTC). The manifest and lockfile named in each entry were confirmed to exist at that
+# exact commit through the GitHub contents API (`ref=<sha>`).
+#
+# Contract (read by the #[ignore] probes in closure_hash_test.rs; the in-process suite only
+# lints the shape):
+#   * exactly two entries per ecosystem, ecosystems go | cargo | typescript | python
+#   * `sha` is the pin; a checkout whose `git rev-parse HEAD` differs from it is a test failure
+#   * `manifest` and `lockfile` are repository-relative; a checkout missing either is a test failure
+#   * `pin_file` / `pin_content`, when present, are written into the checkout ONLY when the file is
+#     absent there: they model the toolchain or interpreter declaration a hermetic runner supplies
+#     as tree content. A closure hash never reads the host toolchain (design: closure_hash is a
+#     pure function of the tree), so a repository without a pin file is refused by the library
+#     unless the runner declares one. Go repositories carry their pin in go.mod (`go` directive).
+
+schema = "closure-hash-pinned-repos/1"
+resolved_on = "2026-10-23"
+
+[[repo]]
+name = "cobra"
+ecosystem = "go"
+url = "https://github.com/spf13/cobra"
+default_branch = "main"
+sha = "adbc8813901bba65827259daa8e22ff94ec1f30e"
+manifest = "go.mod"
+lockfile = "go.sum"
+
+[[repo]]
+name = "testify"
+ecosystem = "go"
+url = "https://github.com/stretchr/testify"
+default_branch = "master"
+sha = "87a7b9d57689f6579db2da795ab8deeab29cb724"
+manifest = "go.mod"
+lockfile = "go.sum"
+
+[[repo]]
+name = "ripgrep"
+ecosystem = "cargo"
+url = "https://github.com/BurntSushi/ripgrep"
+default_branch = "master"
+sha = "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+manifest = "Cargo.toml"
+lockfile = "Cargo.lock"
+pin_file = "rust-toolchain.toml"
+pin_content = "[toolchain]\nchannel = \"1.89.0\"\n"
+
+[[repo]]
+name = "fd"
+ecosystem = "cargo"
+url = "https://github.com/sharkdp/fd"
+default_branch = "master"
+sha = "9e904639aee44df4507200cf0ed5e8531e120d6f"
+manifest = "Cargo.toml"
+lockfile = "Cargo.lock"
+pin_file = "rust-toolchain.toml"
+pin_content = "[toolchain]\nchannel = \"1.89.0\"\n"
+
+[[repo]]
+name = "playwright"
+ecosystem = "typescript"
+url = "https://github.com/microsoft/playwright"
+default_branch = "main"
+sha = "20a2087ea43412b90c172c88faef80786ee18b8b"
+manifest = "package.json"
+lockfile = "package-lock.json"
+pin_file = ".nvmrc"
+pin_content = "v22.11.0\n"
+
+[[repo]]
+name = "nest"
+ecosystem = "typescript"
+url = "https://github.com/nestjs/nest"
+default_branch = "master"
+sha = "c828ad160f25bf347df9fd8632191d07b66d2fb7"
+manifest = "package.json"
+lockfile = "package-lock.json"
+pin_file = ".nvmrc"
+pin_content = "v22.11.0\n"
+
+[[repo]]
+name = "flask"
+ecosystem = "python"
+url = "https://github.com/pallets/flask"
+default_branch = "main"
+sha = "d086db856be187255b8ec61ef409357393020f32"
+manifest = "pyproject.toml"
+lockfile = "uv.lock"
+pin_file = ".python-version"
+pin_content = "3.12.7\n"
+
+[[repo]]
+name = "click"
+ecosystem = "python"
+url = "https://github.com/pallets/click"
+default_branch = "main"
+sha = "2247b35ea1c47c727d7a06e51fa280e12a863ff6"
+manifest = "pyproject.toml"
+lockfile = "uv.lock"
+pin_file = ".python-version"
+pin_content = "3.12.7\n"

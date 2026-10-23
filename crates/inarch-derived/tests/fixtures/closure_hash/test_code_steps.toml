@@ -1,0 +1,69 @@
+# Acceptance steps that only the test-code stage can run: they need network access to public
+# repositories and two distinct hosts. closure_hash_test.rs holds the matching #[ignore] probes.
+# A probe whose environment variable is unset prints a SKIPPED line; a SKIPPED line is not
+# evidence and the step is then still open.
+#
+# Fields per [[step]]
+#   id       stable name, referenced by the requirement map
+#   clause   cross-host | mutation-sensitivity | outside-edit | all
+#   host     where the step runs ("any" means once, on whichever host the stage uses)
+#   command  what is run, in order
+#   expect   the observable result that closes the step
+
+schema = "closure-hash-test-code-steps/1"
+
+[[step]]
+id = "run-in-process-suite"
+clause = "all"
+host = "any"
+command = "cargo test -p inarch-derived --test closure_hash_test"
+expect = "every non-ignored test passes; the mutation campaign reports at least 1000 input mutations with 0 misses and 0 extras"
+
+[[step]]
+id = "checkout-pinned-repositories"
+clause = "cross-host"
+host = "each of the two hosts"
+command = "for each [[repo]] in pinned_repos.toml run: git clone --no-checkout <url> $CLOSURE_HASH_CHECKOUT_ROOT/<name> then git -C $CLOSURE_HASH_CHECKOUT_ROOT/<name> checkout --detach <sha>"
+expect = "all 8 checkouts exist and git rev-parse HEAD equals the pinned sha for each; an unreachable url or a missing sha is a failure, never a skip"
+
+[[step]]
+id = "emit-hash-csv-first-host"
+clause = "cross-host"
+host = "first host"
+command = "CLOSURE_HASH_CHECKOUT_ROOT=<checkouts> CLOSURE_HASH_CSV_OUT=<out>/first.csv cargo test -p inarch-derived --test closure_hash_test -- --ignored --exact pinned_repository_hashes_probe --nocapture"
+expect = "the probe passes and writes first.csv with the header repo,ecosystem,target,closure_hash and at least one hashed target for each of the 8 pinned repositories"
+
+[[step]]
+id = "emit-hash-csv-second-host"
+clause = "cross-host"
+host = "second host, a different machine from the first"
+command = "CLOSURE_HASH_CHECKOUT_ROOT=<checkouts> CLOSURE_HASH_CSV_OUT=<out>/second.csv cargo test -p inarch-derived --test closure_hash_test -- --ignored --exact pinned_repository_hashes_probe --nocapture"
+expect = "the probe passes and writes second.csv from fresh, independent checkouts of the same pinned commits"
+
+[[step]]
+id = "compare-hash-csvs"
+clause = "cross-host"
+host = "any"
+command = "CLOSURE_HASH_CSV_A=<out>/first.csv CLOSURE_HASH_CSV_B=<out>/second.csv cargo test -p inarch-derived --test closure_hash_test -- --ignored --exact cross_host_hash_csvs_are_identical --nocapture"
+expect = "the probe passes: the two files are byte-identical, so every pinned repository hashes equal across the two hosts"
+
+[[step]]
+id = "run-real-repository-mutation-probe"
+clause = "mutation-sensitivity"
+host = "any"
+command = "CLOSURE_HASH_CHECKOUT_ROOT=<checkouts> cargo test -p inarch-derived --test closure_hash_test -- --ignored --exact pinned_repository_mutation_probe --nocapture"
+expect = "the probe passes: at least 1000 seeded single-input mutations of an in-memory copy of the 8 pinned repositories (source, toolchain, config and lock, each represented) change exactly the targets whose declared closure holds the mutated input, 0 misses and 0 extras; the per-repository counts of skipped inputs are printed"
+
+[[step]]
+id = "run-real-repository-outside-edit-probe"
+clause = "outside-edit"
+host = "any"
+command = "CLOSURE_HASH_CHECKOUT_ROOT=<checkouts> cargo test -p inarch-derived --test closure_hash_test -- --ignored --exact pinned_repository_outside_edit_probe --nocapture"
+expect = "the probe passes: on each of the 8 pinned repositories, adding unrelated files and editing or deleting a markdown file that no closure holds changes no closure hash"
+
+[[step]]
+id = "run-ignored-probes-together"
+clause = "all"
+host = "any"
+command = "cargo test -p inarch-derived --test closure_hash_test -- --include-ignored"
+expect = "with all four CLOSURE_HASH_* variables set the suite passes with no SKIPPED line in the output"
