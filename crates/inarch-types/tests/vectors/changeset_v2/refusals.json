@@ -1,0 +1,71 @@
+{
+  "format": 1,
+  "description": "Refusal inputs for the changeset v2 and entry contract suite. Each list is applied by the suite to a valid canonical value; the decoder must refuse every entry with the error named in the suite.",
+  "unknown_field_names": [
+    "zz_unknown_field",
+    "extra",
+    "x-extension",
+    "Author",
+    "authors",
+    "base_position",
+    "policy_version",
+    "state_final",
+    "write",
+    "read",
+    "version2",
+    ""
+  ],
+  "unknown_state_names": [
+    "QUARANTINED",
+    "PROVEN",
+    "LANDED",
+    "ABORTED",
+    "HOLD",
+    "PARKED_PROVISIONAL",
+    "CLEAN,MERGED",
+    "clean",
+    "Merged",
+    "held",
+    "CLEAN ",
+    " HELD",
+    "SUSPECT\n",
+    ""
+  ],
+  "unknown_edge_kind_names": [
+    "symbolic",
+    "samepath",
+    "same_path",
+    "Same-Path",
+    "readfrom",
+    "read_from",
+    "learn",
+    "learned ",
+    "dependency",
+    "SYMBOL",
+    ""
+  ],
+  "client_supplied_authors": [
+    "agent-01@example.com",
+    "service@example.com",
+    "root",
+    "system:server",
+    ""
+  ],
+  "unsupported_versions": [0, 1, 3, 4, 255, 18446744073709551615],
+  "base_cases": [
+    { "head": 0, "accept": [0], "refuse": [1, 2, 18446744073709551615] },
+    { "head": 1, "accept": [0, 1], "refuse": [2, 3] },
+    { "head": 1000, "accept": [0, 1, 999, 1000], "refuse": [1001, 1002, 4294967296] },
+    {
+      "head": 4294967296,
+      "accept": [0, 1, 4294967295, 4294967296],
+      "refuse": [4294967297, 9007199254740993]
+    },
+    {
+      "head": 18446744073709551615,
+      "accept": [0, 1, 18446744073709551614, 18446744073709551615],
+      "refuse": []
+    }
+  ],
+  "sweep": { "head": 64, "refuse_through": 72 }
+}

@@ -1,0 +1,753 @@
+{
+  "format": 1,
+  "description": "Golden changeset descriptions for the changeset v2 contract suite. These are inputs, not encodings: the suite builds a changeset from each description, encodes it, decodes it, re-encodes it and compares bytes and ids. Hash-valued fields are given as seed strings that the suite hashes. A vector may later gain expected_canonical_hex and expected_id_hex members, which freeze its encoding as a regression fixture once an encoder has produced it.",
+  "grammar": {
+    "base": "{log_position: u64} or {proven_publication: seed}",
+    "class": "pre_land or pre_proven",
+    "delta": "list of {path, tracked:{content,file_type}} or {path, deleted:true} or {path, operator:{class,added,removed}}",
+    "writes": "{paths:[..], symbols:[{symbol, interface, body}]}",
+    "reads": "{policy_version?, point:[{interface:{symbol,hash}} or {decision:{id,version}}], predicate:[{symbol,dep_version}], behavior:[{target,closure}]}",
+    "deps_resolves": "lists of seeds that the suite turns into changeset ids",
+    "hints": "list of {kind, digest}",
+    "head": "log end used when the submission form is decoded; never smaller than a log_position base"
+  },
+  "vectors": [
+    {
+      "name": "g01-minimal-pre-proven-base-0",
+      "author": "agent-01@example.com",
+      "head": 0,
+      "base": { "log_position": 0 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g02-minimal-pre-land-base-0",
+      "author": "agent-01@example.com",
+      "head": 0,
+      "base": { "log_position": 0 },
+      "class": "pre_land"
+    },
+    {
+      "name": "g03-base-1",
+      "author": "agent-01@example.com",
+      "head": 1,
+      "base": { "log_position": 1 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g04-base-2",
+      "author": "agent-01@example.com",
+      "head": 2,
+      "base": { "log_position": 2 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g05-base-255",
+      "author": "agent-01@example.com",
+      "head": 255,
+      "base": { "log_position": 255 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g06-base-256",
+      "author": "agent-01@example.com",
+      "head": 256,
+      "base": { "log_position": 256 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g07-base-65535",
+      "author": "agent-01@example.com",
+      "head": 65535,
+      "base": { "log_position": 65535 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g08-base-65536",
+      "author": "agent-01@example.com",
+      "head": 65536,
+      "base": { "log_position": 65536 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g09-base-u32-max",
+      "author": "agent-01@example.com",
+      "head": 4294967295,
+      "base": { "log_position": 4294967295 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g10-base-u32-max-plus-1",
+      "author": "agent-01@example.com",
+      "head": 4294967296,
+      "base": { "log_position": 4294967296 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g11-base-above-2-pow-53",
+      "author": "agent-01@example.com",
+      "head": 9007199254740993,
+      "base": { "log_position": 9007199254740993 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g12-base-u64-max",
+      "author": "agent-01@example.com",
+      "head": 18446744073709551615,
+      "base": { "log_position": 18446744073709551615 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g13-base-behind-head",
+      "author": "agent-01@example.com",
+      "head": 1000,
+      "base": { "log_position": 5 },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g14-proven-publication-base",
+      "author": "agent-01@example.com",
+      "head": 0,
+      "base": { "proven_publication": "pub-g14" },
+      "class": "pre_proven"
+    },
+    {
+      "name": "g15-proven-publication-base-pre-land",
+      "author": "agent-01@example.com",
+      "head": 12,
+      "base": { "proven_publication": "pub-g15" },
+      "class": "pre_land"
+    },
+    {
+      "name": "g16-proven-publication-base-with-delta",
+      "author": "agent-02@example.com",
+      "head": 40,
+      "base": { "proven_publication": "pub-g16" },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "src/lib.rs", "tracked": { "content": "pub fn g16() {}\n", "file_type": "regular" } }
+      ]
+    },
+    {
+      "name": "g17-tracked-regular-file",
+      "author": "agent-02@example.com",
+      "head": 3,
+      "base": { "log_position": 3 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "src/lib.rs", "tracked": { "content": "pub fn answer() -> u32 { 42 }\n", "file_type": "regular" } }
+      ]
+    },
+    {
+      "name": "g18-tracked-executable-file",
+      "author": "agent-02@example.com",
+      "head": 3,
+      "base": { "log_position": 3 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "scripts/run.sh", "tracked": { "content": "#!/bin/sh\necho ok\n", "file_type": "executable" } }
+      ]
+    },
+    {
+      "name": "g19-tracked-symlink",
+      "author": "agent-02@example.com",
+      "head": 3,
+      "base": { "log_position": 3 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "links/config", "tracked": { "content": "../shared/config.toml", "file_type": "symlink" } }
+      ]
+    },
+    {
+      "name": "g20-deleted-path",
+      "author": "agent-02@example.com",
+      "head": 3,
+      "base": { "log_position": 3 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "src/old.rs", "deleted": true }
+      ]
+    },
+    {
+      "name": "g21-tracked-empty-file",
+      "author": "agent-02@example.com",
+      "head": 3,
+      "base": { "log_position": 3 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "empty.txt", "tracked": { "content": "", "file_type": "regular" } }
+      ]
+    },
+    {
+      "name": "g22-mixed-tracked-and-deleted",
+      "author": "agent-02@example.com",
+      "head": 9,
+      "base": { "log_position": 9 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "a/one.txt", "tracked": { "content": "one\n", "file_type": "regular" } },
+        { "path": "a/two.txt", "tracked": { "content": "two\n", "file_type": "regular" } },
+        { "path": "a/three.txt", "deleted": true }
+      ]
+    },
+    {
+      "name": "g23-non-ascii-path-with-spaces",
+      "author": "agent-02@example.com",
+      "head": 9,
+      "base": { "log_position": 9 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "docs/Übersicht und Notizen.md", "tracked": { "content": "# Übersicht\n", "file_type": "regular" } }
+      ]
+    },
+    {
+      "name": "g24-deep-path",
+      "author": "agent-02@example.com",
+      "head": 9,
+      "base": { "log_position": 9 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "a/b/c/d/e/f/g/h/i/j/k/l.txt", "tracked": { "content": "deep\n", "file_type": "regular" } }
+      ]
+    },
+    {
+      "name": "g25-large-content",
+      "author": "agent-02@example.com",
+      "head": 9,
+      "base": { "log_position": 9 },
+      "class": "pre_proven",
+      "delta": [
+        {
+          "path": "data/large.txt",
+          "tracked": {
+            "content": "line 01 of the large file body\nline 02 of the large file body\nline 03 of the large file body\nline 04 of the large file body\nline 05 of the large file body\nline 06 of the large file body\nline 07 of the large file body\nline 08 of the large file body\nline 09 of the large file body\nline 10 of the large file body\nline 11 of the large file body\nline 12 of the large file body\n",
+            "file_type": "regular"
+          }
+        }
+      ]
+    },
+    {
+      "name": "g26-operator-set-union-add",
+      "author": "agent-03@example.com",
+      "head": 20,
+      "base": { "log_position": 20 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "registry/names.txt", "operator": { "class": "set_union", "added": ["alpha", "beta", "gamma"], "removed": [] } }
+      ]
+    },
+    {
+      "name": "g27-operator-set-union-add-and-remove",
+      "author": "agent-03@example.com",
+      "head": 20,
+      "base": { "log_position": 20 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "registry/names.txt", "operator": { "class": "set_union", "added": ["delta"], "removed": ["alpha"] } }
+      ]
+    },
+    {
+      "name": "g28-operator-mvs-max",
+      "author": "agent-03@example.com",
+      "head": 20,
+      "base": { "log_position": 20 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "go.mod", "operator": { "class": "mvs_max", "added": ["example.com/lib@v1.4.0", "example.com/util@v0.9.2"], "removed": [] } }
+      ]
+    },
+    {
+      "name": "g29-whole-content-and-two-operator-deltas",
+      "author": "agent-03@example.com",
+      "head": 20,
+      "base": { "log_position": 20 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "src/main.rs", "tracked": { "content": "fn main() {}\n", "file_type": "regular" } },
+        { "path": "go.mod", "operator": { "class": "mvs_max", "added": ["example.com/lib@v1.6.0"], "removed": [] } },
+        { "path": "registry/plugins.txt", "operator": { "class": "set_union", "added": ["plugin-a"], "removed": [] } }
+      ]
+    },
+    {
+      "name": "g30-ten-tracked-files",
+      "author": "agent-03@example.com",
+      "head": 20,
+      "base": { "log_position": 20 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "bulk/f01.txt", "tracked": { "content": "bulk file 01\n", "file_type": "regular" } },
+        { "path": "bulk/f02.txt", "tracked": { "content": "bulk file 02\n", "file_type": "regular" } },
+        { "path": "bulk/f03.txt", "tracked": { "content": "bulk file 03\n", "file_type": "regular" } },
+        { "path": "bulk/f04.txt", "tracked": { "content": "bulk file 04\n", "file_type": "regular" } },
+        { "path": "bulk/f05.txt", "tracked": { "content": "bulk file 05\n", "file_type": "regular" } },
+        { "path": "bulk/f06.txt", "tracked": { "content": "bulk file 06\n", "file_type": "regular" } },
+        { "path": "bulk/f07.txt", "tracked": { "content": "bulk file 07\n", "file_type": "regular" } },
+        { "path": "bulk/f08.txt", "tracked": { "content": "bulk file 08\n", "file_type": "regular" } },
+        { "path": "bulk/f09.txt", "tracked": { "content": "bulk file 09\n", "file_type": "regular" } },
+        { "path": "bulk/f10.txt", "tracked": { "content": "bulk file 10\n", "file_type": "regular" } }
+      ]
+    },
+    {
+      "name": "g31-operator-set-union-remove-only",
+      "author": "agent-03@example.com",
+      "head": 20,
+      "base": { "log_position": 20 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "registry/names.txt", "operator": { "class": "set_union", "added": [], "removed": ["beta"] } }
+      ]
+    },
+    {
+      "name": "g32-content-with-escapes",
+      "author": "agent-03@example.com",
+      "head": 20,
+      "base": { "log_position": 20 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "text/escapes.txt", "tracked": { "content": "tab\there \"quoted\" back\\slash\n", "file_type": "regular" } }
+      ]
+    },
+    {
+      "name": "g33-writes-paths-only",
+      "author": "agent-04@example.com",
+      "head": 30,
+      "base": { "log_position": 30 },
+      "class": "pre_proven",
+      "writes": { "paths": ["src/lib.rs", "src/util.rs"] }
+    },
+    {
+      "name": "g34-writes-one-symbol-only",
+      "author": "agent-04@example.com",
+      "head": 30,
+      "base": { "log_position": 30 },
+      "class": "pre_proven",
+      "writes": {
+        "symbols": [
+          { "symbol": "crate::util::parse", "interface": "g34-interface-1", "body": "g34-body-1" }
+        ]
+      }
+    },
+    {
+      "name": "g35-writes-paths-and-three-symbols",
+      "author": "agent-04@example.com",
+      "head": 30,
+      "base": { "log_position": 30 },
+      "class": "pre_proven",
+      "writes": {
+        "paths": ["src/lib.rs", "src/parse.rs"],
+        "symbols": [
+          { "symbol": "crate::parse::tokenize", "interface": "g35-interface-1", "body": "g35-body-1" },
+          { "symbol": "crate::parse::Parser", "interface": "g35-interface-2", "body": "g35-body-2" },
+          { "symbol": "crate::parse::Parser::run", "interface": "g35-interface-3", "body": "g35-body-3" }
+        ]
+      }
+    },
+    {
+      "name": "g36-scip-style-symbol-with-spaces",
+      "author": "agent-04@example.com",
+      "head": 30,
+      "base": { "log_position": 30 },
+      "class": "pre_proven",
+      "writes": {
+        "symbols": [
+          { "symbol": "scip-rust cargo example-crate 1.0.0 src/lib.rs/Parser#parse().", "interface": "g36-interface-1", "body": "g36-body-1" }
+        ]
+      }
+    },
+    {
+      "name": "g37-two-symbols-same-interface-different-bodies",
+      "author": "agent-04@example.com",
+      "head": 30,
+      "base": { "log_position": 30 },
+      "class": "pre_proven",
+      "writes": {
+        "symbols": [
+          { "symbol": "crate::a::first", "interface": "g37-shared-interface", "body": "g37-body-1" },
+          { "symbol": "crate::a::second", "interface": "g37-shared-interface", "body": "g37-body-2" }
+        ]
+      }
+    },
+    {
+      "name": "g38-writes-eight-paths",
+      "author": "agent-04@example.com",
+      "head": 30,
+      "base": { "log_position": 30 },
+      "class": "pre_proven",
+      "writes": {
+        "paths": ["w/a.rs", "w/b.rs", "w/c.rs", "w/d.rs", "w/e.rs", "w/f.rs", "w/g.rs", "w/h.rs"]
+      }
+    },
+    {
+      "name": "g39-point-interface-read-no-policy",
+      "author": "agent-05@example.com",
+      "head": 50,
+      "base": { "log_position": 50 },
+      "class": "pre_proven",
+      "reads": {
+        "point": [
+          { "interface": { "symbol": "crate::store::append", "hash": "g39-interface-hash" } }
+        ]
+      }
+    },
+    {
+      "name": "g40-point-decision-read-with-policy",
+      "author": "agent-05@example.com",
+      "head": 50,
+      "base": { "log_position": 50 },
+      "class": "pre_proven",
+      "reads": {
+        "policy_version": 1,
+        "point": [
+          { "decision": { "id": "retry-policy", "version": 4 } }
+        ]
+      }
+    },
+    {
+      "name": "g41-predicate-read",
+      "author": "agent-05@example.com",
+      "head": 50,
+      "base": { "log_position": 50 },
+      "class": "pre_proven",
+      "reads": {
+        "predicate": [
+          { "symbol": "crate::engine::land", "dep_version": 17 }
+        ]
+      }
+    },
+    {
+      "name": "g42-behavior-read",
+      "author": "agent-05@example.com",
+      "head": 50,
+      "base": { "log_position": 50 },
+      "class": "pre_proven",
+      "reads": {
+        "behavior": [
+          { "target": "//engine:unit-tests", "closure": "g42-closure-hash" }
+        ]
+      }
+    },
+    {
+      "name": "g43-all-three-read-kinds-policy-zero",
+      "author": "agent-05@example.com",
+      "head": 50,
+      "base": { "log_position": 50 },
+      "class": "pre_proven",
+      "reads": {
+        "policy_version": 0,
+        "point": [
+          { "interface": { "symbol": "crate::store::append", "hash": "g43-interface-hash" } },
+          { "decision": { "id": "retry-policy", "version": 2 } }
+        ],
+        "predicate": [
+          { "symbol": "crate::store::append", "dep_version": 3 }
+        ],
+        "behavior": [
+          { "target": "//store:tests", "closure": "g43-closure-hash" }
+        ]
+      }
+    },
+    {
+      "name": "g44-all-three-read-kinds-policy-u64-max",
+      "author": "agent-05@example.com",
+      "head": 50,
+      "base": { "log_position": 50 },
+      "class": "pre_proven",
+      "reads": {
+        "policy_version": 18446744073709551615,
+        "point": [
+          { "interface": { "symbol": "crate::store::append", "hash": "g44-interface-hash" } },
+          { "decision": { "id": "retry-policy", "version": 2 } }
+        ],
+        "predicate": [
+          { "symbol": "crate::store::append", "dep_version": 3 }
+        ],
+        "behavior": [
+          { "target": "//store:tests", "closure": "g44-closure-hash" }
+        ]
+      }
+    },
+    {
+      "name": "g45-six-point-interface-reads",
+      "author": "agent-05@example.com",
+      "head": 50,
+      "base": { "log_position": 50 },
+      "class": "pre_proven",
+      "reads": {
+        "point": [
+          { "interface": { "symbol": "crate::m::s1", "hash": "g45-h1" } },
+          { "interface": { "symbol": "crate::m::s2", "hash": "g45-h2" } },
+          { "interface": { "symbol": "crate::m::s3", "hash": "g45-h3" } },
+          { "interface": { "symbol": "crate::m::s4", "hash": "g45-h4" } },
+          { "interface": { "symbol": "crate::m::s5", "hash": "g45-h5" } },
+          { "interface": { "symbol": "crate::m::s6", "hash": "g45-h6" } }
+        ]
+      }
+    },
+    {
+      "name": "g46-policy-version-only",
+      "author": "agent-05@example.com",
+      "head": 50,
+      "base": { "log_position": 50 },
+      "class": "pre_land",
+      "reads": { "policy_version": 7 }
+    },
+    {
+      "name": "g47-predicate-reads-dep-version-bounds",
+      "author": "agent-05@example.com",
+      "head": 50,
+      "base": { "log_position": 50 },
+      "class": "pre_proven",
+      "reads": {
+        "predicate": [
+          { "symbol": "crate::zero::dep", "dep_version": 0 },
+          { "symbol": "crate::big::dep", "dep_version": 4294967296 }
+        ]
+      }
+    },
+    {
+      "name": "g48-decision-reads-version-bounds",
+      "author": "agent-05@example.com",
+      "head": 50,
+      "base": { "log_position": 50 },
+      "class": "pre_proven",
+      "reads": {
+        "point": [
+          { "decision": { "id": "decision-zero", "version": 0 } },
+          { "decision": { "id": "decision-max", "version": 18446744073709551615 } }
+        ]
+      }
+    },
+    {
+      "name": "g49-one-dep",
+      "author": "agent-01@example.com",
+      "head": 60,
+      "base": { "log_position": 60 },
+      "class": "pre_proven",
+      "deps": ["dep-g49-a"]
+    },
+    {
+      "name": "g50-three-deps",
+      "author": "agent-01@example.com",
+      "head": 60,
+      "base": { "log_position": 60 },
+      "class": "pre_proven",
+      "deps": ["dep-g50-a", "dep-g50-b", "dep-g50-c"]
+    },
+    {
+      "name": "g51-resolves-one-conflict",
+      "author": "agent-01@example.com",
+      "head": 60,
+      "base": { "log_position": 60 },
+      "class": "pre_proven",
+      "resolves": ["conflict-g51"]
+    },
+    {
+      "name": "g52-resolves-two-conflicts",
+      "author": "agent-01@example.com",
+      "head": 60,
+      "base": { "log_position": 60 },
+      "class": "pre_proven",
+      "resolves": ["conflict-g52-a", "conflict-g52-b"]
+    },
+    {
+      "name": "g53-deps-and-resolves",
+      "author": "agent-01@example.com",
+      "head": 60,
+      "base": { "log_position": 60 },
+      "class": "pre_proven",
+      "deps": ["dep-g53-a", "dep-g53-b"],
+      "resolves": ["conflict-g53"]
+    },
+    {
+      "name": "g54-one-hint",
+      "author": "agent-02@example.com",
+      "head": 70,
+      "base": { "log_position": 70 },
+      "class": "pre_proven",
+      "hints": [
+        { "kind": "red-receipt", "digest": "hint-g54" }
+      ]
+    },
+    {
+      "name": "g55-three-hints-in-order",
+      "author": "agent-02@example.com",
+      "head": 70,
+      "base": { "log_position": 70 },
+      "class": "pre_proven",
+      "hints": [
+        { "kind": "red-receipt", "digest": "hint-g55-a" },
+        { "kind": "audit-receipt", "digest": "hint-g55-b" },
+        { "kind": "green-receipt", "digest": "hint-g55-c" }
+      ]
+    },
+    {
+      "name": "g56-hint-with-non-ascii-kind",
+      "author": "agent-02@example.com",
+      "head": 70,
+      "base": { "log_position": 70 },
+      "class": "pre_proven",
+      "hints": [
+        { "kind": "Prüfung-Beleg", "digest": "hint-g56" }
+      ]
+    },
+    {
+      "name": "g57-full-pre-proven-log-base",
+      "author": "agent-03@example.com",
+      "head": 100,
+      "base": { "log_position": 40 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "src/engine.rs", "tracked": { "content": "pub fn land() {}\n", "file_type": "regular" } },
+        { "path": "scripts/build.sh", "tracked": { "content": "#!/bin/sh\nexit 0\n", "file_type": "executable" } },
+        { "path": "src/legacy.rs", "deleted": true },
+        { "path": "registry/names.txt", "operator": { "class": "set_union", "added": ["epsilon"], "removed": ["alpha"] } },
+        { "path": "go.mod", "operator": { "class": "mvs_max", "added": ["example.com/lib@v1.5.0"], "removed": [] } }
+      ],
+      "writes": {
+        "paths": ["src/engine.rs", "scripts/build.sh", "src/legacy.rs", "registry/names.txt", "go.mod"],
+        "symbols": [
+          { "symbol": "crate::engine::land", "interface": "full-interface-1", "body": "full-body-1" },
+          { "symbol": "crate::engine::retry", "interface": "full-interface-2", "body": "full-body-2" }
+        ]
+      },
+      "reads": {
+        "policy_version": 12,
+        "point": [
+          { "interface": { "symbol": "crate::store::append", "hash": "full-point-1" } },
+          { "decision": { "id": "retry-policy", "version": 3 } }
+        ],
+        "predicate": [
+          { "symbol": "crate::engine::land", "dep_version": 9 }
+        ],
+        "behavior": [
+          { "target": "//engine:tests", "closure": "full-closure-1" }
+        ]
+      },
+      "deps": ["full-dep-1", "full-dep-2"],
+      "resolves": ["full-resolves-1"],
+      "hints": [
+        { "kind": "red-receipt", "digest": "full-hint-1" },
+        { "kind": "green-receipt", "digest": "full-hint-2" }
+      ]
+    },
+    {
+      "name": "g58-full-pre-land-log-base",
+      "author": "agent-03@example.com",
+      "head": 100,
+      "base": { "log_position": 40 },
+      "class": "pre_land",
+      "delta": [
+        { "path": "src/engine.rs", "tracked": { "content": "pub fn land() {}\n", "file_type": "regular" } },
+        { "path": "scripts/build.sh", "tracked": { "content": "#!/bin/sh\nexit 0\n", "file_type": "executable" } },
+        { "path": "src/legacy.rs", "deleted": true },
+        { "path": "registry/names.txt", "operator": { "class": "set_union", "added": ["epsilon"], "removed": ["alpha"] } },
+        { "path": "go.mod", "operator": { "class": "mvs_max", "added": ["example.com/lib@v1.5.0"], "removed": [] } }
+      ],
+      "writes": {
+        "paths": ["src/engine.rs", "scripts/build.sh", "src/legacy.rs", "registry/names.txt", "go.mod"],
+        "symbols": [
+          { "symbol": "crate::engine::land", "interface": "full-interface-1", "body": "full-body-1" },
+          { "symbol": "crate::engine::retry", "interface": "full-interface-2", "body": "full-body-2" }
+        ]
+      },
+      "reads": {
+        "policy_version": 12,
+        "point": [
+          { "interface": { "symbol": "crate::store::append", "hash": "full-point-1" } },
+          { "decision": { "id": "retry-policy", "version": 3 } }
+        ],
+        "predicate": [
+          { "symbol": "crate::engine::land", "dep_version": 9 }
+        ],
+        "behavior": [
+          { "target": "//engine:tests", "closure": "full-closure-1" }
+        ]
+      },
+      "deps": ["full-dep-1", "full-dep-2"],
+      "resolves": ["full-resolves-1"],
+      "hints": [
+        { "kind": "red-receipt", "digest": "full-hint-1" },
+        { "kind": "green-receipt", "digest": "full-hint-2" }
+      ]
+    },
+    {
+      "name": "g59-full-pre-proven-publication-base",
+      "author": "agent-03@example.com",
+      "head": 100,
+      "base": { "proven_publication": "pub-g59" },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "src/engine.rs", "tracked": { "content": "pub fn land() {}\n", "file_type": "regular" } },
+        { "path": "scripts/build.sh", "tracked": { "content": "#!/bin/sh\nexit 0\n", "file_type": "executable" } },
+        { "path": "src/legacy.rs", "deleted": true },
+        { "path": "registry/names.txt", "operator": { "class": "set_union", "added": ["epsilon"], "removed": ["alpha"] } },
+        { "path": "go.mod", "operator": { "class": "mvs_max", "added": ["example.com/lib@v1.5.0"], "removed": [] } }
+      ],
+      "writes": {
+        "paths": ["src/engine.rs", "scripts/build.sh", "src/legacy.rs", "registry/names.txt", "go.mod"],
+        "symbols": [
+          { "symbol": "crate::engine::land", "interface": "full-interface-1", "body": "full-body-1" },
+          { "symbol": "crate::engine::retry", "interface": "full-interface-2", "body": "full-body-2" }
+        ]
+      },
+      "reads": {
+        "policy_version": 12,
+        "point": [
+          { "interface": { "symbol": "crate::store::append", "hash": "full-point-1" } },
+          { "decision": { "id": "retry-policy", "version": 3 } }
+        ],
+        "predicate": [
+          { "symbol": "crate::engine::land", "dep_version": 9 }
+        ],
+        "behavior": [
+          { "target": "//engine:tests", "closure": "full-closure-1" }
+        ]
+      },
+      "deps": ["full-dep-1", "full-dep-2"],
+      "resolves": ["full-resolves-1"],
+      "hints": [
+        { "kind": "red-receipt", "digest": "full-hint-1" },
+        { "kind": "green-receipt", "digest": "full-hint-2" }
+      ]
+    },
+    {
+      "name": "g60-full-pre-proven-other-policy-version",
+      "author": "agent-03@example.com",
+      "head": 100,
+      "base": { "log_position": 40 },
+      "class": "pre_proven",
+      "delta": [
+        { "path": "src/engine.rs", "tracked": { "content": "pub fn land() {}\n", "file_type": "regular" } },
+        { "path": "scripts/build.sh", "tracked": { "content": "#!/bin/sh\nexit 0\n", "file_type": "executable" } },
+        { "path": "src/legacy.rs", "deleted": true },
+        { "path": "registry/names.txt", "operator": { "class": "set_union", "added": ["epsilon"], "removed": ["alpha"] } },
+        { "path": "go.mod", "operator": { "class": "mvs_max", "added": ["example.com/lib@v1.5.0"], "removed": [] } }
+      ],
+      "writes": {
+        "paths": ["src/engine.rs", "scripts/build.sh", "src/legacy.rs", "registry/names.txt", "go.mod"],
+        "symbols": [
+          { "symbol": "crate::engine::land", "interface": "full-interface-1", "body": "full-body-1" },
+          { "symbol": "crate::engine::retry", "interface": "full-interface-2", "body": "full-body-2" }
+        ]
+      },
+      "reads": {
+        "policy_version": 13,
+        "point": [
+          { "interface": { "symbol": "crate::store::append", "hash": "full-point-1" } },
+          { "decision": { "id": "retry-policy", "version": 3 } }
+        ],
+        "predicate": [
+          { "symbol": "crate::engine::land", "dep_version": 9 }
+        ],
+        "behavior": [
+          { "target": "//engine:tests", "closure": "full-closure-1" }
+        ]
+      },
+      "deps": ["full-dep-1", "full-dep-2"],
+      "resolves": ["full-resolves-1"],
+      "hints": [
+        { "kind": "red-receipt", "digest": "full-hint-1" },
+        { "kind": "green-receipt", "digest": "full-hint-2" }
+      ]
+    }
+  ]
+}
