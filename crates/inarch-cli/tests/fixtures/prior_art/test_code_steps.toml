@@ -1,0 +1,22 @@
+# Steps of the prior-art matrix acceptance that only the test-code queue can run.
+#
+# The lint tests in prior_art_matrix_lint_test.rs run in process and cover every rule a program
+# can check. This file describes the one rule that needs the network and a reader. A step here is
+# test_code_only: a reviewer carries it out on the committed docs/prior_art_matrix.md after the
+# lint tests pass, and records the result with the test-code evidence.
+#
+# The tests parse this file, so keep one key = value per line, a double-quoted string without
+# escapes (a string cannot contain a double quotation mark), an integer, or a one-line array of
+# such strings.
+
+[[step]]
+id = "reviewer-reopens-cited-urls"
+kind = "test_code_only"
+clause = "pass also requires that no row is true on A, B and C together, and that a reviewer re-opens 3 random cited URLs and confirms their quotes."
+sample_size = 3
+seed_env = "PRIOR_ART_SPOT_CHECK_SEED"
+sampling = "The reviewer, not the matrix author, chooses the seed. The ignored test orders the cells by system as listed in REQUIRED_SYSTEMS and then by column, and draws 3 distinct cells with a partial Fisher-Yates shuffle driven by splitmix64 seeded with the seed. The same seed and the same matrix always give the same 3 cells."
+command = "PRIOR_ART_SPOT_CHECK_SEED=<seed> cargo test -p inarch-cli --test prior_art_matrix_lint_test spot_check_lists_three_cited_cells_from_the_committed_matrix -- --ignored --nocapture"
+reviewer_procedure = ["Pick a seed that nobody involved in writing the matrix knows in advance, and record it with the result.", "Run the command and read the three lines that start with SPOT-CHECK; each gives a system, a column, a URL and the quote the matrix records for that cell.", "Open each URL in a browser on the day of the review and find the quoted text on the page.", "Compare the page text with the recorded quote character by character, ignoring only line breaks and runs of white space.", "Record, for each of the 3 cells, the URL, whether the quote was found, and the date and time of the check."]
+pass_when = "All 3 URLs open, and each page contains its recorded quote verbatim."
+fail_when = "Any URL does not open, redirects to a page that does not hold the quote, or holds text that differs from the recorded quote. A failure returns the matrix to its author for correction, and the review repeats with a new seed."

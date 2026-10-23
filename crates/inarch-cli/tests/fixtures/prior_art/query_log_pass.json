@@ -1,0 +1,13 @@
+{
+  "_note": "Synthetic lint fixture. Query texts and result notes are placeholders that exist only to give the lint a well-formed log; they record no real search.",
+  "queries": [
+    {"date": "2026-10-20", "source": "arXiv", "query": "fixture query one for the arXiv source", "result": "fixture result note one"},
+    {"date": "2026-10-20", "source": "GitHub", "query": "fixture query two for the GitHub source", "result": "fixture result note two"},
+    {"date": "2026-10-21", "source": "Google Scholar", "query": "fixture query three for the Google Scholar source", "result": "fixture result note three"},
+    {"date": "2026-10-21", "source": "Patents", "query": "fixture query four for the patent source", "result": "fixture result note four"},
+    {"date": "2026-10-22", "source": "arXiv", "query": "fixture query five for the arXiv source", "result": "fixture result note five"},
+    {"date": "2026-10-22", "source": "GitHub", "query": "fixture query six for the GitHub source", "result": "fixture result note six"},
+    {"date": "2026-10-22", "source": "Google Scholar", "query": "fixture query seven for the Google Scholar source", "result": "fixture result note seven"},
+    {"date": "2026-10-22", "source": "Patents", "query": "fixture query eight for the patent source", "result": "fixture result note eight"}
+  ]
+}
