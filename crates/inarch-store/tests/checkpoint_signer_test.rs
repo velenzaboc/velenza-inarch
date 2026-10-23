@@ -614,6 +614,7 @@ fn admitted_algorithm_set_is_exactly_ml_dsa_65() {
 }
 
 // ---------------------------------------------------------------------------
+// [pqc-reference-only]: the classical names below are rejection-test inputs this contract must refuse
 // Clause 2: an EC_SIGN_*, RSA_SIGN_* or Ed25519 key, or a local signer, refuses at startup.
 // ---------------------------------------------------------------------------
 
