@@ -1,0 +1,91 @@
+{
+  "schema": "inarch.fake-kms.v1",
+  "purpose": "Key versions the in-process fake Cloud KMS serves to the checkpoint signer contract test. The fake generates its ML-DSA-65 key pairs at run time; this file holds no key material, no credential, no project id and no real resource name.",
+  "marker": "[pqc-reference-only] every classical algorithm or signer name in this file is a rejection-test input the signer must refuse at startup; the only admitted algorithm is PQ_SIGN_ML_DSA_65 at the SOFTWARE protection level",
+  "admitted": {
+    "name": "projects/example-proj/locations/global/keyRings/ledger/cryptoKeys/checkpoint/cryptoKeyVersions/1",
+    "algorithm": "PQ_SIGN_ML_DSA_65",
+    "protection_level": "SOFTWARE",
+    "public_key_format": "NIST_PQC",
+    "public_key_len": 1952,
+    "signature_len": 3309
+  },
+  "sources": [
+    {
+      "measured_on": "2026-10-23",
+      "url": "https://docs.cloud.google.com/kms/docs/reference/rest/v1/projects.locations.keyRings.importJobs#PublicKeyFormat",
+      "quote": "The key material is returned in the format defined by NIST PQC standards (FIPS 203, FIPS 204, and FIPS 205).",
+      "shapes": "GetPublicKey serves the ML-DSA-65 key in the NIST_PQC format: the raw FIPS 204 public key of 1952 bytes"
+    },
+    {
+      "measured_on": "2026-10-23",
+      "url": "https://docs.cloud.google.com/kms/docs/reference/rest/v1/projects.locations.keyRings.cryptoKeys.cryptoKeyVersions/getPublicKey",
+      "quote": "This field is required for PQC algorithms.",
+      "shapes": "a PQC public key is only ever requested with an explicit public key format"
+    },
+    {
+      "measured_on": "2026-10-23",
+      "url": "https://docs.cloud.google.com/kms/docs/reference/rest/v1/projects.locations.keyRings.cryptoKeys.cryptoKeyVersions/asymmetricSign",
+      "quote": "Check this field to verify that the intended resource was used for signing.",
+      "shapes": "AsymmetricSign answers with the name of the key version that signed; the signer refuses a signature attributed to any other version"
+    },
+    {
+      "measured_on": "2026-10-23",
+      "url": "https://docs.cloud.google.com/kms/docs/algorithms",
+      "quote": "Pure module-lattice-based digital signature algorithm using the ML-DSA-65 parameter set (FIPS 204)",
+      "shapes": "the fake signs the exact AsymmetricSign request data with pure ML-DSA-65, never a digest"
+    }
+  ],
+  "refused_at_startup": [
+    { "algorithm": "EC_SIGN_P256_SHA256", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "EC_SIGN_P384_SHA384", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "EC_SIGN_SECP256K1_SHA256", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "EC_SIGN_ED25519", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "EC_SIGN_P256_SHA256", "protection_level": "HSM", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "RSA_SIGN_PSS_2048_SHA256", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "RSA_SIGN_PSS_3072_SHA256", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "RSA_SIGN_PSS_4096_SHA256", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "RSA_SIGN_PSS_4096_SHA512", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "RSA_SIGN_PKCS1_2048_SHA256", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "RSA_SIGN_PKCS1_3072_SHA256", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "RSA_SIGN_PKCS1_4096_SHA256", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "RSA_SIGN_PKCS1_4096_SHA512", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "RSA_SIGN_RAW_PKCS1_2048", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "RSA_SIGN_RAW_PKCS1_3072", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "RSA_SIGN_RAW_PKCS1_4096", "protection_level": "SOFTWARE", "refusal": "classical_key", "marker": "[pqc-reference-only] rejection-test input" },
+    { "algorithm": "PQ_SIGN_ML_DSA_44", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "PQ_SIGN_ML_DSA_87", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "PQ_SIGN_ML_DSA_44_EXTERNAL_MU", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "PQ_SIGN_ML_DSA_65_EXTERNAL_MU", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "PQ_SIGN_ML_DSA_87_EXTERNAL_MU", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "PQ_SIGN_SLH_DSA_SHA2_128S", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "PQ_SIGN_HASH_SLH_DSA_SHA2_128S_SHA256", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "CRYPTO_KEY_VERSION_ALGORITHM_UNSPECIFIED", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "GOOGLE_SYMMETRIC_ENCRYPTION", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "HMAC_SHA256", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "pq_sign_ml_dsa_65", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "PQ_SIGN_ML_DSA_65 ", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "", "protection_level": "SOFTWARE", "refusal": "algorithm_not_admitted" },
+    { "algorithm": "PQ_SIGN_ML_DSA_65", "protection_level": "HSM", "refusal": "protection_level" },
+    { "algorithm": "PQ_SIGN_ML_DSA_65", "protection_level": "HSM_SINGLE_TENANT", "refusal": "protection_level" },
+    { "algorithm": "PQ_SIGN_ML_DSA_65", "protection_level": "EXTERNAL", "refusal": "protection_level" },
+    { "algorithm": "PQ_SIGN_ML_DSA_65", "protection_level": "EXTERNAL_VPC", "refusal": "protection_level" },
+    { "algorithm": "PQ_SIGN_ML_DSA_65", "protection_level": "PROTECTION_LEVEL_UNSPECIFIED", "refusal": "protection_level" },
+    { "algorithm": "PQ_SIGN_ML_DSA_65", "protection_level": "software", "refusal": "protection_level" },
+    { "algorithm": "PQ_SIGN_ML_DSA_65", "protection_level": "", "refusal": "protection_level" }
+  ],
+  "local_backends": [
+    { "backend": "local" },
+    { "backend": "file" },
+    { "backend": "pkcs8" },
+    { "backend": "pem" },
+    { "backend": "in-memory" },
+    { "backend": "software" },
+    { "backend": "ed25519", "marker": "[pqc-reference-only] rejection-test input" },
+    { "backend": "ecdsa", "marker": "[pqc-reference-only] rejection-test input" },
+    { "backend": "rsa", "marker": "[pqc-reference-only] rejection-test input" },
+    { "backend": "hmac" },
+    { "backend": "blake3-keyed" }
+  ],
+  "unsigned_backends": ["", "none", "unsigned", "disabled"]
+}

@@ -1,0 +1,43 @@
+# Steps the test-code stage runs to accept the checkpoint signer. The in-process step needs
+# no network and no credential. The live steps are `#[ignore]` tests that need a real
+# Cloud KMS key version and Google credentials on the host that runs them; no step names a
+# project, a host or a credential file.
+
+schema = "inarch.checkpoint-test-code-steps.v1"
+
+[[step]]
+id = "in-process-contract"
+clauses = [
+  "signed-checkpoint-verifies-with-public-key",
+  "classical-or-local-signer-refused-at-startup",
+  "kms-route-blocked-writes-no-unsigned-checkpoint",
+  "ml-dsa-65-ga-dated-record",
+]
+command = "cargo test -p inarch-store --test checkpoint_signer_test"
+env = []
+setup = "none; the fake Cloud KMS signs with a real ML-DSA-65 key generated in process"
+passes_when = "every non-ignored test passes"
+
+[[step]]
+id = "live-kms-sign-and-verify"
+clauses = ["signed-checkpoint-verifies-with-public-key"]
+command = "cargo test -p inarch-store --test checkpoint_signer_test -- --ignored --exact live_kms_signed_checkpoint_verifies_with_the_public_key_alone"
+env = ["INARCH_TEST_KMS_PQ_KEY"]
+setup = "set INARCH_TEST_KMS_PQ_KEY to the full resource name of an enabled PQ_SIGN_ML_DSA_65 CryptoKeyVersion at the SOFTWARE protection level; the host holds Google credentials allowed to call GetPublicKey and AsymmetricSign on it"
+passes_when = "the test passes; it fails rather than skips when INARCH_TEST_KMS_PQ_KEY is unset"
+
+[[step]]
+id = "live-kms-route-blocked"
+clauses = ["kms-route-blocked-writes-no-unsigned-checkpoint"]
+command = "cargo test -p inarch-store --test checkpoint_signer_test -- --ignored --exact live_kms_route_blocked_writes_no_checkpoint"
+env = ["INARCH_TEST_KMS_PQ_KEY", "INARCH_TEST_KMS_ROUTE_BLOCKED"]
+setup = "block outbound TCP 443 to cloudkms.googleapis.com only, leave every other route open, then set INARCH_TEST_KMS_ROUTE_BLOCKED=1 and INARCH_TEST_KMS_PQ_KEY as in live-kms-sign-and-verify"
+passes_when = "the test passes; it fails rather than skips when either variable is unset; remove the block afterwards"
+
+[[step]]
+id = "launch-stage-remeasure"
+clauses = ["ml-dsa-65-ga-dated-record"]
+command = "open https://docs.cloud.google.com/kms/docs/release-notes and https://docs.cloud.google.com/kms/docs/algorithms"
+env = []
+setup = "none"
+passes_when = "both pages still carry the quotes in kms_launch_stage.toml verbatim and PQ_SIGN_ML_DSA_65 is still General Availability at the software protection level; otherwise update the record with the new date before deploying"

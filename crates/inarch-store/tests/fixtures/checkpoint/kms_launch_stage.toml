@@ -1,0 +1,44 @@
+# Dated launch-stage record for the one signing algorithm the checkpoint signer admits.
+# Every entry quotes the official Cloud KMS documentation as it read on `measured_on`.
+# The contract test validates the shape of this record and never compares it with the
+# wall clock; re-measure both sources before any deployment that relies on the signer.
+
+schema = "inarch.kms-launch-stage.v1"
+
+[[measurement]]
+kind = "algorithm"
+subject = "PQ_SIGN_ML_DSA_65"
+launch_stage = "GA"
+measured_on = "2026-10-23"
+release_note_date = "2026-07-16"
+source = "https://docs.cloud.google.com/kms/docs/release-notes"
+quote = "Cloud KMS supports the following post-quantum computing (PQC) signing algorithms in General Availability:"
+listed = [
+  "PQ_SIGN_ML_DSA_44",
+  "PQ_SIGN_ML_DSA_65",
+  "PQ_SIGN_ML_DSA_87",
+  "PQ_SIGN_ML_DSA_44_EXTERNAL_MU",
+  "PQ_SIGN_ML_DSA_65_EXTERNAL_MU",
+  "PQ_SIGN_ML_DSA_87_EXTERNAL_MU",
+  "PQ_SIGN_SLH_DSA_SHA2_128S",
+  "PQ_SIGN_HASH_SLH_DSA_SHA2_128S_SHA256",
+]
+
+[[measurement]]
+kind = "protection_level"
+subject = "SOFTWARE"
+algorithm = "PQ_SIGN_ML_DSA_65"
+measured_on = "2026-10-23"
+source = "https://docs.cloud.google.com/kms/docs/algorithms"
+quote = "You can use the algorithms in this table with the following protection levels:"
+available = ["software"]
+note = "The post-quantum signing table lists the software protection level only; the signer admits SOFTWARE and refuses every other protection level."
+
+[[excluded]]
+subject = "quantum-safe key import" # [pqc-reference-only] pre-GA feature recorded so the signer never depends on it
+launch_stage = "PREVIEW"
+measured_on = "2026-10-23"
+release_note_date = "2026-08-06"
+source = "https://docs.cloud.google.com/kms/docs/release-notes"
+quote = "Preview: Cloud KMS supports quantum-safe key import." # [pqc-reference-only]
+used_by_signer = false
