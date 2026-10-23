@@ -1,0 +1,75 @@
+# Steps the test-code stage runs against a packaged or deployed build of the post-quantum-only
+# transport profile. Each step names the acceptance clause it proves, the exact command, the
+# expected outcome and the observable that must hold. Upper-case words in commands are
+# placeholders the test-code stage fills from the deployment under test; no placeholder is a
+# real address, project or credential.
+#
+# clause: l1-probe | l2-load-balancer | enrollment
+# expect: negotiates | fails | ENABLED | absent | refuses | authenticates
+# Values are plain double-quoted strings without escapes, or true/false.
+
+[[step]]
+id = "l1-probe-hybrid-negotiates"
+clause = "l1-probe"
+command = "openssl s_client -connect L1_ADDRESS -servername L1_SERVER_NAME -tls1_3 -groups X25519MLKEM768"
+expect = "negotiates"
+observe = "exit status is zero and the output names X25519MLKEM768 as the negotiated group"
+requires = "OpenSSL 3.5 or newer"
+
+[[step]]
+id = "l1-probe-x25519-fails"
+clause = "l1-probe"
+command = "openssl s_client -connect L1_ADDRESS -servername L1_SERVER_NAME -groups X25519" # [pqc-reference-only] classical-only probe that must fail
+expect = "fails"
+observe = "exit status is non-zero and no session is established"
+requires = "OpenSSL 3.5 or newer"
+
+[[step]]
+id = "l1-probe-p256-fails"
+clause = "l1-probe"
+command = "openssl s_client -connect L1_ADDRESS -servername L1_SERVER_NAME -groups P-256" # [pqc-reference-only] classical-only probe that must fail
+expect = "fails"
+observe = "exit status is non-zero and no session is established"
+requires = "OpenSSL 3.5 or newer"
+
+[[step]]
+id = "l1-probe-tls12-fails"
+clause = "l1-probe"
+command = "openssl s_client -connect L1_ADDRESS -servername L1_SERVER_NAME -tls1_2"
+expect = "fails"
+observe = "exit status is non-zero and no session is established"
+requires = "OpenSSL 3.5 or newer"
+
+[[step]]
+id = "l2-load-balancer-post-quantum-key-exchange"
+clause = "l2-load-balancer"
+command = "gcloud compute ssl-policies describe L2_SSL_POLICY --global --format=value(postQuantumKeyExchange)"
+expect = "ENABLED"
+observe = "the SSL policy attached to the target proxy that fronts the L2 partner listener reads ENABLED, set explicitly"
+launch_stage_record = "load-balancer-post-quantum-key-exchange"
+requires = "the launch_stage_record re-measured on the deploy date"
+
+[[step]]
+id = "l1-has-no-load-balancer"
+clause = "l2-load-balancer"
+command = "gcloud compute forwarding-rules list --format=json"
+expect = "absent"
+observe = "no forwarding rule, target proxy or backend service routes to the L1 listener; only the L2 partner listener is fronted"
+requires = "read access to the deployment's load-balancing resources"
+
+[[step]]
+id = "enrollment-refuses-key-file-before-network"
+clause = "enrollment"
+command = "inr --config CONFIG_WITH_GCP_CREDENTIALS_FILE whoami"
+expect = "refuses"
+observe = "exit status is non-zero, the error names the service-account key refusal, and a packet capture on the host shows no connection opened by the command"
+requires = "a config whose gcp_credentials_file points at the key-shaped fixture, never a real key"
+
+[[step]]
+id = "enrollment-workload-identity-federation-token-exchange"
+clause = "enrollment"
+command = "inr --config CONFIG_WITHOUT_KEY_FILE whoami"
+expect = "authenticates"
+observe = "GOOGLE_APPLICATION_CREDENTIALS names a workload identity federation credential configuration, the token exchange reaches sts.googleapis.com over TLS 1.3, and the client's recorded transport evidence names X25519MLKEM768 as the negotiated group"
+launch_stage_record = "workload-identity-federation"
+requires = "a workload identity federation pool and provider for the enrolling workstation or agent"

@@ -1,0 +1,147 @@
+# Postgres carrier cases for the post-quantum-only transport profile.
+#
+# A networked Postgres connection is admitted only with sslmode=verify-full,
+# ssl_min_protocol_version=TLSv1.3, a server ssl_groups setting that names post-quantum-bearing
+# groups only, and a driver that reports the negotiated group. A Unix socket or a literal
+# loopback address is node-internal and is not a carrier.
+#
+# Each refused case violates exactly one rule, so the expected reason is unambiguous.
+# expect: refuse | networked_verify_full | node_internal
+# reason (refuse only): sslmode | server_ssl_groups | min_protocol | group_not_reportable
+# Values are plain double-quoted strings without escapes, or true/false.
+
+[[case]]
+name = "networked-verify-full-post-quantum"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=verify-full&ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = true
+expect = "networked_verify_full"
+
+[[case]]
+name = "sslmode-disable"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=disable&ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "sslmode"
+
+[[case]]
+name = "sslmode-prefer"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=prefer&ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "sslmode"
+
+[[case]]
+name = "sslmode-require"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=require&ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "sslmode"
+
+[[case]]
+name = "sslmode-allow"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=allow&ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "sslmode"
+
+[[case]]
+name = "sslmode-verify-ca"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=verify-ca&ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "sslmode"
+
+[[case]]
+name = "sslmode-absent-defaults-to-prefer"
+url = "postgresql://ledger@db.example.com:5432/ledger?ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "sslmode"
+
+[[case]]
+name = "postgres-scheme-sslmode-require"
+url = "postgres://ledger@db.example.com:5432/ledger?sslmode=require&ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "sslmode"
+
+[[case]]
+name = "host-parameter-names-a-network-host"
+url = "postgresql:///ledger?host=db.example.com&sslmode=disable&ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "sslmode"
+
+[[case]]
+name = "server-groups-postgres-18-default"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=verify-full&ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519:prime256v1" # [pqc-reference-only] classical-only server default that must be refused
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "server_ssl_groups"
+
+[[case]]
+name = "server-groups-hybrid-plus-classical"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=verify-full&ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519MLKEM768:X25519" # [pqc-reference-only] a classical group beside the hybrid must be refused
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "server_ssl_groups"
+
+[[case]]
+name = "server-groups-undeclared"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=verify-full&ssl_min_protocol_version=TLSv1.3"
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "server_ssl_groups"
+
+[[case]]
+name = "min-protocol-absent"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=verify-full"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "min_protocol"
+
+[[case]]
+name = "min-protocol-tls12"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=verify-full&ssl_min_protocol_version=TLSv1.2"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = true
+expect = "refuse"
+reason = "min_protocol"
+
+[[case]]
+name = "driver-cannot-report-negotiated-group"
+url = "postgresql://ledger@db.example.com:5432/ledger?sslmode=verify-full&ssl_min_protocol_version=TLSv1.3"
+server_ssl_groups = "X25519MLKEM768"
+driver_reports_negotiated_group = false
+expect = "refuse"
+reason = "group_not_reportable"
+
+[[case]]
+name = "unix-socket-is-node-internal"
+url = "postgresql:///ledger?host=/var/run/postgresql"
+driver_reports_negotiated_group = false
+expect = "node_internal"
+
+[[case]]
+name = "ipv4-loopback-is-node-internal"
+url = "postgresql://ledger@127.0.0.1:5432/ledger?sslmode=disable"
+driver_reports_negotiated_group = false
+expect = "node_internal"
+
+[[case]]
+name = "ipv6-loopback-is-node-internal"
+url = "postgresql://ledger@[::1]:5432/ledger?sslmode=disable"
+driver_reports_negotiated_group = false
+expect = "node_internal"

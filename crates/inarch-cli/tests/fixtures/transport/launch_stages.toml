@@ -1,0 +1,49 @@
+# Dated launch-stage readings for the Google Cloud controls the post-quantum-only transport
+# profile depends on. Every record is perishable: re-measure it from the official page before
+# any deploy decision. A status other than GA or unharmonized fails the contract, because a
+# pre-GA control is never a production substitute.
+#
+# Format: one [[record]] per control; [[reading]] tables name their record by id. Values are
+# plain double-quoted strings without escapes, or true/false.
+
+[[record]]
+id = "workload-identity-federation"
+product = "IAM Workload Identity Federation"
+measured_on = "2026-10-23"
+url = "https://docs.cloud.google.com/iam/docs/release-notes"
+quote = "Workload identity federation is now generally available."
+quote_dated = "2021-04-09"
+status = "GA"
+remeasure_before_deploy = true
+
+[[record]]
+id = "load-balancer-post-quantum-key-exchange"
+product = "Cloud Load Balancing SSL policy post-quantum key exchange"
+measured_on = "2026-10-23"
+url = "https://docs.cloud.google.com/load-balancing/docs/post-quantum-tls"
+quote = "Left unharmonized; re-measure before deploy."
+quote_source = "Ledger Landing design, section 7, Cloud Load Balancer row, measured 2026-10-22"
+status = "unharmonized"
+remeasure_before_deploy = true
+
+[[reading]]
+record = "load-balancer-post-quantum-key-exchange"
+measured_on = "2026-10-23"
+url = "https://docs.cloud.google.com/load-balancing/docs/post-quantum-tls"
+quote = "X25519MLKEM768 is the particular form of post-quantum key exchange supported in Google Cloud load balancers."
+observed_label = "the page carries no launch-stage label for post-quantum key exchange"
+
+[[reading]]
+record = "load-balancer-post-quantum-key-exchange"
+measured_on = "2026-10-23"
+url = "https://docs.cloud.google.com/load-balancing/docs/release-notes"
+quote = "TLS post-quantum key exchange support is now available for Application Load Balancers and external proxy Network Load Balancers."
+quote_dated = "2026-06-02"
+observed_label = "the release note carries no Preview or GA label"
+
+[[reading]]
+record = "load-balancer-post-quantum-key-exchange"
+measured_on = "2026-10-23"
+url = "https://docs.cloud.google.com/compute/docs/reference/rest/v1/sslPolicies"
+quote = "When set to ENABLED, the load balancer allows X25519MLKEM768 key exchange."
+observed_label = "postQuantumKeyExchange is a field of the v1 sslPolicies resource with no Preview label"
